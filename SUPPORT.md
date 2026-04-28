@@ -5,7 +5,7 @@ Thanks for using DoseKeeper. If something isn't working, here's the fastest way 
 ## Contact
 
 - **Email:** K2@jonasenterprises.com
-- **Bug reports / feature requests:** [GitHub Issues](https://github.com/keivnjonas/dosekeeper/issues)
+- **Bug reports / feature requests:** Email the address above with a short note about what you tapped and what you expected to happen.
 
 We typically reply within 1–2 business days.
 
