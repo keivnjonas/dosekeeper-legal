@@ -1,7 +1,7 @@
-<title>Jonas Brotbers Space</title>
+<title>Jonas Brothers Space</title>
 <style>
 /* ============================================================
-   JONASBROTBERS.COM — 2006 REDESIGN PITCH
+   JONASBROTHERS.COM — 2006 MYSPACE MOCKUP
    Deliberately single-theme: this is a 2006 screen. Every color
    is painted explicitly so it holds on any host background.
    ============================================================ */
@@ -12,7 +12,6 @@
   --ms-orange:#FF9933;
   --ms-orange-fill:#FFCC99;
   --ms-row:#B7C4DC;
-  --ms-line:#6699CC;
   --paper:#FFFFFF;
   --ink:#000000;
   --ie-a:#0A246A;
@@ -40,104 +39,64 @@ body{
 a{color:var(--ms-navy);text-decoration:underline;}
 a:hover{color:#CC0000;}
 a:focus-visible,button:focus-visible{outline:2px solid #FF6600;outline-offset:1px;}
-img{max-width:100%;}
 
 /* ---------- IE6 window chrome ---------- */
 .win{
-  max-width:830px;
-  margin:0 auto;
-  background:var(--chrome);
-  border:2px outset var(--chrome-lt);
-  box-shadow:4px 4px 0 rgba(0,0,0,.35);
+  max-width:830px;margin:0 auto;background:var(--chrome);
+  border:2px outset var(--chrome-lt);box-shadow:4px 4px 0 rgba(0,0,0,.35);
 }
 .win-title{
   display:flex;align-items:center;gap:6px;
   background:linear-gradient(90deg,var(--ie-a),var(--ie-b));
-  color:#FFFFFF;font:bold 11px Tahoma,Verdana,sans-serif;
-  padding:3px 4px;
+  color:#FFFFFF;font:bold 11px Tahoma,Verdana,sans-serif;padding:3px 4px;
 }
 .win-title .e{
   width:14px;height:14px;flex:0 0 14px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#7FC4FF,#1B4FA8 70%);
-  border:1px solid #0B2E63;
+  background:radial-gradient(circle at 35% 30%,#7FC4FF,#1B4FA8 70%);border:1px solid #0B2E63;
 }
 .win-title .spacer{flex:1;}
 .win-btns{display:flex;gap:2px;}
 .win-btns span{
-  width:16px;height:14px;background:var(--chrome);
-  border:1px outset var(--chrome-lt);
-  font:bold 9px Marlett,Tahoma,sans-serif;color:#000;
-  display:flex;align-items:center;justify-content:center;
+  width:16px;height:14px;background:var(--chrome);border:1px outset var(--chrome-lt);
+  font:bold 9px Tahoma,sans-serif;color:#000;display:flex;align-items:center;justify-content:center;
 }
-.win-menu{
-  background:var(--chrome);border-bottom:1px solid var(--chrome-dk);
-  padding:2px 6px;font:11px Tahoma,Verdana,sans-serif;
-}
+.win-menu{background:var(--chrome);border-bottom:1px solid var(--chrome-dk);padding:2px 6px;font:11px Tahoma,sans-serif;}
 .win-menu span{padding:1px 7px;}
-.win-menu span u{text-decoration:underline;}
 .win-bar{
-  background:var(--chrome);
-  border-bottom:1px solid var(--chrome-dk);
-  padding:4px 6px;
-  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  background:var(--chrome);border-bottom:1px solid var(--chrome-dk);
+  padding:4px 6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;
 }
-.win-bar label{font:11px Tahoma,Verdana,sans-serif;color:#333;}
+.win-bar label{font:11px Tahoma,sans-serif;color:#333;}
 .addr{
-  flex:1;min-width:220px;
-  background:#FFFFFF;border:1px inset var(--chrome-dk);
+  flex:1;min-width:220px;background:#FFFFFF;border:1px inset var(--chrome-dk);
   padding:3px 5px;font:11px "Courier New",Courier,monospace;color:#000;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .tbtn{
-  font:11px Tahoma,Verdana,sans-serif;
-  background:var(--chrome);border:1px outset var(--chrome-lt);
-  padding:3px 9px;cursor:pointer;color:#000;
+  font:11px Tahoma,Verdana,sans-serif;background:var(--chrome);
+  border:1px outset var(--chrome-lt);padding:3px 9px;cursor:pointer;color:#000;
 }
 .tbtn:active{border-style:inset;}
-.tbtn[aria-pressed="true"],.tbtn[aria-selected="true"]{
-  border-style:inset;background:#ECE9D8;font-weight:bold;
-}
+.tbtn[aria-pressed="true"],.tbtn[aria-selected="true"]{border-style:inset;background:#ECE9D8;font-weight:bold;}
 .win-status{
   background:var(--chrome);border-top:1px solid var(--chrome-lt);
-  padding:3px 6px;font:11px Tahoma,Verdana,sans-serif;color:#333;
-  display:flex;gap:10px;align-items:center;
+  padding:3px 6px;font:11px Tahoma,sans-serif;color:#333;display:flex;gap:10px;align-items:center;
 }
 .win-status .spacer{flex:1;}
 
-/* ---------- viewport that holds the 800px page ---------- */
-.viewport{
-  background:var(--paper);
-  border:1px inset var(--chrome-dk);
-  overflow-x:auto;
-  padding:0;
-}
+.viewport{background:var(--paper);border:1px inset var(--chrome-dk);overflow-x:auto;}
 .page{width:800px;background:var(--paper);}
 
 /* ---------- MySpace furniture ---------- */
-.topbar{
-  background:var(--ms-navy);color:#FFFFFF;
-  padding:5px 8px;display:flex;align-items:center;gap:8px;
-  font-size:11px;
-}
+.topbar{background:var(--ms-navy);color:#FFFFFF;padding:5px 8px;display:flex;align-items:center;gap:8px;font-size:11px;}
 .topbar a{color:#FFFFFF;}
 .topbar .spacer{flex:1;}
-.topbar input[type=text]{
-  width:190px;border:1px solid #000;padding:2px 3px;font:11px Verdana,sans-serif;
-}
-.topbar .go{
-  border:1px outset #FFFFFF;background:var(--chrome);
-  font:11px Verdana,sans-serif;padding:2px 8px;cursor:pointer;
-}
-.radio{
-  display:inline-block;width:11px;height:11px;border-radius:50%;
-  background:#FFFFFF;border:2px solid #FFFFFF;vertical-align:-2px;
-}
+.topbar input[type=text]{width:180px;border:1px solid #000;padding:2px 3px;font:11px Verdana,sans-serif;}
+.topbar .go{border:1px outset #FFFFFF;background:var(--chrome);font:11px Verdana,sans-serif;padding:2px 8px;cursor:pointer;}
+.radio{display:inline-block;width:11px;height:11px;border-radius:50%;background:#FFFFFF;border:2px solid #FFFFFF;vertical-align:-2px;}
 .radio.on{background:radial-gradient(circle,var(--ms-navy) 0 40%,#FFFFFF 45%);}
 
-.navbar{
-  background:var(--ms-blue);color:#FFFFFF;
-  padding:5px 8px;font-size:11px;text-align:center;
-}
+.navbar{background:var(--ms-blue);color:#FFFFFF;padding:5px 8px;font-size:11px;text-align:center;}
 .navbar a{color:#FFFFFF;text-decoration:none;}
 .navbar a:hover{text-decoration:underline;color:#FFFFFF;}
 
@@ -148,95 +107,90 @@ img{max-width:100%;}
 .pname{font:bold 17px Verdana,sans-serif;color:#000;margin:0 0 8px;}
 
 .pic-row{display:flex;gap:10px;margin-bottom:6px;}
-.pic{
-  width:150px;height:150px;flex:0 0 150px;
-  border:1px solid #999;background:#EDEDED;
-  display:flex;align-items:center;justify-content:center;
+.pic{width:150px;height:150px;flex:0 0 150px;border:1px solid #999;background:#EDEDED;}
+.wordmark{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;
+  font:bold 21px "Arial Black",Arial,sans-serif;color:#FFFFFF;letter-spacing:-1px;
+  background:linear-gradient(160deg,#3E63B8,#16264F);text-shadow:2px 2px 0 rgba(0,0,0,.4);
 }
-.mono{
-  width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  font:bold 46px "Arial Black",Arial,sans-serif;color:#FFFFFF;
-  letter-spacing:-2px;
-  background:linear-gradient(135deg,#4B79C4,#22417E);
-  text-shadow:2px 2px 0 rgba(0,0,0,.35);
-}
+.wordmark small{font:bold 9px Verdana,sans-serif;letter-spacing:.22em;color:#BFD2F2;text-shadow:none;}
 .pic-meta{font-size:11px;line-height:1.55;}
 .pic-meta .quote{color:var(--ms-navy);font-style:italic;margin-bottom:8px;}
 .morepics{font-weight:bold;font-size:11px;margin:2px 0 12px;}
 
-/* boxed modules */
-.box{border:1px solid var(--ms-line);margin-bottom:12px;background:var(--paper);}
-.box-h{
-  background:var(--ms-blue);color:#FFFFFF;font-weight:bold;
-  padding:3px 6px;font-size:11px;
-}
+.box{border:1px solid var(--ms-blue);margin-bottom:12px;background:var(--paper);}
+.box-h{background:var(--ms-blue);color:#FFFFFF;font-weight:bold;padding:3px 6px;font-size:11px;}
 .box-b{padding:8px;}
 
 .contact{width:100%;border-collapse:collapse;font-size:11px;}
 .contact td{padding:5px 4px;vertical-align:middle;width:50%;}
 .ico{
-  display:inline-block;width:16px;height:16px;margin-right:5px;
-  vertical-align:-3px;border:1px solid #7A7A7A;background:#DDE6F2;
-  font:8px Verdana,sans-serif;text-align:center;line-height:14px;color:#22417E;
+  display:inline-block;width:16px;height:16px;margin-right:5px;vertical-align:-3px;
+  border:1px solid #7A7A7A;background:#DDE6F2;font:8px Verdana,sans-serif;
+  text-align:center;line-height:14px;color:#22417E;
 }
 
 .urlbox{border:1px solid #000;padding:5px 6px;margin-bottom:12px;font-size:11px;}
 .urlbox .u{font-family:"Courier New",Courier,monospace;color:var(--ms-navy);word-break:break-all;}
 
-.player{
-  border:1px solid #888;background:#5C5C5C;color:#FFFFFF;
-  display:flex;align-items:center;gap:8px;padding:6px;margin-bottom:12px;
-}
+.player{border:1px solid #888;background:#4F4F4F;color:#FFFFFF;padding:6px;margin-bottom:12px;}
+.player .now{display:flex;align-items:center;gap:8px;}
 .player .play{
-  width:34px;height:30px;flex:0 0 34px;
-  background:var(--chrome);border:1px outset var(--chrome-lt);
+  width:34px;height:30px;flex:0 0 34px;background:var(--chrome);border:1px outset var(--chrome-lt);
   display:flex;align-items:center;justify-content:center;color:#000;font-size:12px;
 }
-.player .meta{flex:1;font-size:11px;line-height:1.4;}
-.player .meta b{display:block;font-size:11px;}
+.player .meta{flex:1;font-size:11px;line-height:1.4;min-width:0;}
+.player .meta b{display:block;}
 .player .meta i{font-style:normal;color:#D9D9D9;font-size:10px;}
-.player .ctrl{font-size:10px;color:#FFFFFF;white-space:nowrap;}
+.player .ctrl{font-size:10px;white-space:nowrap;color:#FFFFFF;}
+.player .bar{height:6px;background:#2E2E2E;border:1px solid #6E6E6E;margin:7px 0 6px;}
+.player .bar i{display:block;height:100%;width:38%;background:#7FB4FF;}
+.plist{list-style:none;margin:0;padding:0;font-size:10px;}
+.plist li{display:flex;gap:6px;padding:2px 0;border-top:1px solid #616161;color:#E6E6E6;}
+.plist li span:first-child{width:14px;color:#9FB8DC;}
+.plist li span:last-child{margin-left:auto;color:#B9B9B9;}
+.plist li.cur{color:#FFFFFF;font-weight:bold;}
 
 .tbl{width:100%;border-collapse:collapse;font-size:11px;}
 .tbl th{
-  background:var(--ms-row);color:var(--ms-navy);text-align:left;
-  padding:5px 6px;width:96px;vertical-align:top;font-weight:bold;
-  border-bottom:1px solid #FFFFFF;
+  background:var(--ms-row);color:var(--ms-navy);text-align:left;padding:5px 6px;
+  width:98px;vertical-align:top;font-weight:bold;border-bottom:1px solid #FFFFFF;
 }
 .tbl td{padding:5px 6px;vertical-align:top;border-bottom:1px solid #E4E4E4;}
 
-/* right column */
-.banner{
-  border:1px solid #000;padding:16px 10px;text-align:center;
-  font:bold 17px Verdana,sans-serif;margin-bottom:14px;
-}
-.sect-h{
-  background:var(--ms-orange-fill);color:#CC6600;font-weight:bold;
-  padding:3px 6px;font-size:11px;margin:0 0 8px;
-  border-top:1px solid var(--ms-orange);border-bottom:1px solid var(--ms-orange);
-}
+.banner{border:1px solid #000;padding:16px 10px;text-align:center;font:bold 17px Verdana,sans-serif;margin-bottom:14px;}
 .sect{margin-bottom:16px;}
+.sect-h{
+  background:var(--ms-orange-fill);color:#CC6600;font-weight:bold;padding:3px 6px;font-size:11px;
+  margin:0 0 8px;border-top:1px solid var(--ms-orange);border-bottom:1px solid var(--ms-orange);
+}
 .sub{color:var(--ms-orange);font-weight:bold;font-size:11px;margin:10px 0 3px;}
 .sub:first-child{margin-top:0;}
 .copy{font-size:11px;line-height:1.6;margin:0 0 6px;}
 
+/* tour table */
+.tour{width:100%;border-collapse:collapse;font-size:11px;}
+.tour th{background:var(--ms-row);color:var(--ms-navy);text-align:left;padding:4px 6px;font-weight:bold;}
+.tour td{padding:5px 6px;border-bottom:1px solid #E4E4E4;vertical-align:top;}
+.tour .dt{white-space:nowrap;font-family:"Courier New",monospace;color:#CC0000;font-weight:bold;width:78px;}
+.tour .tix a{font-weight:bold;}
+
 .grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 10px;margin-top:10px;}
 .card{text-align:center;font-size:11px;}
 .tile{
-  width:100%;aspect-ratio:1/1;border:1px solid #999;
-  display:flex;align-items:center;justify-content:center;
-  font:bold 15px "Arial Black",Arial,sans-serif;color:#FFFFFF;
-  text-align:center;padding:6px;line-height:1.15;
+  width:100%;aspect-ratio:1/1;border:1px solid #999;display:flex;
+  align-items:center;justify-content:center;text-align:center;padding:6px;line-height:1.15;
+  font:bold 14px "Arial Black",Arial,sans-serif;color:#FFFFFF;
 }
 .card .nm{display:block;font-weight:bold;color:var(--ms-navy);margin-bottom:4px;}
 .card .sm{display:block;color:#555;font-size:10px;margin-top:3px;}
 .t1{background:linear-gradient(135deg,#3F72C4,#1E3C77);}
-.t2{background:linear-gradient(135deg,#57A05B,#245C2C);}
+.t2{background:linear-gradient(135deg,#C44F6E,#79203A);}
 .t3{background:linear-gradient(135deg,#C4763F,#7A3F16);}
-.t4{background:linear-gradient(135deg,#8A5BB5,#43276E);}
-.t5{background:linear-gradient(135deg,#4FA3AE,#1D5A63);}
-.t6{background:linear-gradient(135deg,#C44F6E,#79203A);}
+.t4{background:linear-gradient(135deg,#57A05B,#245C2C);}
+.t5{background:linear-gradient(135deg,#8A5BB5,#43276E);}
+.t6{background:linear-gradient(135deg,#4FA3AE,#1D5A63);}
 .t7{background:linear-gradient(135deg,#6E7480,#33383F);}
 .t8{background:linear-gradient(135deg,#B59A3F,#6B5615);}
 
@@ -244,39 +198,30 @@ img{max-width:100%;}
 .adslot b{color:#CC0000;display:block;margin:6px 0 4px;font-size:12px;}
 
 .cmt{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #E0E0E0;}
-.cmt .av{width:56px;height:56px;flex:0 0 56px;border:1px solid #999;}
+.cmt .av{width:56px;height:56px;flex:0 0 56px;border:1px solid #999;font-size:10px;}
 .cmt .bd{font-size:11px;line-height:1.55;}
 .cmt .who{font-weight:bold;color:var(--ms-navy);}
 .cmt .when{color:#777;font-size:10px;}
 .tag{
-  display:inline-block;background:#EEE;border:1px solid #BBB;color:#666;
-  font-size:9px;padding:0 4px;margin-left:6px;letter-spacing:.06em;vertical-align:1px;
+  display:inline-block;background:#EEE;border:1px solid #BBB;color:#666;font-size:9px;
+  padding:0 4px;margin-left:6px;letter-spacing:.06em;vertical-align:1px;
 }
 
-.counter{
-  display:inline-flex;gap:2px;background:#000;padding:3px;border:1px solid #555;
-  vertical-align:middle;
-}
-.counter i{
-  font:bold 12px "Courier New",monospace;color:#33FF33;font-style:normal;
-  background:#101010;padding:1px 3px;
-}
+.counter{display:inline-flex;gap:2px;background:#000;padding:3px;border:1px solid #555;vertical-align:middle;}
+.counter i{font:bold 12px "Courier New",monospace;color:#33FF33;font-style:normal;background:#101010;padding:1px 3px;}
 .blink{animation:bl 1.1s steps(1,end) infinite;color:#CC0000;font-weight:bold;}
 @keyframes bl{50%{opacity:0;}}
 .mq{overflow:hidden;white-space:nowrap;border:1px solid var(--ms-orange);background:#FFFBEF;padding:3px 0;margin-bottom:12px;}
-.mq span{display:inline-block;padding-left:100%;animation:mv 18s linear infinite;font-size:11px;color:#CC6600;font-weight:bold;}
+.mq span{display:inline-block;padding-left:100%;animation:mv 20s linear infinite;font-size:11px;color:#CC6600;font-weight:bold;}
 @keyframes mv{to{transform:translateX(-100%);}}
 .pit{font-family:"Comic Sans MS","Segoe Print",cursive;font-size:12px;}
-.hr{border:0;border-top:1px solid var(--ms-blue);margin:14px 0;}
 .foot{text-align:center;font-size:10px;color:#666;padding:14px 12px 20px;line-height:1.7;}
 .foot a{color:var(--ms-navy);}
 
 /* ---------- pitch annotations ---------- */
 .anno{
-  display:none;
-  background:#FFCC00;color:#000;border:1px solid #A37A00;
-  font:bold 10px Verdana,sans-serif;padding:0 5px;margin-right:6px;
-  vertical-align:1px;
+  display:none;background:#FFCC00;color:#000;border:1px solid #A37A00;
+  font:bold 10px Verdana,sans-serif;padding:0 5px;margin-right:6px;vertical-align:1px;
 }
 body.notes .anno{display:inline-block;}
 body.notes .swap{background:var(--note);border-bottom:1px dashed #C9A400;}
@@ -286,11 +231,8 @@ body.notes .notes-panel{display:block;}
 .notes-panel .lede{font-size:11px;color:#444;margin:0 0 10px;line-height:1.6;max-width:64ch;}
 .notes-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px 16px;margin:0;padding:0;list-style:none;}
 .notes-list li{font-size:11px;line-height:1.55;padding-left:26px;position:relative;}
-.notes-list li b{
-  position:absolute;left:0;top:0;background:#FFCC00;border:1px solid #A37A00;
-  font-size:10px;padding:0 4px;
-}
-.notes-key{font-size:10px;color:#666;margin-top:10px;}
+.notes-list li b:first-child{position:absolute;left:0;top:0;background:#FFCC00;border:1px solid #A37A00;font-size:10px;padding:0 4px;}
+.notes-key{font-size:10px;color:#666;margin-top:10px;line-height:1.6;max-width:78ch;}
 
 .screen{display:none;}
 .screen.on{display:block;}
@@ -305,28 +247,27 @@ body.notes .notes-panel{display:block;}
 <div class="win">
   <div class="win-title">
     <span class="e" aria-hidden="true"></span>
-    <span id="wt">Jonas Brotbers - Microsoft Internet Explorer</span>
+    <span id="wt">Jonas Brothers - Microsoft Internet Explorer</span>
     <span class="spacer"></span>
-    <span class="win-btns" aria-hidden="true"><span>_</span><span>□</span><span>×</span></span>
+    <span class="win-btns" aria-hidden="true"><span>_</span><span>&#9633;</span><span>&times;</span></span>
   </div>
 
   <div class="win-menu" aria-hidden="true">
-    <span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span>
-    <span>F<u>a</u>vorites</span><span><u>T</u>ools</span><span><u>H</u>elp</span>
+    <span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Tools</span><span>Help</span>
   </div>
 
   <div class="win-bar">
     <label for="addr">Address</label>
-    <div class="addr" id="addr">http://www.jonasbrotbers.com/</div>
+    <div class="addr" id="addr">http://www.jonasbrothers.com/</div>
     <button class="tbtn" type="button" id="notesBtn" aria-pressed="false">Annotations: off</button>
   </div>
 
-  <div class="win-bar" role="tablist" aria-label="Screens in this redesign">
+  <div class="win-bar" role="tablist" aria-label="Screens in this mockup">
     <button class="tbtn" type="button" role="tab" data-screen="home" aria-selected="true">Profile</button>
-    <button class="tbtn" type="button" role="tab" data-screen="products" aria-selected="false">Products</button>
-    <button class="tbtn" type="button" role="tab" data-screen="support" aria-selected="false">Support</button>
-    <span class="spacer" style="flex:1"></span>
-    <span style="font:11px Tahoma,sans-serif;color:#555;">Concept &mdash; not shipped</span>
+    <button class="tbtn" type="button" role="tab" data-screen="music" aria-selected="false">Music</button>
+    <button class="tbtn" type="button" role="tab" data-screen="tour" aria-selected="false">Tour</button>
+    <span style="flex:1"></span>
+    <span style="font:11px Tahoma,sans-serif;color:#555;">Concept mockup &mdash; not a live site</span>
   </div>
 
   <div class="viewport">
@@ -334,178 +275,214 @@ body.notes .notes-panel{display:block;}
   <!-- ================= SCREEN 1: PROFILE ================= -->
   <div class="page screen on" id="screen-home" role="tabpanel" aria-label="Profile screen">
     <div class="topbar">
-      <span><b>JonasBrotbers.com</b> | Home</span>
-      <span class="spacer"></span>
+      <span><b>JonasBrothers.com</b> | Home</span>
+      <span style="flex:1"></span>
       <span>The Web <i class="radio" aria-hidden="true"></i></span>
-      <span>JonasBrotbers <i class="radio on" aria-hidden="true"></i></span>
-      <input type="text" aria-label="Search JonasBrotbers.com">
+      <span>JonasBrothers <i class="radio on" aria-hidden="true"></i></span>
+      <input type="text" aria-label="Search JonasBrothers.com">
       <button class="go" type="button">Search</button>
-      <span><a href="#support-tab">Help</a> | <a href="#signup">SignUp</a></span>
+      <span><a href="#">Help</a> | <a href="#">SignUp</a></span>
     </div>
     <div class="navbar">
-      <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Products</a> | <a href="#">Support</a> |
-      <a href="#">Press</a> | <a href="#">Careers</a> | <a href="#">Blog</a> | <a href="#">Downloads</a> |
-      <a href="#">Status</a> | <a href="#">Legal</a> | <a href="#">Contact</a>
+      <a href="#">Home</a> | <a href="#">Music</a> | <a href="#">Tour</a> | <a href="#">Videos</a> |
+      <a href="#">Photos</a> | <a href="#">Store</a> | <a href="#">Fan Club</a> | <a href="#">Blog</a> |
+      <a href="#">Mailing List</a> | <a href="#">Contact</a>
     </div>
 
     <div class="cols">
       <!-- LEFT RAIL -->
       <div class="left">
-        <h1 class="pname"><span class="anno">1</span>Jonas Brotbers</h1>
+        <h1 class="pname"><span class="anno">1</span>Jonas Brothers</h1>
 
         <div class="pic-row">
-          <div class="pic"><span class="mono">JB</span></div>
+          <div class="pic">
+            <div class="wordmark">JONAS<br>BROTHERS<small>EST. 2005</small></div>
+          </div>
           <div class="pic-meta">
-            <div class="quote">"We build small software that shows up on time."</div>
-            <span class="swap">Independent software studio</span><br>
-            <span class="swap">Est. 2019</span><br>
-            <span class="swap">Saint Paul,<br>Minnesota</span><br>
+            <div class="quote">"Three brothers. Twenty years. Still burning up."</div>
+            Band<br>
+            Wyckoff,<br>New Jersey<br>
             United States<br><br>
-            Last Ship: <span class="swap">08/25/2026</span>
+            Profile Views: <span class="swap">4,208,116</span><br>
+            Last Login: <span class="swap">08/26/2026</span>
           </div>
         </div>
-        <div class="morepics"><a href="#">View more screenshots</a></div>
+        <div class="morepics"><a href="#">View More Pics</a></div>
 
         <div class="box">
-          <div class="box-h"><span class="anno">2</span>Contacting Jonas Brotbers</div>
+          <div class="box-h"><span class="anno">2</span>Contacting Jonas Brothers</div>
           <div class="box-b">
             <table class="contact">
               <tr>
-                <td><i class="ico" aria-hidden="true">@</i><a href="mailto:K2@jonasenterprises.com">Send Message</a></td>
+                <td><i class="ico" aria-hidden="true">@</i><a href="#">Send Message</a></td>
                 <td><i class="ico" aria-hidden="true">&#8594;</i><a href="#">Forward to Friend</a></td>
               </tr>
               <tr>
-                <td><i class="ico" aria-hidden="true">+</i><a href="#">Join the List</a></td>
+                <td><i class="ico" aria-hidden="true">+</i><a href="#">Add to Friends</a></td>
                 <td><i class="ico" aria-hidden="true">&#9733;</i><a href="#">Add to Favorites</a></td>
               </tr>
               <tr>
-                <td><i class="ico" aria-hidden="true">IM</i><a href="#">Book a Call</a></td>
-                <td><i class="ico" aria-hidden="true">!</i><a href="#">Report a Bug</a></td>
+                <td><i class="ico" aria-hidden="true">IM</i><a href="#">Instant Message</a></td>
+                <td><i class="ico" aria-hidden="true">&#9993;</i><a href="#">Join Mailing List</a></td>
               </tr>
               <tr>
-                <td><i class="ico" aria-hidden="true">&#9660;</i><a href="#">Get the App</a></td>
-                <td><i class="ico" aria-hidden="true">&#9734;</i><a href="#">Leave a Review</a></td>
+                <td><i class="ico" aria-hidden="true">&#9834;</i><a href="#">Add to Group</a></td>
+                <td><i class="ico" aria-hidden="true">&#9734;</i><a href="#">Rank Band</a></td>
               </tr>
             </table>
           </div>
         </div>
 
         <div class="urlbox">
-          <span class="anno">3</span>Jonas Brotbers URL:<br>
-          <span class="u">http://www.jonasbrotbers.com/</span>
+          <span class="anno">3</span>Jonas Brothers' URL:<br>
+          <span class="u">http://www.jonasbrothers.com/</span>
         </div>
 
         <div class="player">
-          <div class="play" aria-hidden="true">&#9654;</div>
-          <div class="meta">
-            <b>DoseKeeper 2.1</b>
-            <i>JONAS BROTBERS &middot; iOS</i>
+          <div class="now">
+            <div class="play" aria-hidden="true">&#9654;</div>
+            <div class="meta">
+              <b><span class="anno">4</span>Listen When Sad</b>
+              <i>JONAS BROTHERS &middot; new single</i>
+            </div>
+            <div class="ctrl">+add+<br>+share+</div>
           </div>
-          <div class="ctrl">+get+<br>+notes+</div>
+          <div class="bar" aria-hidden="true"><i></i></div>
+          <ol class="plist">
+            <li class="cur"><span>1.</span><span>Listen When Sad</span><span>&#9654;</span></li>
+            <li><span>2.</span><span>Sucker</span><span>&#9654;</span></li>
+            <li><span>3.</span><span>Burnin' Up</span><span>&#9654;</span></li>
+            <li><span>4.</span><span>S.O.S.</span><span>&#9654;</span></li>
+            <li><span>5.</span><span>Year 3000</span><span>&#9654;</span></li>
+            <li><span>6.</span><span>Lovebug</span><span>&#9654;</span></li>
+          </ol>
         </div>
 
         <div class="box">
-          <div class="box-h"><span class="anno">4</span>Jonas Brotbers' Interests</div>
+          <div class="box-h"><span class="anno">5</span>Band Details</div>
           <table class="tbl">
-            <tr><th>General</th><td>Small teams, boring reliability, software that a 72-year-old can use without a tutorial</td></tr>
-            <tr><th>Products</th><td>DoseKeeper &mdash; medication &amp; supplement tracking for iOS</td></tr>
-            <tr><th>Platforms</th><td>iOS 17+, iPadOS, Apple Watch (in progress)</td></tr>
-            <tr><th>Values</th><td>No ad SDKs. No third-party analytics. Your data is yours and you can take it out as CSV.</td></tr>
-            <tr><th>Currently</th><td>Caregiver permissions, trip pack-list math, faster Today screen</td></tr>
-            <tr><th>Contact</th><td><a href="mailto:K2@jonasenterprises.com">K2@jonasenterprises.com</a><br>Replies in 1&ndash;2 business days</td></tr>
+            <tr><th>Members</th><td>Kevin, Joe and Nick Jonas</td></tr>
+            <tr><th>Genre</th><td>Pop / Pop Rock</td></tr>
+            <tr><th>Formed</th><td>2005 &mdash; Wyckoff, New Jersey</td></tr>
+            <tr><th>Record Label</th><td>Republic Records</td></tr>
+            <tr><th>Type of Label</th><td>Major</td></tr>
+            <tr><th>Latest Album</th><td><i>Greetings from Your Hometown</i> (2025)</td></tr>
+            <tr><th>On Tour</th><td>The Burning Up Tour: All Over Again &mdash; 45 dates, Sep&ndash;Dec 2026</td></tr>
           </table>
         </div>
 
         <div style="font-size:10px;color:#666;text-align:center;">
           You are visitor
           <span class="counter" aria-label="visitor counter">
-            <i>0</i><i>0</i><i>4</i><i>2</i><i>0</i><i>0</i>
+            <i>0</i><i>0</i><i>2</i><i>0</i><i>0</i><i>5</i>
           </span>
         </div>
       </div>
 
       <!-- RIGHT COLUMN -->
       <div class="right">
-        <div class="banner"><span class="anno">5</span>Jonas Brotbers is in your extended network</div>
+        <div class="banner"><span class="anno">6</span>Jonas Brothers is in your extended network</div>
 
-        <div class="mq"><span>&#9733; DoseKeeper 2.1 is out &mdash; caregiver codes, CSV export, faster Today screen &#9733; Now on the App Store &#9733; Email K2@jonasenterprises.com &#9733;</span></div>
+        <div class="mq"><span>&#9733; THE BURNING UP TOUR: ALL OVER AGAIN &mdash; on sale now &#9733; New single "Listen When Sad" out now &#9733; Greetings from Your Hometown available everywhere &#9733;</span></div>
 
         <div class="sect">
-          <div class="sect-h"><span class="anno">6</span>Latest Blog Entry [<a href="#">Subscribe to this Blog</a>]</div>
+          <div class="sect-h"><span class="anno">7</span>Upcoming Shows</div>
+          <table class="tour">
+            <tr><th>Date</th><th>Venue</th><th>City</th><th>&nbsp;</th></tr>
+            <tr>
+              <td class="dt">SEP 25</td><td>TD Garden</td><td>Boston, MA</td>
+              <td class="tix"><a href="#">Tickets</a> <span class="blink">NEW!</span></td>
+            </tr>
+            <tr>
+              <td class="dt">DEC 21</td><td>Prudential Center</td><td>Newark, NJ</td>
+              <td class="tix"><a href="#">Tickets</a></td>
+            </tr>
+            <tr>
+              <td class="dt">TBA</td><td class="swap" colspan="2">Toronto &middot; Washington DC &middot; Miami &middot; Los Angeles &middot; Seattle &middot; Denver &amp; more</td>
+              <td class="tix"><a href="#">All dates</a></td>
+            </tr>
+          </table>
+          <p class="copy" style="margin-top:6px;">
+            45 shows across the US and Canada. Special guests on select dates:
+            Magnus Ferrell, Franklin Jonas and All Time Low.
+            [<a href="#">View All Tour Dates</a>]
+          </p>
+        </div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="anno">8</span>Latest Blog Entry [<a href="#">Subscribe to this Blog</a>]</div>
           <p class="copy">
-            <b>DoseKeeper 2.1: caregiver codes, CSV export, and a faster Today screen.</b>
-            You can now hand a family member exactly the access you want them to have &mdash; Caregiver,
-            Orderer, Clinician, or Minimal &mdash; with a code that expires if it goes unused.
-            (<a href="#">view more</a>) <span class="blink">NEW!</span>
+            <b>We're going back out &mdash; The Burning Up Tour: All Over Again.</b>
+            Three nights at Madison Square Garden turned into forty-five. We start in Boston on
+            September 25 and finish at Prudential Center two days before Christmas, which felt like
+            the right place to end it. (<a href="#">view more</a>)
           </p>
           <p class="copy">[<a href="#">View All Blog Entries</a>]</p>
         </div>
 
         <div class="sect">
-          <div class="sect-h"><span class="anno">7</span>Jonas Brotbers' Blurbs</div>
+          <div class="sect-h"><span class="anno">9</span>Jonas Brothers' Blurbs</div>
           <div class="sub">About us:</div>
           <p class="copy pit">
-            Hi! We're Jonas Brotbers and this is our software baby. We build one app at a time and we
-            answer our own support email. DoseKeeper tracks medications, supplements and peptides,
-            keeps a schedule that follows your real timezone, and lets the people who help you
-            see only what you decide they can see.
+            Hello! We're Kevin, Joe and Nick and this is our MySpace baby. We started this band in
+            Wyckoff, New Jersey in 2005, and twenty years later we put out <i>Greetings from Your
+            Hometown</i> &mdash; our seventh record. Thanks for being here since the beginning, or
+            since about four minutes ago. Both count.
           </p>
           <div class="sub">Who we'd like to meet:</div>
           <p class="copy">
-            People managing more than three daily medications. Caregivers doing the reordering.
-            Clinicians who want a clean 90-day CSV instead of a photo of a pill organizer.
-            And anyone who has ever opened a health app and been asked to make an account with a data broker.
+            Everyone in row 400. The people who still have the 2006 CD in a car that no longer has a
+            CD player. Anyone bringing a homemade sign.
           </p>
         </div>
 
         <div class="sect">
-          <div class="sect-h"><span class="anno">8</span>Jonas Brotbers' Product Space</div>
-          <p class="copy">Jonas Brotbers has <b style="color:#CC0000">4,200</b> users.</p>
+          <div class="sect-h"><span class="anno">10</span>Jonas Brothers' Friend Space</div>
+          <p class="copy">Jonas Brothers have <b style="color:#CC0000">4,208,116</b> friends.</p>
           <div class="grid8">
-            <div class="card"><span class="nm">DoseKeeper</span><div class="tile t1">DOSE<br>KEEPER</div><span class="sm">Top product</span></div>
-            <div class="card"><span class="nm">Today</span><div class="tile t2">TODAY</div><span class="sm">Log &amp; undo</span></div>
-            <div class="card"><span class="nm">Library</span><div class="tile t3">LIB<br>RARY</div><span class="sm">Supply &amp; reorder</span></div>
-            <div class="card"><span class="nm">Caregiving</span><div class="tile t4">CARE</div><span class="sm">Codes &amp; roles</span></div>
-            <div class="card"><span class="nm">History</span><div class="tile t5">HIST<br>ORY</div><span class="sm">90 days + CSV</span></div>
-            <div class="card"><span class="nm">Trips</span><div class="tile t6">TRIPS</div><span class="sm">Pack-list math</span></div>
-            <div class="card"><span class="nm">Status</span><div class="tile t7">STAT<br>US</div><span class="sm">Uptime</span></div>
+            <div class="card"><span class="nm">Kevin</span><div class="tile t1">KEVIN</div><span class="sm">Guitar</span></div>
+            <div class="card"><span class="nm">Joe</span><div class="tile t2">JOE</div><span class="sm">Vocals</span></div>
+            <div class="card"><span class="nm">Nick</span><div class="tile t3">NICK</div><span class="sm">Vocals, guitar</span></div>
+            <div class="card"><span class="nm">All Time Low</span><div class="tile t4">ATL</div><span class="sm">Tour guest</span></div>
+            <div class="card"><span class="nm">Magnus Ferrell</span><div class="tile t5">MF</div><span class="sm">Tour guest</span></div>
+            <div class="card"><span class="nm">Franklin Jonas</span><div class="tile t6">FJ</div><span class="sm">Tour guest</span></div>
+            <div class="card"><span class="nm">Fan Club</span><div class="tile t7">FAN<br>CLUB</div><span class="sm">Presale access</span></div>
             <div class="card">
-              <span class="nm">Jonas Records</span>
+              <span class="nm">JB Store</span>
               <div class="adslot">
-                <b>Get 4 extra<br>slots</b>
-                on your profile when you buy DoseKeeper Plus!
+                <b>Get 4 extra<br>photos</b>
+                for your profile when you buy the tour tee!
               </div>
             </div>
           </div>
           <p class="copy" style="text-align:right;margin-top:10px;">
-            <b><a href="#">View All of Jonas Brotbers' Products</a></b>
+            <b><a href="#">View All of Jonas Brothers' Friends</a></b>
           </p>
         </div>
 
         <div class="sect">
           <div class="sect-h">
-            <span class="anno">9</span>Jonas Brotbers' Friend Comments<span class="tag">SAMPLE COPY</span>
+            <span class="anno">11</span>Jonas Brothers' Friend Comments<span class="tag">SAMPLE COPY</span>
           </div>
           <div class="cmt">
-            <div class="av tile t2" aria-hidden="true"></div>
+            <div class="av tile t4" aria-hidden="true">A</div>
             <div class="bd">
-              <span class="who">Dana</span> <span class="when">Aug 12 2026 4:12 PM</span><br>
-              My mom's reorder alert went to me instead of her and it just worked. First health app
-              she hasn't asked me to uninstall.
+              <span class="who">Ava</span> <span class="when">Aug 22 2026 11:04 PM</span><br>
+              MSG night three. I have lost my voice and I regret nothing.
             </div>
           </div>
           <div class="cmt">
-            <div class="av tile t4" aria-hidden="true"></div>
+            <div class="av tile t5" aria-hidden="true">D</div>
             <div class="bd">
-              <span class="who">Marcus</span> <span class="when">Aug 09 2026 8:40 AM</span><br>
-              Exported 90 days as CSV, emailed it to my cardiologist, done in a minute.
+              <span class="who">Devon</span> <span class="when">Aug 20 2026 9:12 AM</span><br>
+              Twenty years and they open with the one from 2007. Perfect.
             </div>
           </div>
           <div class="cmt" style="border-bottom:0;">
-            <div class="av tile t6" aria-hidden="true"></div>
+            <div class="av tile t6" aria-hidden="true">R</div>
             <div class="bd">
-              <span class="who">Priya</span> <span class="when">Aug 02 2026 9:05 PM</span><br>
-              The long-press to un-log a dose saved me. I tap "taken" by accident constantly.
+              <span class="who">Rosa</span> <span class="when">Aug 14 2026 6:47 PM</span><br>
+              Boston tickets secured. Bringing my daughter, who was not alive for the first tour.
             </div>
           </div>
           <p class="copy" style="margin-top:8px;"><a href="#">Add Comment</a> | <a href="#">View All Comments</a></p>
@@ -514,239 +491,218 @@ body.notes .notes-panel{display:block;}
     </div>
 
     <div class="foot">
-      &copy; 2026 Jonas Brotbers &middot; Jonas Enterprises &middot;
-      <a href="#">About</a> | <a href="#">Privacy Policy</a> | <a href="#">Support</a> |
-      <a href="#">Terms</a> | <a href="#">Press</a> | <a href="mailto:K2@jonasenterprises.com">Contact</a><br>
+      Concept mockup &middot; <a href="#">Home</a> | <a href="#">Music</a> | <a href="#">Tour</a> |
+      <a href="#">Store</a> | <a href="#">Fan Club</a> | <a href="#">Contact</a><br>
       Best viewed at 1024&times;768.
     </div>
   </div>
 
-  <!-- ================= SCREEN 2: PRODUCTS ================= -->
-  <div class="page screen" id="screen-products" role="tabpanel" aria-label="Products screen">
+  <!-- ================= SCREEN 2: MUSIC ================= -->
+  <div class="page screen" id="screen-music" role="tabpanel" aria-label="Music screen">
     <div class="topbar">
-      <span><b>JonasBrotbers.com</b> | Browse</span>
-      <span class="spacer"></span>
+      <span><b>JonasBrothers.com</b> | Music</span>
+      <span style="flex:1"></span>
       <span>The Web <i class="radio" aria-hidden="true"></i></span>
-      <span>JonasBrotbers <i class="radio on" aria-hidden="true"></i></span>
-      <input type="text" aria-label="Search products">
+      <span>JonasBrothers <i class="radio on" aria-hidden="true"></i></span>
+      <input type="text" aria-label="Search music">
       <button class="go" type="button">Search</button>
       <span><a href="#">Help</a> | <a href="#">SignUp</a></span>
     </div>
     <div class="navbar">
-      <a href="#">Home</a> | <a href="#">About</a> | <a href="#"><b>Products</b></a> | <a href="#">Support</a> |
-      <a href="#">Press</a> | <a href="#">Careers</a> | <a href="#">Blog</a> | <a href="#">Downloads</a> |
-      <a href="#">Status</a> | <a href="#">Legal</a> | <a href="#">Contact</a>
+      <a href="#">Home</a> | <a href="#"><b>Music</b></a> | <a href="#">Tour</a> | <a href="#">Videos</a> |
+      <a href="#">Photos</a> | <a href="#">Store</a> | <a href="#">Fan Club</a> | <a href="#">Blog</a> |
+      <a href="#">Mailing List</a> | <a href="#">Contact</a>
     </div>
 
     <div class="cols">
       <div class="left">
         <div class="box">
-          <div class="box-h"><span class="anno">10</span>Browse Products</div>
-          <div class="box-b">
-            <table class="tbl">
-              <tr><th>Platform</th><td>iOS &middot; iPadOS &middot; Watch</td></tr>
-              <tr><th>Price</th><td>Free &middot; Plus</td></tr>
-              <tr><th>Status</th><td>Shipping &middot; Beta &middot; Planned</td></tr>
-              <tr><th>Sort by</th><td>Recently updated</td></tr>
-            </table>
+          <div class="box-h"><span class="anno">12</span>Now Playing</div>
+          <div class="box-b" style="padding:6px;">
+            <div class="player" style="margin:0;">
+              <div class="now">
+                <div class="play" aria-hidden="true">&#9654;</div>
+                <div class="meta"><b>Listen When Sad</b><i>New single</i></div>
+                <div class="ctrl">+add+</div>
+              </div>
+              <div class="bar" aria-hidden="true"><i></i></div>
+            </div>
           </div>
         </div>
+
         <div class="box">
-          <div class="box-h">Cool New Product</div>
-          <div class="box-b" style="text-align:center;">
-            <div class="tile t1" style="width:120px;height:120px;margin:0 auto 8px;">DOSE<br>KEEPER</div>
-            <b>DoseKeeper 2.1</b><br>
-            <span style="color:#555;">Medication &amp; supplement tracking</span><br><br>
-            <a href="#">Download on the App Store</a>
+          <div class="box-h">Listen On</div>
+          <div class="box-b">
+            <p class="copy">
+              <a href="#">Spotify</a><br>
+              <a href="#">Apple Music</a><br>
+              <a href="#">YouTube</a><br>
+              <a href="#">Amazon Music</a>
+            </p>
           </div>
         </div>
+
         <div class="urlbox">
-          Product URL:<br>
-          <span class="u">http://www.jonasbrotbers.com/products/dosekeeper</span>
+          Album URL:<br>
+          <span class="u">http://www.jonasbrothers.com/music/greetings</span>
         </div>
       </div>
 
       <div class="right">
-        <div class="banner">4 products &middot; 1 shipping &middot; 3 in the works</div>
+        <div class="banner">Seven albums. 2006 to right now.</div>
 
         <div class="sect">
-          <div class="sect-h"><span class="anno">11</span>Featured: DoseKeeper</div>
+          <div class="sect-h"><span class="anno">13</span>Latest Release</div>
           <div style="display:flex;gap:14px;align-items:flex-start;">
-            <div class="tile t1" style="width:130px;height:130px;flex:0 0 130px;">DOSE<br>KEEPER</div>
+            <div class="tile t1" style="width:140px;height:140px;flex:0 0 140px;font-size:13px;">GREETINGS<br>FROM YOUR<br>HOMETOWN</div>
             <div style="min-width:0;">
               <p class="copy">
-                Track medications, supplements and peptides. See your day, log a dose, and share
-                supply status with the people you trust &mdash; at exactly the level of access you pick.
+                <b><i>Greetings from Your Hometown</i></b><br>
+                Released August 8, 2025 &mdash; the band's seventh studio album.
               </p>
-              <table class="tbl">
-                <tr><th>Today</th><td>Long-press any row to undo. "Mark all" leaves a 5-second Undo.</td></tr>
-                <tr><th>History</th><td>Last 90 days on screen. Export CSV at 30 / 90 / 365 days.</td></tr>
-                <tr><th>Caregiving</th><td>Generate a code, pick a preset, revoke any time.</td></tr>
-                <tr><th>Trips</th><td>Pack-list math for the days you'll be gone.</td></tr>
-                <tr><th>Privacy</th><td>No ad SDKs. No third-party analytics. Deletion within 14 days on request.</td></tr>
-              </table>
+              <p class="copy">
+                New single <b>"Listen When Sad"</b>, debuted live at Madison Square Garden.
+              </p>
+              <p class="copy">
+                <a href="#">Listen now</a> &middot; <a href="#">Buy the vinyl</a> &middot; <a href="#">Watch the video</a>
+              </p>
             </div>
           </div>
         </div>
 
         <div class="sect">
-          <div class="sect-h"><span class="anno">12</span>More from Jonas Brotbers</div>
-          <div class="grid8" style="grid-template-columns:repeat(3,1fr);">
-            <div class="card"><span class="nm">Caregiver Portal</span><div class="tile t4">CARE</div><span class="sm">Beta</span></div>
-            <div class="card"><span class="nm">Clinician Export</span><div class="tile t5">CSV</div><span class="sm">Shipping</span></div>
-            <div class="card"><span class="nm">Watch App</span><div class="tile t7">WATCH</div><span class="sm">Planned</span></div>
+          <div class="sect-h"><span class="anno">14</span>Discography</div>
+          <div class="grid8">
+            <div class="card"><span class="nm">It's About Time</span><div class="tile t3" style="font-size:11px;">IT'S<br>ABOUT<br>TIME</div><span class="sm">2006</span></div>
+            <div class="card"><span class="nm">Jonas Brothers</span><div class="tile t2" style="font-size:11px;">JONAS<br>BROTHERS</div><span class="sm">2007</span></div>
+            <div class="card"><span class="nm">A Little Bit Longer</span><div class="tile t5" style="font-size:11px;">A LITTLE<br>BIT<br>LONGER</div><span class="sm">2008</span></div>
+            <div class="card"><span class="nm">Lines, Vines and Trying Times</span><div class="tile t4" style="font-size:11px;">LINES<br>VINES</div><span class="sm">2009</span></div>
+            <div class="card"><span class="nm">Happiness Begins</span><div class="tile t6" style="font-size:11px;">HAPPINESS<br>BEGINS</div><span class="sm">2019</span></div>
+            <div class="card"><span class="nm">The Album</span><div class="tile t8" style="font-size:11px;">THE<br>ALBUM</div><span class="sm">2023</span></div>
+            <div class="card"><span class="nm">Greetings from Your Hometown</span><div class="tile t1" style="font-size:11px;">GREET<br>INGS</div><span class="sm">2025</span></div>
+            <div class="card"><span class="nm">Singles</span><div class="tile t7" style="font-size:11px;">SING<br>LES</div><span class="sm">2005&ndash;2026</span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="foot">
-      &copy; 2026 Jonas Brotbers &middot; Jonas Enterprises &middot;
-      <a href="#">Privacy Policy</a> | <a href="#">Support</a> | <a href="mailto:K2@jonasenterprises.com">Contact</a>
-    </div>
+    <div class="foot">Concept mockup &middot; <a href="#">Home</a> | <a href="#">Music</a> | <a href="#">Tour</a> | <a href="#">Store</a></div>
   </div>
 
-  <!-- ================= SCREEN 3: SUPPORT ================= -->
-  <div class="page screen" id="screen-support" role="tabpanel" aria-label="Support screen">
+  <!-- ================= SCREEN 3: TOUR ================= -->
+  <div class="page screen" id="screen-tour" role="tabpanel" aria-label="Tour screen">
     <div class="topbar">
-      <span><b>JonasBrotbers.com</b> | Support</span>
-      <span class="spacer"></span>
+      <span><b>JonasBrothers.com</b> | Tour</span>
+      <span style="flex:1"></span>
       <span>The Web <i class="radio" aria-hidden="true"></i></span>
-      <span>JonasBrotbers <i class="radio on" aria-hidden="true"></i></span>
-      <input type="text" aria-label="Search support">
+      <span>JonasBrothers <i class="radio on" aria-hidden="true"></i></span>
+      <input type="text" aria-label="Search tour dates">
       <button class="go" type="button">Search</button>
       <span><a href="#">Help</a> | <a href="#">SignUp</a></span>
     </div>
     <div class="navbar">
-      <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Products</a> | <a href="#"><b>Support</b></a> |
-      <a href="#">Press</a> | <a href="#">Careers</a> | <a href="#">Blog</a> | <a href="#">Downloads</a> |
-      <a href="#">Status</a> | <a href="#">Legal</a> | <a href="#">Contact</a>
+      <a href="#">Home</a> | <a href="#">Music</a> | <a href="#"><b>Tour</b></a> | <a href="#">Videos</a> |
+      <a href="#">Photos</a> | <a href="#">Store</a> | <a href="#">Fan Club</a> | <a href="#">Blog</a> |
+      <a href="#">Mailing List</a> | <a href="#">Contact</a>
     </div>
 
     <div class="cols">
       <div class="left">
         <div class="box">
-          <div class="box-h"><span class="anno">13</span>Contact Support</div>
+          <div class="box-h"><span class="anno">15</span>Filter Dates</div>
           <div class="box-b">
-            <p class="copy">
-              <b>Email:</b><br>
-              <a href="mailto:K2@jonasenterprises.com">K2@jonasenterprises.com</a>
-            </p>
-            <p class="copy">
-              Tell us what you tapped and what you expected to happen.
-              We typically reply within <b>1&ndash;2 business days</b>.
-            </p>
+            <table class="tbl">
+              <tr><th>Country</th><td>US &middot; Canada</td></tr>
+              <tr><th>Month</th><td>Sep &middot; Oct &middot; Nov &middot; Dec</td></tr>
+              <tr><th>Guest</th><td>All Time Low &middot; Magnus Ferrell &middot; Franklin Jonas</td></tr>
+              <tr><th>Status</th><td>On sale &middot; Presale &middot; Sold out</td></tr>
+            </table>
           </div>
         </div>
         <div class="box">
-          <div class="box-h">Support Topics</div>
-          <table class="tbl">
-            <tr><th>Notifications</th><td><a href="#">Reminders not arriving</a></td></tr>
-            <tr><th>Logging</th><td><a href="#">Undo a dose</a></td></tr>
-            <tr><th>History</th><td><a href="#">Find an old dose</a></td></tr>
-            <tr><th>Caregiving</th><td><a href="#">Let family help</a></td></tr>
-            <tr><th>Account</th><td><a href="#">Delete my account</a></td></tr>
-            <tr><th>Privacy</th><td><a href="#">Where data lives</a></td></tr>
-          </table>
+          <div class="box-h">Fan Club Presale</div>
+          <div class="box-b">
+            <p class="copy">
+              Members get first access to every date, plus the pit lottery.
+            </p>
+            <p class="copy"><a href="#">Join the Fan Club</a></p>
+          </div>
         </div>
-        <div class="player">
-          <div class="play" aria-hidden="true">&#9654;</div>
-          <div class="meta"><b>System Status</b><i>All services normal</i></div>
-          <div class="ctrl">+view+</div>
+        <div class="urlbox">
+          Tour URL:<br>
+          <span class="u">http://www.jonasbrothers.com/tour/</span>
         </div>
       </div>
 
       <div class="right">
-        <div class="banner">Something not working? Start here.</div>
+        <div class="banner">The Burning Up Tour: All Over Again</div>
 
         <div class="sect">
-          <div class="sect-h"><span class="anno">14</span>Support Blog &mdash; Common Questions</div>
-
-          <div class="sub">My reminders aren't arriving</div>
-          <p class="copy">
-            1. In DoseKeeper <b>Settings</b>, confirm <b>Push reorder alerts</b> and <b>Dose reminders</b> are both on.<br>
-            2. In iOS <b>Settings &rarr; Notifications &rarr; DoseKeeper</b>, confirm notifications are allowed.<br>
-            3. Changed devices recently? Toggle push off and back on to refresh the device registration.<br>
-            4. Check your phone's timezone &mdash; schedules are anchored to <b>Settings &rarr; Profile</b>.
-          </p>
-
-          <div class="sub">I logged a dose by mistake</div>
-          <p class="copy">
-            On <b>Today</b>, long-press the dose row and choose <b>Mark pending</b>. If you used
-            <b>Mark all</b>, an Undo toast sits at the bottom of the screen for 5 seconds.
-          </p>
-
-          <div class="sub">I can't find an old dose</div>
-          <p class="copy">
-            <b>History</b> shows the last 90 days. For longer windows &mdash; or to hand something to a
-            doctor &mdash; use <b>Export CSV</b> at the bottom of History (30 / 90 / 365 day ranges).
-          </p>
-
-          <div class="sub">How do I let a family member help me reorder?</div>
-          <p class="copy">
-            1. <b>Settings &rarr; Caregiving &rarr; Generate code</b>, then pick a preset:
-            Caregiver, Orderer, Clinician, or Minimal.<br>
-            2. Send the code. They sign up, then <b>Settings &rarr; Caregiving &rarr; Redeem code</b>.<br>
-            3. Tune what they see in <b>Settings &rarr; Who can help &rarr; [their name]</b>.
-          </p>
-
-          <div class="sub">How do I delete my account?</div>
-          <p class="copy">
-            Email <a href="mailto:K2@jonasenterprises.com">K2@jonasenterprises.com</a> from the address you
-            signed up with. We delete your profile, supplements, dose history, schedules, trips,
-            caretaker links and push subscriptions within <b>14 days</b>.
+          <div class="sect-h"><span class="anno">16</span>North America &mdash; 45 Dates</div>
+          <table class="tour">
+            <tr><th>Date</th><th>Venue</th><th>City</th><th>&nbsp;</th></tr>
+            <tr><td class="dt">AUG 20</td><td>Madison Square Garden</td><td>New York, NY</td><td class="tix">Past</td></tr>
+            <tr><td class="dt">AUG 21</td><td>Madison Square Garden</td><td>New York, NY</td><td class="tix">Past</td></tr>
+            <tr><td class="dt">AUG 22</td><td>Madison Square Garden</td><td>New York, NY</td><td class="tix">Past</td></tr>
+            <tr><td class="dt">SEP 25</td><td>TD Garden &mdash; <b>Opening night</b></td><td>Boston, MA</td><td class="tix"><a href="#">Tickets</a></td></tr>
+            <tr><td class="dt swap">TBA</td><td class="swap">Toronto &middot; Washington DC &middot; Miami &middot; Los Angeles &middot; Seattle &middot; Denver</td><td class="swap">+ 35 more</td><td class="tix"><a href="#">Tickets</a></td></tr>
+            <tr><td class="dt">DEC 21</td><td>Prudential Center &mdash; <b>Final night</b></td><td>Newark, NJ</td><td class="tix"><a href="#">Tickets</a></td></tr>
+          </table>
+          <p class="copy" style="margin-top:8px;">
+            Special guests on select dates: <b>Magnus Ferrell</b>, <b>Franklin Jonas</b> and <b>All Time Low</b>.
           </p>
         </div>
 
         <div class="sect">
-          <div class="sect-h"><span class="anno">15</span>Privacy, in one paragraph</div>
-          <p class="copy">
-            We collect only what the features you use require: email, display name, timezone, routine
-            times, the items you track, your dose history, trips, caretaker links, order requests, a push
-            token, and pharmacy preferences. We do not sell or rent your data, and we do not use
-            advertising or third-party analytics SDKs. [<a href="#">Read the full Privacy Policy</a>]
-          </p>
+          <div class="sect-h"><span class="anno">17</span>Before You Go</div>
+          <table class="tbl">
+            <tr><th>Doors</th><td>Typically 90 minutes before showtime. Check your venue.</td></tr>
+            <tr><th>Bags</th><td>Most venues on this run are clear-bag only.</td></tr>
+            <tr><th>Signs</th><td>Bring them. Keep them under shoulder height once the lights go down.</td></tr>
+            <tr><th>Resale</th><td>Use the official exchange. If a price looks impossible, it is.</td></tr>
+          </table>
         </div>
       </div>
     </div>
 
-    <div class="foot">
-      &copy; 2026 Jonas Brotbers &middot; Jonas Enterprises &middot;
-      <a href="#">Privacy Policy</a> | <a href="#">Support</a> | <a href="mailto:K2@jonasenterprises.com">Contact</a>
-    </div>
+    <div class="foot">Concept mockup &middot; <a href="#">Home</a> | <a href="#">Music</a> | <a href="#">Tour</a> | <a href="#">Store</a></div>
   </div>
 
   </div><!-- /viewport -->
 
   <!-- ================= PITCH NOTES ================= -->
   <div class="notes-panel">
-    <h3>Pitch notes &mdash; what each 2006 element is doing for us in 2026</h3>
+    <h3>Pitch notes &mdash; what each 2006 module is doing for us</h3>
     <p class="lede">
-      The bet: every module on a MySpace profile is a job a modern marketing site already has,
-      just named more honestly. Nothing here is decoration for its own sake &mdash; each numbered
-      block maps to a page we'd have built anyway.
+      The argument: this band was <em>made</em> on MySpace in 2006, and a MySpace profile already
+      contains every module a modern artist site needs &mdash; it just names them more bluntly.
+      Nothing below is nostalgia for its own sake; each numbered block is a page we'd build anyway.
     </p>
     <ul class="notes-list">
-      <li><b>1</b> <b>Profile identity.</b> Name, one-line positioning, location, "Last Ship" date. Replaces the hero &mdash; and the ship date does the work a "trusted by" logo wall usually fakes.</li>
-      <li><b>2</b> <b>Contact table.</b> Eight conversion actions above the fold in 120px of height. Email, share, mailing list, bookmark, book a call, bug report, download, review.</li>
-      <li><b>3</b> <b>URL box.</b> The 2006 share primitive. Now: canonical link + copy-to-clipboard, which is what people actually want when they're texting a recommendation.</li>
-      <li><b>4</b> <b>Interests table.</b> Our spec sheet. Platforms, values, what we're building now. Scannable in five seconds, no scroll-triggered reveals.</li>
-      <li><b>5</b> <b>Extended network banner.</b> Social proof slot. Swap in the real number once we agree what we're willing to publish.</li>
-      <li><b>6</b> <b>Latest blog entry.</b> Changelog on the homepage. The strongest signal a small studio has: the thing was updated this month.</li>
-      <li><b>7</b> <b>Blurbs.</b> "About us" and "Who we'd like to meet" &mdash; the second one is our ICP, stated out loud, which most sites bury in a deck.</li>
-      <li><b>8</b> <b>Product Space (Top 8).</b> Feature grid as a friends list. Ranked, finite, and it forces us to pick eight.</li>
-      <li><b>9</b> <b>Friend comments.</b> Testimonials in reverse-chron with dates. Marked SAMPLE &mdash; needs real, permissioned quotes before this goes anywhere near production.</li>
-      <li><b>10</b> <b>Browse filters.</b> Platform / price / status. Honest about what's shipping vs. planned.</li>
-      <li><b>11</b> <b>Featured product.</b> Feature table pulled straight from the support docs, so it can't drift from what the app does.</li>
-      <li><b>12</b> <b>More products.</b> Roadmap as a grid. Each tile carries its own status label.</li>
-      <li><b>13</b> <b>Support contact.</b> One email, one expectation ("1&ndash;2 business days"). No ticket portal.</li>
-      <li><b>14</b> <b>Support blog.</b> The five real questions from SUPPORT.md, verbatim, indexable.</li>
-      <li><b>15</b> <b>Privacy in one paragraph.</b> The differentiator: no ad SDKs, no third-party analytics. Say it on the page, not just in the policy.</li>
+      <li><b>1</b> <b>Profile identity.</b> Name, tagline, hometown, last login. Replaces the hero video &mdash; and "Wyckoff, New Jersey" does more brand work than any full-bleed photo.</li>
+      <li><b>2</b> <b>Contact table.</b> Eight actions in 120px: message, share, follow, bookmark, mailing list, fan club, rate. Every conversion sits above the fold.</li>
+      <li><b>3</b> <b>URL box.</b> The 2006 share primitive. Now: canonical link plus copy-to-clipboard, which is what people actually want when they're texting a friend.</li>
+      <li><b>4</b> <b>The music player.</b> The single most valuable pixel on the page. Autoplay was the point in 2006; today it's a streaming-link hub with the new single on top.</li>
+      <li><b>5</b> <b>Band Details.</b> The press-kit table. Members, genre, label, latest album, current tour &mdash; scannable in five seconds by a journalist or a promoter.</li>
+      <li><b>6</b> <b>Extended network banner.</b> Social proof slot. Swap the number for whatever we're comfortable publishing.</li>
+      <li><b>7</b> <b>Upcoming Shows.</b> Tour dates on the homepage, not one click in. This is the revenue module &mdash; it should never require navigation.</li>
+      <li><b>8</b> <b>Latest blog entry.</b> Announcements in the band's own voice, above the fold, dated. The thing every artist site buries under a "News" tab.</li>
+      <li><b>9</b> <b>Blurbs.</b> "About us" and "Who we'd like to meet." The second one is audience positioning stated out loud &mdash; most sites hide that in a deck.</li>
+      <li><b>10</b> <b>Top 8.</b> Members and tour guests as a ranked, finite grid. It forces a hierarchy, which a logo carousel never does.</li>
+      <li><b>11</b> <b>Friend comments.</b> Fan wall in reverse-chron. Marked SAMPLE &mdash; needs real, permissioned posts before this goes anywhere near production.</li>
+      <li><b>12</b> <b>Persistent player.</b> Carries across screens so audio survives navigation. In 2006 that was an accident; here it's the spec.</li>
+      <li><b>13</b> <b>Latest release.</b> One record, one date, three actions: listen, buy, watch.</li>
+      <li><b>14</b> <b>Discography grid.</b> Twenty years in one screen, chronological. The 2006 sleeve sitting next to the 2025 one <em>is</em> the pitch.</li>
+      <li><b>15</b> <b>Date filters.</b> Country, month, guest, status. What people actually search a tour page for.</li>
+      <li><b>16</b> <b>Full routing.</b> Opening and closing nights called out; sold-out states shown rather than hidden.</li>
+      <li><b>17</b> <b>Before You Go.</b> Doors, bag policy, signs, resale. The support content that otherwise arrives as 400 identical DMs.</li>
     </ul>
     <p class="notes-key">
-      Yellow-highlighted text = placeholder that needs a real value before build.
-      Type: Verdana 11px throughout, Arial Black for shouts, Courier for URLs &mdash; all system faces,
-      which is what makes this read as 2006 rather than as a filter applied to a modern page.
+      <b>Accuracy:</b> album, tour name, opening and closing nights, guest acts and the new single are
+      real and current. Anything highlighted yellow &mdash; view counts, TBA rows, exact routing &mdash;
+      is placeholder and needs the real data. Fan comments are invented and labelled as such.
+      <b>Type:</b> Verdana 11px throughout, Arial Black for shouts, Courier for URLs and dates &mdash; all
+      system faces, which is what makes this read as 2006 rather than as a filter over a modern page.
     </p>
   </div>
 
@@ -767,9 +723,9 @@ body.notes .notes-panel{display:block;}
   var notesBtn = document.getElementById('notesBtn');
 
   var URLS = {
-    home:     {url:'http://www.jonasbrotbers.com/',                 title:'Jonas Brotbers'},
-    products: {url:'http://www.jonasbrotbers.com/products/',        title:'Jonas Brotbers - Products'},
-    support:  {url:'http://www.jonasbrotbers.com/support/',         title:'Jonas Brotbers - Support'}
+    home:  {url:'http://www.jonasbrothers.com/',      title:'Jonas Brothers'},
+    music: {url:'http://www.jonasbrothers.com/music/', title:'Jonas Brothers - Music'},
+    tour:  {url:'http://www.jonasbrothers.com/tour/',  title:'Jonas Brothers - Tour'}
   };
 
   function show(name){
@@ -782,7 +738,6 @@ body.notes .notes-panel{display:block;}
     addr.textContent = URLS[name].url;
     wt.textContent = URLS[name].title + ' - Microsoft Internet Explorer';
     status.textContent = 'Done';
-    document.querySelector('.viewport').scrollTop = 0;
   }
 
   tabs.forEach(function(t){
@@ -793,7 +748,7 @@ body.notes .notes-panel{display:block;}
     var on = body.classList.toggle('notes');
     notesBtn.setAttribute('aria-pressed', String(on));
     notesBtn.textContent = 'Annotations: ' + (on ? 'on' : 'off');
-    status.textContent = on ? '15 pitch notes shown' : 'Done';
+    status.textContent = on ? '17 pitch notes shown' : 'Done';
   });
 })();
 </script>
