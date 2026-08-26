@@ -1,0 +1,799 @@
+<title>Jonas Brotbers Space</title>
+<style>
+/* ============================================================
+   JONASBROTBERS.COM — 2006 REDESIGN PITCH
+   Deliberately single-theme: this is a 2006 screen. Every color
+   is painted explicitly so it holds on any host background.
+   ============================================================ */
+
+:root{
+  --ms-blue:#6699CC;
+  --ms-navy:#003399;
+  --ms-orange:#FF9933;
+  --ms-orange-fill:#FFCC99;
+  --ms-row:#B7C4DC;
+  --ms-line:#6699CC;
+  --paper:#FFFFFF;
+  --ink:#000000;
+  --ie-a:#0A246A;
+  --ie-b:#A6CAF0;
+  --chrome:#D4D0C8;
+  --chrome-lt:#FFFFFF;
+  --chrome-dk:#808080;
+  --desk-a:#5A7EDC;
+  --desk-b:#2C4A9B;
+  --note:#FFF6C8;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:var(--desk-b);
+  background-image:linear-gradient(170deg,var(--desk-a) 0%,var(--desk-b) 100%);
+  font-family:Verdana,Geneva,Tahoma,sans-serif;
+  font-size:11px;
+  color:var(--ink);
+  padding:18px 12px 40px;
+}
+
+a{color:var(--ms-navy);text-decoration:underline;}
+a:hover{color:#CC0000;}
+a:focus-visible,button:focus-visible{outline:2px solid #FF6600;outline-offset:1px;}
+img{max-width:100%;}
+
+/* ---------- IE6 window chrome ---------- */
+.win{
+  max-width:830px;
+  margin:0 auto;
+  background:var(--chrome);
+  border:2px outset var(--chrome-lt);
+  box-shadow:4px 4px 0 rgba(0,0,0,.35);
+}
+.win-title{
+  display:flex;align-items:center;gap:6px;
+  background:linear-gradient(90deg,var(--ie-a),var(--ie-b));
+  color:#FFFFFF;font:bold 11px Tahoma,Verdana,sans-serif;
+  padding:3px 4px;
+}
+.win-title .e{
+  width:14px;height:14px;flex:0 0 14px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#7FC4FF,#1B4FA8 70%);
+  border:1px solid #0B2E63;
+}
+.win-title .spacer{flex:1;}
+.win-btns{display:flex;gap:2px;}
+.win-btns span{
+  width:16px;height:14px;background:var(--chrome);
+  border:1px outset var(--chrome-lt);
+  font:bold 9px Marlett,Tahoma,sans-serif;color:#000;
+  display:flex;align-items:center;justify-content:center;
+}
+.win-menu{
+  background:var(--chrome);border-bottom:1px solid var(--chrome-dk);
+  padding:2px 6px;font:11px Tahoma,Verdana,sans-serif;
+}
+.win-menu span{padding:1px 7px;}
+.win-menu span u{text-decoration:underline;}
+.win-bar{
+  background:var(--chrome);
+  border-bottom:1px solid var(--chrome-dk);
+  padding:4px 6px;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.win-bar label{font:11px Tahoma,Verdana,sans-serif;color:#333;}
+.addr{
+  flex:1;min-width:220px;
+  background:#FFFFFF;border:1px inset var(--chrome-dk);
+  padding:3px 5px;font:11px "Courier New",Courier,monospace;color:#000;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tbtn{
+  font:11px Tahoma,Verdana,sans-serif;
+  background:var(--chrome);border:1px outset var(--chrome-lt);
+  padding:3px 9px;cursor:pointer;color:#000;
+}
+.tbtn:active{border-style:inset;}
+.tbtn[aria-pressed="true"],.tbtn[aria-selected="true"]{
+  border-style:inset;background:#ECE9D8;font-weight:bold;
+}
+.win-status{
+  background:var(--chrome);border-top:1px solid var(--chrome-lt);
+  padding:3px 6px;font:11px Tahoma,Verdana,sans-serif;color:#333;
+  display:flex;gap:10px;align-items:center;
+}
+.win-status .spacer{flex:1;}
+
+/* ---------- viewport that holds the 800px page ---------- */
+.viewport{
+  background:var(--paper);
+  border:1px inset var(--chrome-dk);
+  overflow-x:auto;
+  padding:0;
+}
+.page{width:800px;background:var(--paper);}
+
+/* ---------- MySpace furniture ---------- */
+.topbar{
+  background:var(--ms-navy);color:#FFFFFF;
+  padding:5px 8px;display:flex;align-items:center;gap:8px;
+  font-size:11px;
+}
+.topbar a{color:#FFFFFF;}
+.topbar .spacer{flex:1;}
+.topbar input[type=text]{
+  width:190px;border:1px solid #000;padding:2px 3px;font:11px Verdana,sans-serif;
+}
+.topbar .go{
+  border:1px outset #FFFFFF;background:var(--chrome);
+  font:11px Verdana,sans-serif;padding:2px 8px;cursor:pointer;
+}
+.radio{
+  display:inline-block;width:11px;height:11px;border-radius:50%;
+  background:#FFFFFF;border:2px solid #FFFFFF;vertical-align:-2px;
+}
+.radio.on{background:radial-gradient(circle,var(--ms-navy) 0 40%,#FFFFFF 45%);}
+
+.navbar{
+  background:var(--ms-blue);color:#FFFFFF;
+  padding:5px 8px;font-size:11px;text-align:center;
+}
+.navbar a{color:#FFFFFF;text-decoration:none;}
+.navbar a:hover{text-decoration:underline;color:#FFFFFF;}
+
+.cols{display:flex;gap:14px;padding:10px 12px 24px;align-items:flex-start;}
+.left{width:318px;flex:0 0 318px;}
+.right{flex:1;min-width:0;}
+
+.pname{font:bold 17px Verdana,sans-serif;color:#000;margin:0 0 8px;}
+
+.pic-row{display:flex;gap:10px;margin-bottom:6px;}
+.pic{
+  width:150px;height:150px;flex:0 0 150px;
+  border:1px solid #999;background:#EDEDED;
+  display:flex;align-items:center;justify-content:center;
+}
+.mono{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font:bold 46px "Arial Black",Arial,sans-serif;color:#FFFFFF;
+  letter-spacing:-2px;
+  background:linear-gradient(135deg,#4B79C4,#22417E);
+  text-shadow:2px 2px 0 rgba(0,0,0,.35);
+}
+.pic-meta{font-size:11px;line-height:1.55;}
+.pic-meta .quote{color:var(--ms-navy);font-style:italic;margin-bottom:8px;}
+.morepics{font-weight:bold;font-size:11px;margin:2px 0 12px;}
+
+/* boxed modules */
+.box{border:1px solid var(--ms-line);margin-bottom:12px;background:var(--paper);}
+.box-h{
+  background:var(--ms-blue);color:#FFFFFF;font-weight:bold;
+  padding:3px 6px;font-size:11px;
+}
+.box-b{padding:8px;}
+
+.contact{width:100%;border-collapse:collapse;font-size:11px;}
+.contact td{padding:5px 4px;vertical-align:middle;width:50%;}
+.ico{
+  display:inline-block;width:16px;height:16px;margin-right:5px;
+  vertical-align:-3px;border:1px solid #7A7A7A;background:#DDE6F2;
+  font:8px Verdana,sans-serif;text-align:center;line-height:14px;color:#22417E;
+}
+
+.urlbox{border:1px solid #000;padding:5px 6px;margin-bottom:12px;font-size:11px;}
+.urlbox .u{font-family:"Courier New",Courier,monospace;color:var(--ms-navy);word-break:break-all;}
+
+.player{
+  border:1px solid #888;background:#5C5C5C;color:#FFFFFF;
+  display:flex;align-items:center;gap:8px;padding:6px;margin-bottom:12px;
+}
+.player .play{
+  width:34px;height:30px;flex:0 0 34px;
+  background:var(--chrome);border:1px outset var(--chrome-lt);
+  display:flex;align-items:center;justify-content:center;color:#000;font-size:12px;
+}
+.player .meta{flex:1;font-size:11px;line-height:1.4;}
+.player .meta b{display:block;font-size:11px;}
+.player .meta i{font-style:normal;color:#D9D9D9;font-size:10px;}
+.player .ctrl{font-size:10px;color:#FFFFFF;white-space:nowrap;}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11px;}
+.tbl th{
+  background:var(--ms-row);color:var(--ms-navy);text-align:left;
+  padding:5px 6px;width:96px;vertical-align:top;font-weight:bold;
+  border-bottom:1px solid #FFFFFF;
+}
+.tbl td{padding:5px 6px;vertical-align:top;border-bottom:1px solid #E4E4E4;}
+
+/* right column */
+.banner{
+  border:1px solid #000;padding:16px 10px;text-align:center;
+  font:bold 17px Verdana,sans-serif;margin-bottom:14px;
+}
+.sect-h{
+  background:var(--ms-orange-fill);color:#CC6600;font-weight:bold;
+  padding:3px 6px;font-size:11px;margin:0 0 8px;
+  border-top:1px solid var(--ms-orange);border-bottom:1px solid var(--ms-orange);
+}
+.sect{margin-bottom:16px;}
+.sub{color:var(--ms-orange);font-weight:bold;font-size:11px;margin:10px 0 3px;}
+.sub:first-child{margin-top:0;}
+.copy{font-size:11px;line-height:1.6;margin:0 0 6px;}
+
+.grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 10px;margin-top:10px;}
+.card{text-align:center;font-size:11px;}
+.tile{
+  width:100%;aspect-ratio:1/1;border:1px solid #999;
+  display:flex;align-items:center;justify-content:center;
+  font:bold 15px "Arial Black",Arial,sans-serif;color:#FFFFFF;
+  text-align:center;padding:6px;line-height:1.15;
+}
+.card .nm{display:block;font-weight:bold;color:var(--ms-navy);margin-bottom:4px;}
+.card .sm{display:block;color:#555;font-size:10px;margin-top:3px;}
+.t1{background:linear-gradient(135deg,#3F72C4,#1E3C77);}
+.t2{background:linear-gradient(135deg,#57A05B,#245C2C);}
+.t3{background:linear-gradient(135deg,#C4763F,#7A3F16);}
+.t4{background:linear-gradient(135deg,#8A5BB5,#43276E);}
+.t5{background:linear-gradient(135deg,#4FA3AE,#1D5A63);}
+.t6{background:linear-gradient(135deg,#C44F6E,#79203A);}
+.t7{background:linear-gradient(135deg,#6E7480,#33383F);}
+.t8{background:linear-gradient(135deg,#B59A3F,#6B5615);}
+
+.adslot{font-size:11px;text-align:center;}
+.adslot b{color:#CC0000;display:block;margin:6px 0 4px;font-size:12px;}
+
+.cmt{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #E0E0E0;}
+.cmt .av{width:56px;height:56px;flex:0 0 56px;border:1px solid #999;}
+.cmt .bd{font-size:11px;line-height:1.55;}
+.cmt .who{font-weight:bold;color:var(--ms-navy);}
+.cmt .when{color:#777;font-size:10px;}
+.tag{
+  display:inline-block;background:#EEE;border:1px solid #BBB;color:#666;
+  font-size:9px;padding:0 4px;margin-left:6px;letter-spacing:.06em;vertical-align:1px;
+}
+
+.counter{
+  display:inline-flex;gap:2px;background:#000;padding:3px;border:1px solid #555;
+  vertical-align:middle;
+}
+.counter i{
+  font:bold 12px "Courier New",monospace;color:#33FF33;font-style:normal;
+  background:#101010;padding:1px 3px;
+}
+.blink{animation:bl 1.1s steps(1,end) infinite;color:#CC0000;font-weight:bold;}
+@keyframes bl{50%{opacity:0;}}
+.mq{overflow:hidden;white-space:nowrap;border:1px solid var(--ms-orange);background:#FFFBEF;padding:3px 0;margin-bottom:12px;}
+.mq span{display:inline-block;padding-left:100%;animation:mv 18s linear infinite;font-size:11px;color:#CC6600;font-weight:bold;}
+@keyframes mv{to{transform:translateX(-100%);}}
+.pit{font-family:"Comic Sans MS","Segoe Print",cursive;font-size:12px;}
+.hr{border:0;border-top:1px solid var(--ms-blue);margin:14px 0;}
+.foot{text-align:center;font-size:10px;color:#666;padding:14px 12px 20px;line-height:1.7;}
+.foot a{color:var(--ms-navy);}
+
+/* ---------- pitch annotations ---------- */
+.anno{
+  display:none;
+  background:#FFCC00;color:#000;border:1px solid #A37A00;
+  font:bold 10px Verdana,sans-serif;padding:0 5px;margin-right:6px;
+  vertical-align:1px;
+}
+body.notes .anno{display:inline-block;}
+body.notes .swap{background:var(--note);border-bottom:1px dashed #C9A400;}
+.notes-panel{display:none;background:#F4F1E4;border-top:2px solid var(--chrome-dk);padding:12px 14px;}
+body.notes .notes-panel{display:block;}
+.notes-panel h3{font:bold 12px Verdana,sans-serif;margin:0 0 4px;color:#000;}
+.notes-panel .lede{font-size:11px;color:#444;margin:0 0 10px;line-height:1.6;max-width:64ch;}
+.notes-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px 16px;margin:0;padding:0;list-style:none;}
+.notes-list li{font-size:11px;line-height:1.55;padding-left:26px;position:relative;}
+.notes-list li b{
+  position:absolute;left:0;top:0;background:#FFCC00;border:1px solid #A37A00;
+  font-size:10px;padding:0 4px;
+}
+.notes-key{font-size:10px;color:#666;margin-top:10px;}
+
+.screen{display:none;}
+.screen.on{display:block;}
+
+@media (prefers-reduced-motion:reduce){
+  .blink,.mq span{animation:none;}
+  .blink{opacity:1;}
+  .mq span{padding-left:0;}
+}
+</style>
+
+<div class="win">
+  <div class="win-title">
+    <span class="e" aria-hidden="true"></span>
+    <span id="wt">Jonas Brotbers - Microsoft Internet Explorer</span>
+    <span class="spacer"></span>
+    <span class="win-btns" aria-hidden="true"><span>_</span><span>□</span><span>×</span></span>
+  </div>
+
+  <div class="win-menu" aria-hidden="true">
+    <span><u>F</u>ile</span><span><u>E</u>dit</span><span><u>V</u>iew</span>
+    <span>F<u>a</u>vorites</span><span><u>T</u>ools</span><span><u>H</u>elp</span>
+  </div>
+
+  <div class="win-bar">
+    <label for="addr">Address</label>
+    <div class="addr" id="addr">http://www.jonasbrotbers.com/</div>
+    <button class="tbtn" type="button" id="notesBtn" aria-pressed="false">Annotations: off</button>
+  </div>
+
+  <div class="win-bar" role="tablist" aria-label="Screens in this redesign">
+    <button class="tbtn" type="button" role="tab" data-screen="home" aria-selected="true">Profile</button>
+    <button class="tbtn" type="button" role="tab" data-screen="products" aria-selected="false">Products</button>
+    <button class="tbtn" type="button" role="tab" data-screen="support" aria-selected="false">Support</button>
+    <span class="spacer" style="flex:1"></span>
+    <span style="font:11px Tahoma,sans-serif;color:#555;">Concept &mdash; not shipped</span>
+  </div>
+
+  <div class="viewport">
+
+  <!-- ================= SCREEN 1: PROFILE ================= -->
+  <div class="page screen on" id="screen-home" role="tabpanel" aria-label="Profile screen">
+    <div class="topbar">
+      <span><b>JonasBrotbers.com</b> | Home</span>
+      <span class="spacer"></span>
+      <span>The Web <i class="radio" aria-hidden="true"></i></span>
+      <span>JonasBrotbers <i class="radio on" aria-hidden="true"></i></span>
+      <input type="text" aria-label="Search JonasBrotbers.com">
+      <button class="go" type="button">Search</button>
+      <span><a href="#support-tab">Help</a> | <a href="#signup">SignUp</a></span>
+    </div>
+    <div class="navbar">
+      <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Products</a> | <a href="#">Support</a> |
+      <a href="#">Press</a> | <a href="#">Careers</a> | <a href="#">Blog</a> | <a href="#">Downloads</a> |
+      <a href="#">Status</a> | <a href="#">Legal</a> | <a href="#">Contact</a>
+    </div>
+
+    <div class="cols">
+      <!-- LEFT RAIL -->
+      <div class="left">
+        <h1 class="pname"><span class="anno">1</span>Jonas Brotbers</h1>
+
+        <div class="pic-row">
+          <div class="pic"><span class="mono">JB</span></div>
+          <div class="pic-meta">
+            <div class="quote">"We build small software that shows up on time."</div>
+            <span class="swap">Independent software studio</span><br>
+            <span class="swap">Est. 2019</span><br>
+            <span class="swap">Saint Paul,<br>Minnesota</span><br>
+            United States<br><br>
+            Last Ship: <span class="swap">08/25/2026</span>
+          </div>
+        </div>
+        <div class="morepics"><a href="#">View more screenshots</a></div>
+
+        <div class="box">
+          <div class="box-h"><span class="anno">2</span>Contacting Jonas Brotbers</div>
+          <div class="box-b">
+            <table class="contact">
+              <tr>
+                <td><i class="ico" aria-hidden="true">@</i><a href="mailto:K2@jonasenterprises.com">Send Message</a></td>
+                <td><i class="ico" aria-hidden="true">&#8594;</i><a href="#">Forward to Friend</a></td>
+              </tr>
+              <tr>
+                <td><i class="ico" aria-hidden="true">+</i><a href="#">Join the List</a></td>
+                <td><i class="ico" aria-hidden="true">&#9733;</i><a href="#">Add to Favorites</a></td>
+              </tr>
+              <tr>
+                <td><i class="ico" aria-hidden="true">IM</i><a href="#">Book a Call</a></td>
+                <td><i class="ico" aria-hidden="true">!</i><a href="#">Report a Bug</a></td>
+              </tr>
+              <tr>
+                <td><i class="ico" aria-hidden="true">&#9660;</i><a href="#">Get the App</a></td>
+                <td><i class="ico" aria-hidden="true">&#9734;</i><a href="#">Leave a Review</a></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="urlbox">
+          <span class="anno">3</span>Jonas Brotbers URL:<br>
+          <span class="u">http://www.jonasbrotbers.com/</span>
+        </div>
+
+        <div class="player">
+          <div class="play" aria-hidden="true">&#9654;</div>
+          <div class="meta">
+            <b>DoseKeeper 2.1</b>
+            <i>JONAS BROTBERS &middot; iOS</i>
+          </div>
+          <div class="ctrl">+get+<br>+notes+</div>
+        </div>
+
+        <div class="box">
+          <div class="box-h"><span class="anno">4</span>Jonas Brotbers' Interests</div>
+          <table class="tbl">
+            <tr><th>General</th><td>Small teams, boring reliability, software that a 72-year-old can use without a tutorial</td></tr>
+            <tr><th>Products</th><td>DoseKeeper &mdash; medication &amp; supplement tracking for iOS</td></tr>
+            <tr><th>Platforms</th><td>iOS 17+, iPadOS, Apple Watch (in progress)</td></tr>
+            <tr><th>Values</th><td>No ad SDKs. No third-party analytics. Your data is yours and you can take it out as CSV.</td></tr>
+            <tr><th>Currently</th><td>Caregiver permissions, trip pack-list math, faster Today screen</td></tr>
+            <tr><th>Contact</th><td><a href="mailto:K2@jonasenterprises.com">K2@jonasenterprises.com</a><br>Replies in 1&ndash;2 business days</td></tr>
+          </table>
+        </div>
+
+        <div style="font-size:10px;color:#666;text-align:center;">
+          You are visitor
+          <span class="counter" aria-label="visitor counter">
+            <i>0</i><i>0</i><i>4</i><i>2</i><i>0</i><i>0</i>
+          </span>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="right">
+        <div class="banner"><span class="anno">5</span>Jonas Brotbers is in your extended network</div>
+
+        <div class="mq"><span>&#9733; DoseKeeper 2.1 is out &mdash; caregiver codes, CSV export, faster Today screen &#9733; Now on the App Store &#9733; Email K2@jonasenterprises.com &#9733;</span></div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="anno">6</span>Latest Blog Entry [<a href="#">Subscribe to this Blog</a>]</div>
+          <p class="copy">
+            <b>DoseKeeper 2.1: caregiver codes, CSV export, and a faster Today screen.</b>
+            You can now hand a family member exactly the access you want them to have &mdash; Caregiver,
+            Orderer, Clinician, or Minimal &mdash; with a code that expires if it goes unused.
+            (<a href="#">view more</a>) <span class="blink">NEW!</span>
+          </p>
+          <p class="copy">[<a href="#">View All Blog Entries</a>]</p>
+        </div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="anno">7</span>Jonas Brotbers' Blurbs</div>
+          <div class="sub">About us:</div>
+          <p class="copy pit">
+            Hi! We're Jonas Brotbers and this is our software baby. We build one app at a time and we
+            answer our own support email. DoseKeeper tracks medications, supplements and peptides,
+            keeps a schedule that follows your real timezone, and lets the people who help you
+            see only what you decide they can see.
+          </p>
+          <div class="sub">Who we'd like to meet:</div>
+          <p class="copy">
+            People managing more than three daily medications. Caregivers doing the reordering.
+            Clinicians who want a clean 90-day CSV instead of a photo of a pill organizer.
+            And anyone who has ever opened a health app and been asked to make an account with a data broker.
+          </p>
+        </div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="anno">8</span>Jonas Brotbers' Product Space</div>
+          <p class="copy">Jonas Brotbers has <b style="color:#CC0000">4,200</b> users.</p>
+          <div class="grid8">
+            <div class="card"><span class="nm">DoseKeeper</span><div class="tile t1">DOSE<br>KEEPER</div><span class="sm">Top product</span></div>
+            <div class="card"><span class="nm">Today</span><div class="tile t2">TODAY</div><span class="sm">Log &amp; undo</span></div>
+            <div class="card"><span class="nm">Library</span><div class="tile t3">LIB<br>RARY</div><span class="sm">Supply &amp; reorder</span></div>
+            <div class="card"><span class="nm">Caregiving</span><div class="tile t4">CARE</div><span class="sm">Codes &amp; roles</span></div>
+            <div class="card"><span class="nm">History</span><div class="tile t5">HIST<br>ORY</div><span class="sm">90 days + CSV</span></div>
+            <div class="card"><span class="nm">Trips</span><div class="tile t6">TRIPS</div><span class="sm">Pack-list math</span></div>
+            <div class="card"><span class="nm">Status</span><div class="tile t7">STAT<br>US</div><span class="sm">Uptime</span></div>
+            <div class="card">
+              <span class="nm">Jonas Records</span>
+              <div class="adslot">
+                <b>Get 4 extra<br>slots</b>
+                on your profile when you buy DoseKeeper Plus!
+              </div>
+            </div>
+          </div>
+          <p class="copy" style="text-align:right;margin-top:10px;">
+            <b><a href="#">View All of Jonas Brotbers' Products</a></b>
+          </p>
+        </div>
+
+        <div class="sect">
+          <div class="sect-h">
+            <span class="anno">9</span>Jonas Brotbers' Friend Comments<span class="tag">SAMPLE COPY</span>
+          </div>
+          <div class="cmt">
+            <div class="av tile t2" aria-hidden="true"></div>
+            <div class="bd">
+              <span class="who">Dana</span> <span class="when">Aug 12 2026 4:12 PM</span><br>
+              My mom's reorder alert went to me instead of her and it just worked. First health app
+              she hasn't asked me to uninstall.
+            </div>
+          </div>
+          <div class="cmt">
+            <div class="av tile t4" aria-hidden="true"></div>
+            <div class="bd">
+              <span class="who">Marcus</span> <span class="when">Aug 09 2026 8:40 AM</span><br>
+              Exported 90 days as CSV, emailed it to my cardiologist, done in a minute.
+            </div>
+          </div>
+          <div class="cmt" style="border-bottom:0;">
+            <div class="av tile t6" aria-hidden="true"></div>
+            <div class="bd">
+              <span class="who">Priya</span> <span class="when">Aug 02 2026 9:05 PM</span><br>
+              The long-press to un-log a dose saved me. I tap "taken" by accident constantly.
+            </div>
+          </div>
+          <p class="copy" style="margin-top:8px;"><a href="#">Add Comment</a> | <a href="#">View All Comments</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      &copy; 2026 Jonas Brotbers &middot; Jonas Enterprises &middot;
+      <a href="#">About</a> | <a href="#">Privacy Policy</a> | <a href="#">Support</a> |
+      <a href="#">Terms</a> | <a href="#">Press</a> | <a href="mailto:K2@jonasenterprises.com">Contact</a><br>
+      Best viewed at 1024&times;768.
+    </div>
+  </div>
+
+  <!-- ================= SCREEN 2: PRODUCTS ================= -->
+  <div class="page screen" id="screen-products" role="tabpanel" aria-label="Products screen">
+    <div class="topbar">
+      <span><b>JonasBrotbers.com</b> | Browse</span>
+      <span class="spacer"></span>
+      <span>The Web <i class="radio" aria-hidden="true"></i></span>
+      <span>JonasBrotbers <i class="radio on" aria-hidden="true"></i></span>
+      <input type="text" aria-label="Search products">
+      <button class="go" type="button">Search</button>
+      <span><a href="#">Help</a> | <a href="#">SignUp</a></span>
+    </div>
+    <div class="navbar">
+      <a href="#">Home</a> | <a href="#">About</a> | <a href="#"><b>Products</b></a> | <a href="#">Support</a> |
+      <a href="#">Press</a> | <a href="#">Careers</a> | <a href="#">Blog</a> | <a href="#">Downloads</a> |
+      <a href="#">Status</a> | <a href="#">Legal</a> | <a href="#">Contact</a>
+    </div>
+
+    <div class="cols">
+      <div class="left">
+        <div class="box">
+          <div class="box-h"><span class="anno">10</span>Browse Products</div>
+          <div class="box-b">
+            <table class="tbl">
+              <tr><th>Platform</th><td>iOS &middot; iPadOS &middot; Watch</td></tr>
+              <tr><th>Price</th><td>Free &middot; Plus</td></tr>
+              <tr><th>Status</th><td>Shipping &middot; Beta &middot; Planned</td></tr>
+              <tr><th>Sort by</th><td>Recently updated</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-h">Cool New Product</div>
+          <div class="box-b" style="text-align:center;">
+            <div class="tile t1" style="width:120px;height:120px;margin:0 auto 8px;">DOSE<br>KEEPER</div>
+            <b>DoseKeeper 2.1</b><br>
+            <span style="color:#555;">Medication &amp; supplement tracking</span><br><br>
+            <a href="#">Download on the App Store</a>
+          </div>
+        </div>
+        <div class="urlbox">
+          Product URL:<br>
+          <span class="u">http://www.jonasbrotbers.com/products/dosekeeper</span>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="banner">4 products &middot; 1 shipping &middot; 3 in the works</div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="anno">11</span>Featured: DoseKeeper</div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div class="tile t1" style="width:130px;height:130px;flex:0 0 130px;">DOSE<br>KEEPER</div>
+            <div style="min-width:0;">
+              <p class="copy">
+                Track medications, supplements and peptides. See your day, log a dose, and share
+                supply status with the people you trust &mdash; at exactly the level of access you pick.
+              </p>
+              <table class="tbl">
+                <tr><th>Today</th><td>Long-press any row to undo. "Mark all" leaves a 5-second Undo.</td></tr>
+                <tr><th>History</th><td>Last 90 days on screen. Export CSV at 30 / 90 / 365 days.</td></tr>
+                <tr><th>Caregiving</th><td>Generate a code, pick a preset, revoke any time.</td></tr>
+                <tr><th>Trips</th><td>Pack-list math for the days you'll be gone.</td></tr>
+                <tr><th>Privacy</th><td>No ad SDKs. No third-party analytics. Deletion within 14 days on request.</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="anno">12</span>More from Jonas Brotbers</div>
+          <div class="grid8" style="grid-template-columns:repeat(3,1fr);">
+            <div class="card"><span class="nm">Caregiver Portal</span><div class="tile t4">CARE</div><span class="sm">Beta</span></div>
+            <div class="card"><span class="nm">Clinician Export</span><div class="tile t5">CSV</div><span class="sm">Shipping</span></div>
+            <div class="card"><span class="nm">Watch App</span><div class="tile t7">WATCH</div><span class="sm">Planned</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      &copy; 2026 Jonas Brotbers &middot; Jonas Enterprises &middot;
+      <a href="#">Privacy Policy</a> | <a href="#">Support</a> | <a href="mailto:K2@jonasenterprises.com">Contact</a>
+    </div>
+  </div>
+
+  <!-- ================= SCREEN 3: SUPPORT ================= -->
+  <div class="page screen" id="screen-support" role="tabpanel" aria-label="Support screen">
+    <div class="topbar">
+      <span><b>JonasBrotbers.com</b> | Support</span>
+      <span class="spacer"></span>
+      <span>The Web <i class="radio" aria-hidden="true"></i></span>
+      <span>JonasBrotbers <i class="radio on" aria-hidden="true"></i></span>
+      <input type="text" aria-label="Search support">
+      <button class="go" type="button">Search</button>
+      <span><a href="#">Help</a> | <a href="#">SignUp</a></span>
+    </div>
+    <div class="navbar">
+      <a href="#">Home</a> | <a href="#">About</a> | <a href="#">Products</a> | <a href="#"><b>Support</b></a> |
+      <a href="#">Press</a> | <a href="#">Careers</a> | <a href="#">Blog</a> | <a href="#">Downloads</a> |
+      <a href="#">Status</a> | <a href="#">Legal</a> | <a href="#">Contact</a>
+    </div>
+
+    <div class="cols">
+      <div class="left">
+        <div class="box">
+          <div class="box-h"><span class="anno">13</span>Contact Support</div>
+          <div class="box-b">
+            <p class="copy">
+              <b>Email:</b><br>
+              <a href="mailto:K2@jonasenterprises.com">K2@jonasenterprises.com</a>
+            </p>
+            <p class="copy">
+              Tell us what you tapped and what you expected to happen.
+              We typically reply within <b>1&ndash;2 business days</b>.
+            </p>
+          </div>
+        </div>
+        <div class="box">
+          <div class="box-h">Support Topics</div>
+          <table class="tbl">
+            <tr><th>Notifications</th><td><a href="#">Reminders not arriving</a></td></tr>
+            <tr><th>Logging</th><td><a href="#">Undo a dose</a></td></tr>
+            <tr><th>History</th><td><a href="#">Find an old dose</a></td></tr>
+            <tr><th>Caregiving</th><td><a href="#">Let family help</a></td></tr>
+            <tr><th>Account</th><td><a href="#">Delete my account</a></td></tr>
+            <tr><th>Privacy</th><td><a href="#">Where data lives</a></td></tr>
+          </table>
+        </div>
+        <div class="player">
+          <div class="play" aria-hidden="true">&#9654;</div>
+          <div class="meta"><b>System Status</b><i>All services normal</i></div>
+          <div class="ctrl">+view+</div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="banner">Something not working? Start here.</div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="anno">14</span>Support Blog &mdash; Common Questions</div>
+
+          <div class="sub">My reminders aren't arriving</div>
+          <p class="copy">
+            1. In DoseKeeper <b>Settings</b>, confirm <b>Push reorder alerts</b> and <b>Dose reminders</b> are both on.<br>
+            2. In iOS <b>Settings &rarr; Notifications &rarr; DoseKeeper</b>, confirm notifications are allowed.<br>
+            3. Changed devices recently? Toggle push off and back on to refresh the device registration.<br>
+            4. Check your phone's timezone &mdash; schedules are anchored to <b>Settings &rarr; Profile</b>.
+          </p>
+
+          <div class="sub">I logged a dose by mistake</div>
+          <p class="copy">
+            On <b>Today</b>, long-press the dose row and choose <b>Mark pending</b>. If you used
+            <b>Mark all</b>, an Undo toast sits at the bottom of the screen for 5 seconds.
+          </p>
+
+          <div class="sub">I can't find an old dose</div>
+          <p class="copy">
+            <b>History</b> shows the last 90 days. For longer windows &mdash; or to hand something to a
+            doctor &mdash; use <b>Export CSV</b> at the bottom of History (30 / 90 / 365 day ranges).
+          </p>
+
+          <div class="sub">How do I let a family member help me reorder?</div>
+          <p class="copy">
+            1. <b>Settings &rarr; Caregiving &rarr; Generate code</b>, then pick a preset:
+            Caregiver, Orderer, Clinician, or Minimal.<br>
+            2. Send the code. They sign up, then <b>Settings &rarr; Caregiving &rarr; Redeem code</b>.<br>
+            3. Tune what they see in <b>Settings &rarr; Who can help &rarr; [their name]</b>.
+          </p>
+
+          <div class="sub">How do I delete my account?</div>
+          <p class="copy">
+            Email <a href="mailto:K2@jonasenterprises.com">K2@jonasenterprises.com</a> from the address you
+            signed up with. We delete your profile, supplements, dose history, schedules, trips,
+            caretaker links and push subscriptions within <b>14 days</b>.
+          </p>
+        </div>
+
+        <div class="sect">
+          <div class="sect-h"><span class="anno">15</span>Privacy, in one paragraph</div>
+          <p class="copy">
+            We collect only what the features you use require: email, display name, timezone, routine
+            times, the items you track, your dose history, trips, caretaker links, order requests, a push
+            token, and pharmacy preferences. We do not sell or rent your data, and we do not use
+            advertising or third-party analytics SDKs. [<a href="#">Read the full Privacy Policy</a>]
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      &copy; 2026 Jonas Brotbers &middot; Jonas Enterprises &middot;
+      <a href="#">Privacy Policy</a> | <a href="#">Support</a> | <a href="mailto:K2@jonasenterprises.com">Contact</a>
+    </div>
+  </div>
+
+  </div><!-- /viewport -->
+
+  <!-- ================= PITCH NOTES ================= -->
+  <div class="notes-panel">
+    <h3>Pitch notes &mdash; what each 2006 element is doing for us in 2026</h3>
+    <p class="lede">
+      The bet: every module on a MySpace profile is a job a modern marketing site already has,
+      just named more honestly. Nothing here is decoration for its own sake &mdash; each numbered
+      block maps to a page we'd have built anyway.
+    </p>
+    <ul class="notes-list">
+      <li><b>1</b> <b>Profile identity.</b> Name, one-line positioning, location, "Last Ship" date. Replaces the hero &mdash; and the ship date does the work a "trusted by" logo wall usually fakes.</li>
+      <li><b>2</b> <b>Contact table.</b> Eight conversion actions above the fold in 120px of height. Email, share, mailing list, bookmark, book a call, bug report, download, review.</li>
+      <li><b>3</b> <b>URL box.</b> The 2006 share primitive. Now: canonical link + copy-to-clipboard, which is what people actually want when they're texting a recommendation.</li>
+      <li><b>4</b> <b>Interests table.</b> Our spec sheet. Platforms, values, what we're building now. Scannable in five seconds, no scroll-triggered reveals.</li>
+      <li><b>5</b> <b>Extended network banner.</b> Social proof slot. Swap in the real number once we agree what we're willing to publish.</li>
+      <li><b>6</b> <b>Latest blog entry.</b> Changelog on the homepage. The strongest signal a small studio has: the thing was updated this month.</li>
+      <li><b>7</b> <b>Blurbs.</b> "About us" and "Who we'd like to meet" &mdash; the second one is our ICP, stated out loud, which most sites bury in a deck.</li>
+      <li><b>8</b> <b>Product Space (Top 8).</b> Feature grid as a friends list. Ranked, finite, and it forces us to pick eight.</li>
+      <li><b>9</b> <b>Friend comments.</b> Testimonials in reverse-chron with dates. Marked SAMPLE &mdash; needs real, permissioned quotes before this goes anywhere near production.</li>
+      <li><b>10</b> <b>Browse filters.</b> Platform / price / status. Honest about what's shipping vs. planned.</li>
+      <li><b>11</b> <b>Featured product.</b> Feature table pulled straight from the support docs, so it can't drift from what the app does.</li>
+      <li><b>12</b> <b>More products.</b> Roadmap as a grid. Each tile carries its own status label.</li>
+      <li><b>13</b> <b>Support contact.</b> One email, one expectation ("1&ndash;2 business days"). No ticket portal.</li>
+      <li><b>14</b> <b>Support blog.</b> The five real questions from SUPPORT.md, verbatim, indexable.</li>
+      <li><b>15</b> <b>Privacy in one paragraph.</b> The differentiator: no ad SDKs, no third-party analytics. Say it on the page, not just in the policy.</li>
+    </ul>
+    <p class="notes-key">
+      Yellow-highlighted text = placeholder that needs a real value before build.
+      Type: Verdana 11px throughout, Arial Black for shouts, Courier for URLs &mdash; all system faces,
+      which is what makes this read as 2006 rather than as a filter applied to a modern page.
+    </p>
+  </div>
+
+  <div class="win-status">
+    <span id="statusText">Done</span>
+    <span class="spacer"></span>
+    <span>Internet</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  var body = document.body;
+  var tabs = document.querySelectorAll('[data-screen]');
+  var addr = document.getElementById('addr');
+  var wt = document.getElementById('wt');
+  var status = document.getElementById('statusText');
+  var notesBtn = document.getElementById('notesBtn');
+
+  var URLS = {
+    home:     {url:'http://www.jonasbrotbers.com/',                 title:'Jonas Brotbers'},
+    products: {url:'http://www.jonasbrotbers.com/products/',        title:'Jonas Brotbers - Products'},
+    support:  {url:'http://www.jonasbrotbers.com/support/',         title:'Jonas Brotbers - Support'}
+  };
+
+  function show(name){
+    document.querySelectorAll('.screen').forEach(function(s){
+      s.classList.toggle('on', s.id === 'screen-' + name);
+    });
+    tabs.forEach(function(t){
+      t.setAttribute('aria-selected', String(t.dataset.screen === name));
+    });
+    addr.textContent = URLS[name].url;
+    wt.textContent = URLS[name].title + ' - Microsoft Internet Explorer';
+    status.textContent = 'Done';
+    document.querySelector('.viewport').scrollTop = 0;
+  }
+
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ show(t.dataset.screen); });
+  });
+
+  notesBtn.addEventListener('click', function(){
+    var on = body.classList.toggle('notes');
+    notesBtn.setAttribute('aria-pressed', String(on));
+    notesBtn.textContent = 'Annotations: ' + (on ? 'on' : 'off');
+    status.textContent = on ? '15 pitch notes shown' : 'Done';
+  });
+})();
+</script>
