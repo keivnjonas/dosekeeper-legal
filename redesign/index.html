@@ -234,6 +234,23 @@ body.notes .notes-panel{display:block;}
 .notes-list li b:first-child{position:absolute;left:0;top:0;background:#FFCC00;border:1px solid #A37A00;font-size:10px;padding:0 4px;}
 .notes-key{font-size:10px;color:#666;margin-top:10px;line-height:1.6;max-width:78ch;}
 
+/* ---------- glitter ---------- */
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+.glitcv{display:block;image-rendering:auto;}
+.pic.glit{background:#000;border:1px solid #555;}
+.pic.glit .glitcv{width:150px;height:150px;}
+.gg{
+  background:#000;border:1px solid #6E6E6E;margin-bottom:12px;
+  padding:4px;text-align:center;
+}
+.gg .glitcv{width:100%;height:auto;}
+.gg .cap{
+  display:block;font-size:9px;color:#9A9A9A;letter-spacing:.1em;
+  padding:3px 2px 1px;font-family:Verdana,sans-serif;
+}
+.gdiv{display:block;width:100%;height:auto;margin:0 0 12px;border:1px solid #B58900;}
+.cmt .gg{margin:6px 0 0;max-width:280px;}
+
 .screen{display:none;}
 .screen.on{display:block;}
 
@@ -259,6 +276,7 @@ body.notes .notes-panel{display:block;}
   <div class="win-bar">
     <label for="addr">Address</label>
     <div class="addr" id="addr">http://www.jonasbrothers.com/</div>
+    <button class="tbtn" type="button" id="glitterBtn" aria-pressed="true">Glitter: on</button>
     <button class="tbtn" type="button" id="notesBtn" aria-pressed="false">Annotations: off</button>
   </div>
 
@@ -295,8 +313,10 @@ body.notes .notes-panel{display:block;}
         <h1 class="pname"><span class="anno">1</span>Jonas Brothers</h1>
 
         <div class="pic-row">
-          <div class="pic">
-            <div class="wordmark">JONAS<br>BROTHERS<small>EST. 2005</small></div>
+          <div class="pic glit">
+            <canvas class="glitcv" width="300" height="300"
+                    data-glit="wordmark" data-pal="gold"
+                    aria-label="Jonas Brothers glitter wordmark"></canvas>
           </div>
           <div class="pic-meta">
             <div class="quote">"Three brothers. Twenty years. Still burning up."</div>
@@ -381,9 +401,19 @@ body.notes .notes-panel{display:block;}
 
       <!-- RIGHT COLUMN -->
       <div class="right">
+        <div class="gg">
+          <canvas class="glitcv" width="880" height="200"
+                  data-glit="banner" data-pal="pink"
+                  aria-label="Jonas Brothers glitter graphic"></canvas>
+          <span class="cap"><span class="anno">18</span>GLITTER GRAPHIC &mdash; COPY + PASTE INTO YOUR PROFILE</span>
+        </div>
+
         <div class="banner"><span class="anno">6</span>Jonas Brothers is in your extended network</div>
 
         <div class="mq"><span>&#9733; THE BURNING UP TOUR: ALL OVER AGAIN &mdash; on sale now &#9733; New single "Listen When Sad" out now &#9733; Greetings from Your Hometown available everywhere &#9733;</span></div>
+
+        <canvas class="glitcv gdiv" width="880" height="28"
+                data-glit="bar" data-pal="gold" aria-hidden="true"></canvas>
 
         <div class="sect">
           <div class="sect-h"><span class="anno">7</span>Upcoming Shows</div>
@@ -483,6 +513,18 @@ body.notes .notes-panel{display:block;}
             <div class="bd">
               <span class="who">Rosa</span> <span class="when">Aug 14 2026 6:47 PM</span><br>
               Boston tickets secured. Bringing my daughter, who was not alive for the first tour.
+            </div>
+          </div>
+          <div class="cmt" style="border-bottom:0;padding-top:10px;">
+            <div class="av tile t2" aria-hidden="true">M</div>
+            <div class="bd">
+              <span class="who">Mikayla</span> <span class="when">Aug 11 2026 3:33 PM</span><br>
+              made u guys something!!! put it on ur page :)
+              <div class="gg">
+                <canvas class="glitcv" width="520" height="150"
+                        data-glit="fan" data-pal="ice"
+                        aria-label="Fan-made glitter graphic reading J B 4 EVER"></canvas>
+              </div>
             </div>
           </div>
           <p class="copy" style="margin-top:8px;"><a href="#">Add Comment</a> | <a href="#">View All Comments</a></p>
@@ -696,6 +738,7 @@ body.notes .notes-panel{display:block;}
       <li><b>15</b> <b>Date filters.</b> Country, month, guest, status. What people actually search a tour page for.</li>
       <li><b>16</b> <b>Full routing.</b> Opening and closing nights called out; sold-out states shown rather than hidden.</li>
       <li><b>17</b> <b>Before You Go.</b> Doors, bag policy, signs, resale. The support content that otherwise arrives as 400 identical DMs.</li>
+      <li><b>18</b> <b>Glitter.</b> Not a joke module. In 2006 fans made the graphics and the band's page hosted them &mdash; the marketing came from the audience. The modern read: a share kit people actually want to post. Every sparkle here is drawn in canvas, so it's one file with no image assets.</li>
     </ul>
     <p class="notes-key">
       <b>Accuracy:</b> album, tour name, opening and closing nights, guest acts and the new single are
@@ -712,6 +755,8 @@ body.notes .notes-panel{display:block;}
     <span>Internet</span>
   </div>
 </div>
+
+<canvas id="fx" aria-hidden="true"></canvas>
 
 <script>
 (function(){
@@ -748,7 +793,207 @@ body.notes .notes-panel{display:block;}
     var on = body.classList.toggle('notes');
     notesBtn.setAttribute('aria-pressed', String(on));
     notesBtn.textContent = 'Annotations: ' + (on ? 'on' : 'off');
-    status.textContent = on ? '17 pitch notes shown' : 'Done';
+    status.textContent = on ? '18 pitch notes shown' : 'Done';
   });
+  /* ================= GLITTER ENGINE =================
+     Every sparkle is drawn in canvas: an animated glitter field
+     masked into text, exactly how a 2006 glitter generator worked.
+     ================================================== */
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var glitterOn = !reduce;
+
+  var PAL = {
+    gold: {a:'#FFF7C9', b:'#F0BE22', c:'#7E5000', spark:'#FFFDEB'},
+    pink: {a:'#FFD9F1', b:'#EE3B99', c:'#6E0A3F', spark:'#FFFFFF'},
+    ice:  {a:'#EAF5FF', b:'#5C9DF5', c:'#123A78', spark:'#FFFFFF'}
+  };
+
+  var SPEC = {
+    wordmark: [
+      {t:'JONAS',     f:'900 64px "Arial Black","Arial Bold",Arial,sans-serif', y:112},
+      {t:'BROTHERS',  f:'900 39px "Arial Black","Arial Bold",Arial,sans-serif', y:166},
+      {t:'EST. 2005', f:'bold 19px Verdana,sans-serif',                          y:214}
+    ],
+    banner: [
+      {t:'JONAS BROTHERS',      f:'900 74px "Arial Black","Arial Bold",Arial,sans-serif', y:76},
+      {t:'~*~ BURNIN\' UP ~*~', f:'bold 30px Verdana,sans-serif',                          y:140}
+    ],
+    fan: [
+      {t:'JB 4 EVER',   f:'900 54px "Arial Black","Arial Bold",Arial,sans-serif', y:62},
+      {t:'*~ MYSPACE ~*', f:'bold 22px Verdana,sans-serif',                        y:112}
+    ]
+  };
+
+  function star(ctx,x,y,r){
+    ctx.beginPath();
+    ctx.moveTo(x,y-r);
+    ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.quadraticCurveTo(x,y,x,y+r);
+    ctx.quadraticCurveTo(x,y,x-r,y);
+    ctx.quadraticCurveTo(x,y,x,y-r);
+    ctx.fill();
+  }
+
+  /* the glitter field itself: gradient ground, random grain, star twinkles */
+  function field(ctx,w,h,p){
+    var g = ctx.createLinearGradient(0,0,0,h);
+    g.addColorStop(0,p.a); g.addColorStop(0.42,p.b);
+    g.addColorStop(0.60,p.c); g.addColorStop(1,p.b);
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,w,h);
+
+    /* grain is drawn chunky on purpose: these canvases display at half their
+       backing size, so 1px specks average away to nothing */
+    var n = Math.round(w*h/48), i, s;
+    for(i=0;i<n;i++){
+      s = Math.random()*3.6 + 1.4;
+      ctx.globalAlpha = 0.35 + Math.random()*0.65;
+      ctx.fillStyle = Math.random() < 0.62 ? '#FFFFFF' : p.spark;
+      ctx.fillRect(Math.random()*w, Math.random()*h, s, s);
+    }
+
+    /* a few blown-out glints */
+    ctx.fillStyle = '#FFFFFF';
+    var hot = Math.max(4, Math.round(w*h/2600));
+    for(i=0;i<hot;i++){
+      ctx.globalAlpha = 0.85 + Math.random()*0.15;
+      s = Math.random()*4 + 2.5;
+      ctx.fillRect(Math.random()*w, Math.random()*h, s, s);
+    }
+    ctx.globalAlpha = 1;
+
+    var st = Math.max(4, Math.round(w*h/4200));
+    for(i=0;i<st;i++){
+      ctx.globalAlpha = 0.6 + Math.random()*0.4;
+      star(ctx, Math.random()*w, Math.random()*h, 4 + Math.random()*11);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* All lines go onto ONE offscreen mask. 'destination-in' composites against
+     the whole canvas per call, so masking line-by-line would intersect each
+     line with the last and leave nothing. Built once, then reused each frame. */
+  function maskFor(cv, lines){
+    if(cv._mask) return cv._mask;
+    var m = document.createElement('canvas');
+    m.width = cv.width; m.height = cv.height;
+    var mc = m.getContext('2d');
+    mc.textAlign = 'center';
+    mc.textBaseline = 'middle';
+    mc.fillStyle = '#FFFFFF';
+    lines.forEach(function(L){ mc.font = L.f; mc.fillText(L.t, cv.width/2, L.y); });
+    cv._mask = m;
+    return m;
+  }
+
+  function drawGlit(cv){
+    var ctx = cv.getContext('2d');
+    var w = cv.width, h = cv.height;
+    var p = PAL[cv.dataset.pal] || PAL.gold;
+    var kind = cv.dataset.glit;
+
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0,0,w,h);
+    field(ctx,w,h,p);
+
+    var lines = SPEC[kind];
+    if(!lines || !lines.length){ return; }   /* plain glitter bar */
+
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.drawImage(maskFor(cv,lines), 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+
+    /* glow goes BEHIND the glitter (a dark outline would vanish on black) */
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.globalAlpha = 0.6;
+    ctx.shadowColor = p.b;
+    ctx.shadowBlur = 18;
+    ctx.drawImage(maskFor(cv,lines), 0, 0);
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  var glits = [].slice.call(document.querySelectorAll('[data-glit]'));
+  glits.forEach(drawGlit);
+
+  /* ---- cursor trail + falling sparkles ---- */
+  var fx = document.getElementById('fx');
+  var fxc = fx.getContext('2d');
+  var bits = [];
+  var TRAIL = ['#FFFFFF','#FFE477','#FF7ACB','#8FD0FF','#FFC0F0'];
+
+  function sizeFx(){
+    fx.width = window.innerWidth;
+    fx.height = window.innerHeight;
+  }
+  sizeFx();
+  window.addEventListener('resize', sizeFx);
+
+  function spawn(x,y,n,up){
+    for(var i=0;i<n;i++){
+      bits.push({
+        x: x + (Math.random()*16-8),
+        y: y + (Math.random()*16-8),
+        vx: (Math.random()-0.5)*0.9,
+        vy: up ? (Math.random()*0.7+0.25) : (Math.random()*1.6+0.4),
+        r: Math.random()*2.6 + 1.2,
+        life: 1,
+        fade: 0.012 + Math.random()*0.02,
+        c: TRAIL[(Math.random()*TRAIL.length)|0]
+      });
+    }
+  }
+
+  document.addEventListener('mousemove', function(e){
+    if(glitterOn && bits.length < 400) spawn(e.clientX, e.clientY, 2, false);
+  });
+  document.addEventListener('click', function(e){
+    if(glitterOn) spawn(e.clientX, e.clientY, 14, false);
+  });
+
+  var last = 0, ambient = 0;
+  function loop(ts){
+    requestAnimationFrame(loop);
+
+    /* glitter canvases repaint at ~12fps — the cadence of an animated GIF */
+    if(glitterOn && ts - last > 80){
+      last = ts;
+      glits.forEach(drawGlit);
+    }
+
+    fxc.clearRect(0,0,fx.width,fx.height);
+    if(!glitterOn){ bits.length = 0; return; }
+
+    if(ts - ambient > 130){
+      ambient = ts;
+      spawn(Math.random()*fx.width, -10, 1, true);
+    }
+
+    for(var i=bits.length-1;i>=0;i--){
+      var b = bits[i];
+      b.x += b.vx; b.y += b.vy; b.life -= b.fade;
+      if(b.life <= 0 || b.y > fx.height+20){ bits.splice(i,1); continue; }
+      fxc.globalAlpha = Math.max(0, b.life);
+      fxc.fillStyle = b.c;
+      star(fxc, b.x, b.y, b.r * (0.6 + b.life*0.8));
+    }
+    fxc.globalAlpha = 1;
+  }
+  requestAnimationFrame(loop);
+
+  var glitterBtn = document.getElementById('glitterBtn');
+  function setGlitter(v){
+    glitterOn = v;
+    glitterBtn.setAttribute('aria-pressed', String(v));
+    glitterBtn.textContent = 'Glitter: ' + (v ? 'on' : 'off');
+    glits.forEach(drawGlit);           /* leave a static frame when paused */
+    if(!v) fxc.clearRect(0,0,fx.width,fx.height);
+  }
+  setGlitter(glitterOn);
+  glitterBtn.addEventListener('click', function(){ setGlitter(!glitterOn); });
+
 })();
 </script>

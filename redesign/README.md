@@ -15,7 +15,29 @@ Three screens, switchable from the fake IE6 toolbar:
 | **Music** | Band music page | Latest release, discography grid, streaming links |
 | **Tour** | Shows listing | Full routing, date filters, venue info |
 
-An **Annotations** toggle overlays 17 numbered markers and a notes panel
+## Glitter
+
+Four animated glitter surfaces, all drawn in canvas — no image assets:
+
+- the **profile wordmark** (gold), masked into "JONAS BROTHERS / EST. 2005"
+- a **glitter graphic** header (pink) captioned as copy-paste fan art
+- a **divider bar** under the marquee
+- a **fan-made glitter graphic** posted in the comments (ice blue)
+
+Plus a full-page sparkle layer: glitter falls ambiently and trails the cursor,
+with a burst on click. A **Glitter** toolbar toggle pauses all of it (leaving a
+static frame), and `prefers-reduced-motion` starts it paused.
+
+Two implementation notes worth keeping if this is ever rebuilt:
+
+- The glitter is masked into the letterforms with a single `destination-in`
+  composite against **one combined offscreen mask**. Masking line-by-line does
+  not work — `destination-in` composites against the whole canvas per call, so
+  the second line intersects with the first and the text disappears.
+- The grain is drawn deliberately chunky (1.4–5px). These canvases display at
+  half their backing-store size, so 1px specks average away to a flat gradient.
+
+An **Annotations** toggle overlays 18 numbered markers and a notes panel
 arguing the thesis: this band was made on MySpace in 2006, and a MySpace
 profile already contains every module a modern artist site needs. It also
 highlights every placeholder value in yellow.
@@ -49,4 +71,6 @@ Song titles appear as titles only — no lyrics.
 - `prefers-reduced-motion` disables the blink and marquee animations.
 - Fixed 800px page inside an `overflow-x: auto` viewport, so the document
   itself never scrolls sideways.
-- No photographs are used; all avatars, album sleeves and tiles are CSS-drawn.
+- No photographs are used; all avatars, album sleeves, glitter and tiles are
+  drawn in CSS or canvas.
+- The wordmark is original type, not the band's actual logo artwork.
