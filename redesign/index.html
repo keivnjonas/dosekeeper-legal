@@ -323,6 +323,49 @@ body.fxoff #flames2{animation-play-state:paused;}
   border:1px solid #6E6E6E;background:#DDE6F2;
 }
 
+/* ---------- scrollable show list ---------- */
+.showscroll{
+  max-height:216px;overflow-y:auto;overflow-x:hidden;
+  border:1px solid var(--ms-blue);background:var(--paper);
+}
+.showscroll.tall{max-height:430px;}
+.showscroll table{width:100%;border-collapse:collapse;font-size:11px;}
+.showscroll th{
+  position:sticky;top:0;z-index:1;
+  background:var(--ms-row);color:var(--ms-navy);text-align:left;
+  padding:4px 6px;font-weight:bold;border-bottom:1px solid #FFFFFF;
+}
+.showscroll td{padding:4px 6px;border-bottom:1px solid #E4E4E4;vertical-align:top;}
+.showscroll tr:hover td{background:#F2F6FC;}
+.showscroll .dt{
+  white-space:nowrap;font-family:"Courier New",monospace;
+  color:#CC0000;font-weight:bold;width:66px;
+}
+.showscroll .tix{width:64px;text-align:right;white-space:nowrap;}
+.showscroll tr.is-past td{color:#8A8A8A;}
+.showscroll tr.is-past .dt{color:#A98A8A;}
+.showscroll tr.is-tba .dt{color:#8A8A8A;}
+.note-badge{
+  display:inline-block;background:var(--ms-orange-fill);color:#8A4B00;
+  border:1px solid var(--ms-orange);font-size:9px;padding:0 4px;margin-left:5px;
+  vertical-align:1px;white-space:nowrap;
+}
+.scrollhint{font-size:10px;color:#777;padding:3px 1px 0;}
+
+/* ---------- merch rail (comment layout, shoppable) ---------- */
+.merchscroll{max-height:330px;overflow-y:auto;overflow-x:hidden;}
+.merch-price{
+  color:#CC0000;font-weight:bold;font-size:11px;margin-left:6px;
+  font-variant-numeric:tabular-nums;
+}
+.merch-buy{margin-top:3px;font-size:11px;}
+.merch-buy a{font-weight:bold;}
+.cmt .av.shot{
+  display:flex;align-items:center;justify-content:center;
+  font:bold 9px Verdana,sans-serif;color:#FFFFFF;text-align:center;
+  line-height:1.1;padding:3px;
+}
+
 /* ---------- crest ---------- */
 .crest{display:block;width:100%;height:auto;margin:2px 0 12px;}
 
@@ -489,32 +532,28 @@ body.fxoff #flames2{animation-play-state:paused;}
           <div class="wmp-sep" aria-hidden="true"></div>
           <div class="wmp-stage">
             <div class="pane" aria-hidden="true"></div>
-            <div class="err"><span class="anno">4</span>Error Loading XML Document</div>
+            <div class="err">
+              <div>
+                <span class="anno">4</span>Error Loading XML Document
+                <div style="margin-top:10px;">
+                  <a id="spotify-cta" href="#" target="_blank" rel="noopener"
+                     style="font-weight:bold;">&#9654; Play on Spotify</a>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="wmp-foot"><span class="ic" aria-hidden="true"></span>open player in a new window</div>
+          <div class="wmp-foot"><span class="ic" aria-hidden="true"></span><a id="spotify-foot" href="#" target="_blank" rel="noopener">open player in a new window</a></div>
         </div>
 
         <div class="sect">
           <div class="sect-h"><span class="anno">7</span>Upcoming Shows</div>
-          <table class="tour">
-            <tr><th>Date</th><th>Venue</th><th>City</th><th>&nbsp;</th></tr>
-            <tr>
-              <td class="dt">SEP 25</td><td>TD Garden</td><td>Boston, MA</td>
-              <td class="tix"><a href="#">Tickets</a> <span class="blink">NEW!</span></td>
-            </tr>
-            <tr>
-              <td class="dt">DEC 21</td><td>Prudential Center</td><td>Newark, NJ</td>
-              <td class="tix"><a href="#">Tickets</a></td>
-            </tr>
-            <tr>
-              <td class="dt">TBA</td><td class="swap" colspan="2">Toronto &middot; Washington DC &middot; Miami &middot; Los Angeles &middot; Seattle &middot; Denver &amp; more</td>
-              <td class="tix"><a href="#">All dates</a></td>
-            </tr>
-          </table>
+          <div class="showscroll" id="shows-home" tabindex="0"
+               role="region" aria-label="Upcoming shows, scrollable"></div>
+          <div class="scrollhint">Scroll the list for all <b id="showcount-home">47</b> dates.</div>
           <p class="copy" style="margin-top:6px;">
-            45 shows across the US and Canada. Special guests on select dates:
+            47 shows across the US and Canada. Special guests on select dates:
             Magnus Ferrell, Franklin Jonas and All Time Low.
-            [<a href="#">View All Tour Dates</a>]
+            [<a id="alldates-home" href="#" target="_blank" rel="noopener">View All Tour Dates</a>]
           </p>
         </div>
 
@@ -585,29 +624,12 @@ body.fxoff #flames2{animation-play-state:paused;}
 
         <div class="sect">
           <div class="sect-h">
-            <span class="anno">11</span>Jonas Brothers' Friend Comments<span class="tag">SAMPLE COPY</span>
+            <span class="anno">11</span>Jonas Brothers' Merch Space<span class="tag">SAMPLE PRODUCTS</span>
           </div>
-          <div class="cmt">
-            <div class="av tile t4" aria-hidden="true">A</div>
-            <div class="bd">
-              <span class="who">Ava</span> <span class="when">Aug 22 2026 11:04 PM</span><br>
-              MSG night three. I have lost my voice and I regret nothing.
-            </div>
-          </div>
-          <div class="cmt">
-            <div class="av tile t5" aria-hidden="true">D</div>
-            <div class="bd">
-              <span class="who">Devon</span> <span class="when">Aug 20 2026 9:12 AM</span><br>
-              Twenty years and they open with the one from 2007. Perfect.
-            </div>
-          </div>
-          <div class="cmt" style="border-bottom:0;">
-            <div class="av tile t6" aria-hidden="true">R</div>
-            <div class="bd">
-              <span class="who">Rosa</span> <span class="when">Aug 14 2026 6:47 PM</span><br>
-              Boston tickets secured. Bringing my daughter, who was not alive for the first tour.
-            </div>
-          </div>
+          <div class="merchscroll" id="merch" tabindex="0"
+               role="region" aria-label="Merch, scrollable"></div>
+          <div class="scrollhint">Scroll for the full drop.</div>
+
           <div class="cmt" style="border-bottom:0;padding-top:10px;">
             <div class="av tile t2" aria-hidden="true">M</div>
             <div class="bd">
@@ -620,7 +642,7 @@ body.fxoff #flames2{animation-play-state:paused;}
               </div>
             </div>
           </div>
-          <p class="copy" style="margin-top:8px;"><a href="#">Add Comment</a> | <a href="#">View All Comments</a></p>
+          <p class="copy" style="margin-top:8px;"><a href="#">View All Merch</a> | <a href="#">Size Guide</a></p>
         </div>
       </div>
     </div>
@@ -669,7 +691,7 @@ body.fxoff #flames2{animation-play-state:paused;}
           <div class="box-h">Listen On</div>
           <div class="box-b">
             <p class="copy">
-              <a href="#">Spotify</a><br>
+              <a class="js-spotify" href="#" target="_blank" rel="noopener">Spotify</a><br>
               <a href="#">Apple Music</a><br>
               <a href="#">YouTube</a><br>
               <a href="#">Amazon Music</a>
@@ -773,16 +795,10 @@ body.fxoff #flames2{animation-play-state:paused;}
         <div class="banner">The Burning Up Tour: All Over Again</div>
 
         <div class="sect">
-          <div class="sect-h"><span class="anno">16</span>North America &mdash; 45 Dates</div>
-          <table class="tour">
-            <tr><th>Date</th><th>Venue</th><th>City</th><th>&nbsp;</th></tr>
-            <tr><td class="dt">AUG 20</td><td>Madison Square Garden</td><td>New York, NY</td><td class="tix">Past</td></tr>
-            <tr><td class="dt">AUG 21</td><td>Madison Square Garden</td><td>New York, NY</td><td class="tix">Past</td></tr>
-            <tr><td class="dt">AUG 22</td><td>Madison Square Garden</td><td>New York, NY</td><td class="tix">Past</td></tr>
-            <tr><td class="dt">SEP 25</td><td>TD Garden &mdash; <b>Opening night</b></td><td>Boston, MA</td><td class="tix"><a href="#">Tickets</a></td></tr>
-            <tr><td class="dt swap">TBA</td><td class="swap">Toronto &middot; Washington DC &middot; Miami &middot; Los Angeles &middot; Seattle &middot; Denver</td><td class="swap">+ 35 more</td><td class="tix"><a href="#">Tickets</a></td></tr>
-            <tr><td class="dt">DEC 21</td><td>Prudential Center &mdash; <b>Final night</b></td><td>Newark, NJ</td><td class="tix"><a href="#">Tickets</a></td></tr>
-          </table>
+          <div class="sect-h"><span class="anno">16</span>North America &mdash; <span id="showcount-tour">47</span> Dates</div>
+          <div class="showscroll tall" id="shows-tour" tabindex="0"
+               role="region" aria-label="All tour dates, scrollable"></div>
+          <div class="scrollhint">Every date on the run. Tickets open in a new tab.</div>
           <p class="copy" style="margin-top:8px;">
             Special guests on select dates: <b>Magnus Ferrell</b>, <b>Franklin Jonas</b> and <b>All Time Low</b>.
           </p>
@@ -817,19 +833,19 @@ body.fxoff #flames2{animation-play-state:paused;}
       <li><b>1</b> <b>Profile identity.</b> Name, tagline, hometown, last login. Replaces the hero video &mdash; and "Wyckoff, New Jersey" does more brand work than any full-bleed photo.</li>
       <li><b>2</b> <b>Contact table.</b> Eight actions in 120px: message, share, follow, bookmark, mailing list, fan club, rate. Every conversion sits above the fold.</li>
       <li><b>3</b> <b>URL box.</b> The 2006 share primitive. Now: canonical link plus copy-to-clipboard, which is what people actually want when they're texting a friend.</li>
-      <li><b>4</b> <b>The music player.</b> The single most valuable pixel on the page, which is why it sits top-right above everything else. Autoplay was the point in 2006; today it's a streaming-link hub. Shown in its authentic failed state &mdash; half these embeds were broken by 2008, and that is the argument for owning the player rather than renting it.</li>
+      <li><b>4</b> <b>The music player.</b> The single most valuable pixel on the page, which is why it sits top-right above everything else. Autoplay was the point in 2006; today it's a streaming-link hub. Shown in its authentic failed state &mdash; half these embeds were broken by 2008 &mdash; and the dead embed hands you straight to Spotify. That is the whole argument in one module: own the surface, rent the playback.</li>
       <li><b>5</b> <b>Band Details.</b> The press-kit table &mdash; members, genre, formed. Scannable in five seconds by a journalist or a promoter.</li>
       <li><b>6</b> <b>Extended network banner.</b> Social proof slot. Swap the number for whatever we're comfortable publishing.</li>
-      <li><b>7</b> <b>Upcoming Shows.</b> Tour dates on the homepage, not one click in. This is the revenue module &mdash; it should never require navigation.</li>
+      <li><b>7</b> <b>Upcoming Shows.</b> All 47 dates on the homepage, scrollable in place, every row linking straight to tickets. This is the revenue module &mdash; it should never require navigation, and it should never need a second page to show the whole run.</li>
       <li><b>8</b> <b>Latest blog entry.</b> Announcements in the band's own voice, above the fold, dated. The thing every artist site buries under a "News" tab.</li>
       <li><b>9</b> <b>Blurbs.</b> "About us" and "Who we'd like to meet." The second one is audience positioning stated out loud &mdash; most sites hide that in a deck.</li>
       <li><b>10</b> <b>Top 8.</b> Members and tour guests as a ranked, finite grid. It forces a hierarchy, which a logo carousel never does.</li>
-      <li><b>11</b> <b>Friend comments.</b> Fan wall in reverse-chron. Marked SAMPLE &mdash; needs real, permissioned posts before this goes anywhere near production.</li>
+      <li><b>11</b> <b>Merch in the fan-wall slot.</b> The comment wall's exact layout, selling. A product reads as a post: thumbnail, name, price, one line, buy. It scrolls in place like a feed rather than bouncing people to a store. Product copy is SAMPLE &mdash; swap the catalogue and the real product URLs into <code>__DATA.merch</code>.</li>
       <li><b>12</b> <b>Persistent player.</b> Carries across screens so audio survives navigation. In 2006 that was an accident; here it's the spec.</li>
       <li><b>13</b> <b>Latest release.</b> One record, one date, three actions: listen, buy, watch.</li>
       <li><b>14</b> <b>Discography grid.</b> Twenty years in one screen, chronological. The 2006 sleeve sitting next to the 2025 one <em>is</em> the pitch.</li>
       <li><b>15</b> <b>Date filters.</b> Country, month, guest, status. What people actually search a tour page for.</li>
-      <li><b>16</b> <b>Full routing.</b> Opening and closing nights called out; sold-out states shown rather than hidden.</li>
+      <li><b>16</b> <b>Full routing.</b> Every date in one scrollable list, opening and closing nights badged, played shows greyed rather than hidden. All rows render from <code>__DATA.shows</code>, so the routing is one array to update.</li>
       <li><b>17</b> <b>Before You Go.</b> Doors, bag policy, signs, resale. The support content that otherwise arrives as 400 identical DMs.</li>
       <li><b>18</b> <b>Glitter.</b> Not a joke module. In 2006 fans made the graphics and the band's page hosted them &mdash; the marketing came from the audience. The modern read: a share kit people actually want to post. Every sparkle here is drawn in canvas, so it's one file with no image assets.</li>
     </ul>
@@ -848,6 +864,70 @@ body.fxoff #flames2{animation-play-state:paused;}
     <span>Internet</span>
   </div>
 </div>
+
+<script>
+/* ------------------------------------------------------------------
+   Editable content. Everything the tour list, the player and the merch
+   rail render comes from here — change these arrays, not the markup.
+
+   shows[]  d      date label, or "TBA"
+            venue  venue name
+            city    city, state/province
+            url     per-show ticket page; falls back to ticketsAll
+            note    optional badge ("Opening night", "Final night")
+            past    true once the show has happened
+   VERIFIED marks rows confirmed from public listings. Rows without it
+   are real routing cities with dates still to be pasted in.
+   ------------------------------------------------------------------ */
+window.__DATA = {
+  spotify:    "https://open.spotify.com/artist/7gOdHgIoIKoe4i9Tta6qdD",
+  ticketsAll: "https://www.ticketmaster.com/jonas-brothers-tickets/artist/1052712",
+  showCount:  47,
+  shows: [
+    {d:"AUG 20", venue:"Madison Square Garden", city:"New York, NY", past:true},
+    {d:"AUG 21", venue:"Madison Square Garden", city:"New York, NY", past:true},
+    {d:"AUG 22", venue:"Madison Square Garden", city:"New York, NY", past:true},
+    {d:"SEP 25", venue:"TD Garden",              city:"Boston, MA",      note:"Opening night"},
+    {d:"SEP 26", venue:"SNHU Arena",             city:"Manchester, NH"},
+    {d:"SEP 28", venue:"RBC Amphitheatre",       city:"Toronto, ON"},
+    {d:"SEP 30", venue:"Capital One Arena",      city:"Washington, DC"},
+    {d:"OCT 1",  venue:"Lenovo Center",          city:"Raleigh, NC"},
+    {d:"OCT 2",  venue:"Xfinity Mobile Arena",   city:"Philadelphia, PA"},
+    {d:"OCT 5",  venue:"Kaseya Center",          city:"Miami, FL"},
+    {d:"OCT 6",  venue:"Kia Center",             city:"Orlando, FL"},
+    {d:"OCT 8",  venue:"State Farm Arena",       city:"Atlanta, GA"},
+    {d:"NOV 5",  venue:"Bridgestone Arena",      city:"Nashville, TN"},
+    {d:"NOV 10", venue:"American Airlines Center", city:"Dallas, TX"},
+    {d:"NOV 21", venue:"Chase Center",           city:"San Francisco, CA"},
+    {d:"NOV 22", venue:"Golden 1 Center",        city:"Sacramento, CA"},
+    {d:"DEC 21", venue:"Prudential Center",      city:"Newark, NJ", note:"Final night"},
+    {d:"TBA", venue:"Venue TBA", city:"Charlotte, NC",   tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Columbus, OH",    tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Buffalo, NY",     tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Detroit, MI",     tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Milwaukee, WI",   tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Des Moines, IA",  tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Omaha, NE",       tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Kansas City, MO", tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Austin, TX",      tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Denver, CO",      tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Las Vegas, NV",   tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Los Angeles, CA", tba:true},
+    {d:"TBA", venue:"Venue TBA", city:"Seattle, WA",     tba:true}
+  ],
+  /* SAMPLE product copy — swap for the real catalogue and product URLs. */
+  merch: [
+    {n:"Burning Up Tour Tee",        p:"$40", t:"t2", d:"Black heavyweight cotton. Full routing printed on the back.", url:"#"},
+    {n:"All Over Again Hoodie",      p:"$85", t:"t1", d:"Heavyweight fleece, embroidered JB crest on the chest.", url:"#"},
+    {n:"Greetings From Your Hometown LP", p:"$32", t:"t3", d:"180g vinyl, gatefold sleeve. Limited red pressing.", url:"#"},
+    {n:"Tour Poster — Numbered",     p:"$28", t:"t5", d:"18x24 screen print, hand numbered out of 500.", url:"#"},
+    {n:"JB Crest Dad Hat",           p:"$35", t:"t4", d:"Washed twill, adjustable strap, embroidered crest.", url:"#"},
+    {n:"Enamel Pin Set",             p:"$22", t:"t6", d:"Three pins: crest, guitar, and the 2006 wordmark.", url:"#"},
+    {n:"Tour Tote",                  p:"$30", t:"t8", d:"Heavy canvas, screen printed both sides.", url:"#"},
+    {n:"1of3 Crewneck",              p:"$75", t:"t7", d:"Vintage wash crewneck with the Wyckoff print.", url:"#"}
+  ]
+};
+</script>
 
 <script>
 /* Real artwork. Inlined as data URIs so the page stays a single file.
@@ -895,6 +975,92 @@ window.__ASSETS = {
   tabs.forEach(function(t){
     t.addEventListener('click', function(){ show(t.dataset.screen); });
   });
+
+  /* ---------------- content rendered from window.__DATA ---------------- */
+  var DATA = window.__DATA || {};
+
+  function esc(v){
+    return String(v == null ? '' : v)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function showRow(sh){
+    var cls = sh.past ? ' class="is-past"' : (sh.tba ? ' class="is-tba"' : '');
+    var venue = esc(sh.venue);
+    if(sh.note) venue += ' <span class="note-badge">' + esc(sh.note) + '</span>';
+
+    var action;
+    if(sh.past){
+      action = 'Past';
+    } else {
+      var href = sh.url || DATA.ticketsAll || '#';
+      action = '<a href="' + esc(href) + '" target="_blank" rel="noopener">Tickets</a>';
+    }
+    return '<tr' + cls + '>' +
+      '<td class="dt">' + esc(sh.d) + '</td>' +
+      '<td>' + venue + '</td>' +
+      '<td>' + esc(sh.city) + '</td>' +
+      '<td class="tix">' + action + '</td></tr>';
+  }
+
+  function renderShows(el){
+    if(!el || !DATA.shows) return;
+    el.innerHTML =
+      '<table><thead><tr><th>Date</th><th>Venue</th><th>City</th><th>&nbsp;</th></tr></thead>' +
+      '<tbody>' + DATA.shows.map(showRow).join('') + '</tbody></table>';
+  }
+
+  function renderMerch(el){
+    if(!el || !DATA.merch) return;
+    el.innerHTML = DATA.merch.map(function(m){
+      var initials = m.n.split(/\s+/).slice(0,2)
+        .map(function(w){ return w.charAt(0); }).join('');
+      return '<div class="cmt">' +
+        '<div class="av tile shot ' + esc(m.t || 't1') + '" aria-hidden="true">' + esc(initials) + '</div>' +
+        '<div class="bd">' +
+          '<span class="who">' + esc(m.n) + '</span>' +
+          '<span class="merch-price">' + esc(m.p) + '</span><br>' +
+          esc(m.d) +
+          '<div class="merch-buy">' +
+            '<a href="' + esc(m.url || '#') + '" target="_blank" rel="noopener">Add to Cart</a>' +
+          '</div>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  renderShows(document.getElementById('shows-home'));
+  renderShows(document.getElementById('shows-tour'));
+  renderMerch(document.getElementById('merch'));
+
+  /* counts stay honest even if the array changes */
+  var total = DATA.showCount || (DATA.shows ? DATA.shows.length : 0);
+  ['showcount-home','showcount-tour'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.textContent = total;
+  });
+
+  /* every Spotify affordance points at the one URL in the data block */
+  if(DATA.spotify){
+    ['spotify-cta','spotify-foot'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.href = DATA.spotify;
+    });
+    [].forEach.call(document.querySelectorAll('.js-spotify'), function(el){
+      el.href = DATA.spotify;
+    });
+    /* the transport buttons are part of the same affordance */
+    [].forEach.call(document.querySelectorAll('.wmp-top .wb'), function(btn){
+      btn.style.cursor = 'pointer';
+      btn.addEventListener('click', function(){
+        window.open(DATA.spotify, '_blank', 'noopener');
+      });
+    });
+  }
+  if(DATA.ticketsAll){
+    var all = document.getElementById('alldates-home');
+    if(all) all.href = DATA.ticketsAll;
+  }
 
   notesBtn.addEventListener('click', function(){
     var on = body.classList.toggle('notes');
