@@ -28,8 +28,7 @@
 
 body{
   margin:0;
-  background:var(--desk-b);
-  background-image:linear-gradient(170deg,var(--desk-a) 0%,var(--desk-b) 100%);
+  background:#000000;
   font-family:Verdana,Geneva,Tahoma,sans-serif;
   font-size:11px;
   color:var(--ink);
@@ -234,6 +233,73 @@ body.notes .notes-panel{display:block;}
 .notes-list li b:first-child{position:absolute;left:0;top:0;background:#FFCC00;border:1px solid #A37A00;font-size:10px;padding:0 4px;}
 .notes-key{font-size:10px;color:#666;margin-top:10px;line-height:1.6;max-width:78ch;}
 
+/* ---------- flames background ---------- */
+#flames{
+  position:fixed;left:0;bottom:0;width:100%;height:40vh;
+  z-index:0;pointer-events:none;
+}
+#fireglow{
+  position:fixed;left:0;bottom:0;width:100%;height:56vh;
+  z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 100% at 50% 100%,
+             rgba(255,116,0,0.50) 0%, rgba(190,40,0,0.22) 45%, rgba(0,0,0,0) 72%);
+}
+.win{position:relative;z-index:1;}
+
+/* ---------- band photo slot ---------- */
+.pic.photo{background:#111;border:1px solid #999;overflow:hidden;}
+.pic.photo img{display:none;width:150px;height:150px;object-fit:cover;}
+.photo-ph{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;text-align:center;
+  font:bold 15px Verdana,sans-serif;color:#8FA6C6;letter-spacing:.14em;
+  background:repeating-linear-gradient(135deg,#1A2434 0 8px,#141C29 8px 16px);
+}
+.photo-ph small{font:9px Verdana,sans-serif;letter-spacing:.04em;color:#5E7391;}
+
+/* ---------- classic media player ---------- */
+.wmp{border:1px solid #000;background:#3A3A3A;margin-bottom:12px;}
+.wmp-top{display:flex;align-items:center;gap:8px;padding:5px 6px;
+  background:linear-gradient(180deg,#5C5C5C,#2E2E2E);}
+.wmp-btns{display:flex;gap:3px;}
+.wb{
+  width:34px;height:30px;background:linear-gradient(180deg,#EDEDED,#B4B4B4);
+  border:1px outset #FFFFFF;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:#1A1A1A;line-height:1;
+}
+.wmp-lcd{
+  flex:1;min-width:0;height:44px;background:#111;border:2px inset #6E6E6E;
+  display:flex;align-items:flex-end;justify-content:flex-end;gap:4px;padding:5px 8px;
+}
+.wmp-lcd i{display:block;width:14px;height:3px;background:#25E05A;}
+.wmp-vol{display:flex;align-items:center;gap:7px;padding:3px 8px 6px;
+  background:linear-gradient(180deg,#2E2E2E,#4A4A4A);}
+.spk{color:#E8E8E8;font-size:13px;line-height:1;}
+.vslider{position:relative;width:150px;height:5px;background:#151515;border:1px inset #777;}
+.vslider i{position:absolute;left:52%;top:-6px;width:9px;height:17px;
+  background:linear-gradient(180deg,#EDEDED,#9A9A9A);border:1px outset #FFF;}
+.vseg{display:flex;gap:3px;}
+.vseg i{display:block;width:11px;height:5px;background:#25E05A;}
+.vgrip{color:#9E9E9E;font:9px Verdana,sans-serif;letter-spacing:1px;}
+.wmp-sep{height:9px;background:#2B2B2B;border-top:1px solid #111;}
+.wmp-stage{display:flex;height:250px;background:#FFFFFF;}
+.wmp-stage .pane{width:56%;background:#C9C9C9;border-right:1px solid #B0B0B0;}
+.wmp-stage .err{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:10px;text-align:center;font-size:11px;color:#333;background:#FFFFFF;
+}
+.wmp-foot{
+  background:#FFFFFF;text-align:right;padding:4px 8px 6px;
+  font-size:10px;color:#333;border-top:0;
+}
+.wmp-foot .ic{
+  display:inline-block;width:11px;height:9px;margin-right:4px;vertical-align:0;
+  border:1px solid #6E6E6E;background:#DDE6F2;
+}
+
+/* ---------- crest ---------- */
+.crest{display:block;width:100%;height:auto;margin:2px 0 12px;}
+
 /* ---------- glitter ---------- */
 #fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
 .glitcv{display:block;image-rendering:auto;}
@@ -276,7 +342,7 @@ body.notes .notes-panel{display:block;}
   <div class="win-bar">
     <label for="addr">Address</label>
     <div class="addr" id="addr">http://www.jonasbrothers.com/</div>
-    <button class="tbtn" type="button" id="glitterBtn" aria-pressed="true">Glitter: on</button>
+    <button class="tbtn" type="button" id="glitterBtn" aria-pressed="true">Effects: on</button>
     <button class="tbtn" type="button" id="notesBtn" aria-pressed="false">Annotations: off</button>
   </div>
 
@@ -313,18 +379,14 @@ body.notes .notes-panel{display:block;}
         <h1 class="pname"><span class="anno">1</span>Jonas Brothers</h1>
 
         <div class="pic-row">
-          <div class="pic glit">
-            <canvas class="glitcv" width="300" height="300"
-                    data-glit="wordmark" data-pal="gold"
-                    aria-label="Jonas Brothers glitter wordmark"></canvas>
+          <div class="pic photo">
+            <img src="assets/band-photo.jpg" alt="Jonas Brothers">
+            <div class="photo-ph">BAND<br>PHOTO<small>assets/band-photo.jpg</small></div>
           </div>
           <div class="pic-meta">
-            <div class="quote">"Three brothers. Twenty years. Still burning up."</div>
-            Band<br>
+            <div class="quote">"listen when sad"</div>
             Wyckoff,<br>New Jersey<br>
-            United States<br><br>
-            Profile Views: <span class="swap">4,208,116</span><br>
-            Last Login: <span class="swap">08/26/2026</span>
+            United States
           </div>
         </div>
         <div class="morepics"><a href="#">View More Pics</a></div>
@@ -358,38 +420,18 @@ body.notes .notes-panel{display:block;}
           <span class="u">http://www.jonasbrothers.com/</span>
         </div>
 
-        <div class="player">
-          <div class="now">
-            <div class="play" aria-hidden="true">&#9654;</div>
-            <div class="meta">
-              <b><span class="anno">4</span>Listen When Sad</b>
-              <i>JONAS BROTHERS &middot; new single</i>
-            </div>
-            <div class="ctrl">+add+<br>+share+</div>
-          </div>
-          <div class="bar" aria-hidden="true"><i></i></div>
-          <ol class="plist">
-            <li class="cur"><span>1.</span><span>Listen When Sad</span><span>&#9654;</span></li>
-            <li><span>2.</span><span>Sucker</span><span>&#9654;</span></li>
-            <li><span>3.</span><span>Burnin' Up</span><span>&#9654;</span></li>
-            <li><span>4.</span><span>S.O.S.</span><span>&#9654;</span></li>
-            <li><span>5.</span><span>Year 3000</span><span>&#9654;</span></li>
-            <li><span>6.</span><span>Lovebug</span><span>&#9654;</span></li>
-          </ol>
-        </div>
-
         <div class="box">
           <div class="box-h"><span class="anno">5</span>Band Details</div>
           <table class="tbl">
             <tr><th>Members</th><td>Kevin, Joe and Nick Jonas</td></tr>
             <tr><th>Genre</th><td>Pop / Pop Rock</td></tr>
             <tr><th>Formed</th><td>2005 &mdash; Wyckoff, New Jersey</td></tr>
-            <tr><th>Record Label</th><td>Republic Records</td></tr>
-            <tr><th>Type of Label</th><td>Major</td></tr>
-            <tr><th>Latest Album</th><td><i>Greetings from Your Hometown</i> (2025)</td></tr>
-            <tr><th>On Tour</th><td>The Burning Up Tour: All Over Again &mdash; 45 dates, Sep&ndash;Dec 2026</td></tr>
           </table>
         </div>
+
+        <canvas class="glitcv crest" width="600" height="620"
+                data-glit="crest" data-pal="red"
+                aria-label="Jonas Brothers glitter crest"></canvas>
 
         <div style="font-size:10px;color:#666;text-align:center;">
           You are visitor
@@ -401,19 +443,30 @@ body.notes .notes-panel{display:block;}
 
       <!-- RIGHT COLUMN -->
       <div class="right">
-        <div class="gg">
-          <canvas class="glitcv" width="880" height="200"
-                  data-glit="banner" data-pal="pink"
-                  aria-label="Jonas Brothers glitter graphic"></canvas>
-          <span class="cap"><span class="anno">18</span>GLITTER GRAPHIC &mdash; COPY + PASTE INTO YOUR PROFILE</span>
+        <div class="wmp">
+          <div class="wmp-top">
+            <div class="wmp-btns">
+              <span class="wb" aria-hidden="true">&#9632;</span>
+              <span class="wb" aria-hidden="true">&#9664;&#124;</span>
+              <span class="wb" aria-hidden="true">&#10073;&#10073;</span>
+              <span class="wb" aria-hidden="true">&#9654;</span>
+              <span class="wb" aria-hidden="true">&#124;&#9654;</span>
+            </div>
+            <div class="wmp-lcd" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="wmp-vol">
+            <span class="spk" aria-hidden="true">&#128266;</span>
+            <div class="vslider" aria-hidden="true"><i></i></div>
+            <div class="vseg" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="vgrip" aria-hidden="true">|||</span>
+          </div>
+          <div class="wmp-sep" aria-hidden="true"></div>
+          <div class="wmp-stage">
+            <div class="pane" aria-hidden="true"></div>
+            <div class="err"><span class="anno">4</span>Error Loading XML Document</div>
+          </div>
+          <div class="wmp-foot"><span class="ic" aria-hidden="true"></span>open player in a new window</div>
         </div>
-
-        <div class="banner"><span class="anno">6</span>Jonas Brothers is in your extended network</div>
-
-        <div class="mq"><span>&#9733; THE BURNING UP TOUR: ALL OVER AGAIN &mdash; on sale now &#9733; New single "Listen When Sad" out now &#9733; Greetings from Your Hometown available everywhere &#9733;</span></div>
-
-        <canvas class="glitcv gdiv" width="880" height="28"
-                data-glit="bar" data-pal="gold" aria-hidden="true"></canvas>
 
         <div class="sect">
           <div class="sect-h"><span class="anno">7</span>Upcoming Shows</div>
@@ -449,6 +502,20 @@ body.notes .notes-panel{display:block;}
           </p>
           <p class="copy">[<a href="#">View All Blog Entries</a>]</p>
         </div>
+
+        <div class="banner"><span class="anno">6</span>Jonas Brothers is in your extended network</div>
+
+        <div class="mq"><span>&#9733; THE BURNING UP TOUR: ALL OVER AGAIN &mdash; on sale now &#9733; New single "Listen When Sad" out now &#9733; Greetings from Your Hometown available everywhere &#9733;</span></div>
+
+        <div class="gg">
+          <canvas class="glitcv" width="880" height="200"
+                  data-glit="banner" data-pal="pink"
+                  aria-label="Jonas Brothers glitter graphic"></canvas>
+          <span class="cap"><span class="anno">18</span>GLITTER GRAPHIC &mdash; COPY + PASTE INTO YOUR PROFILE</span>
+        </div>
+
+        <canvas class="glitcv gdiv" width="880" height="28"
+                data-glit="bar" data-pal="gold" aria-hidden="true"></canvas>
 
         <div class="sect">
           <div class="sect-h"><span class="anno">9</span>Jonas Brothers' Blurbs</div>
@@ -724,8 +791,8 @@ body.notes .notes-panel{display:block;}
       <li><b>1</b> <b>Profile identity.</b> Name, tagline, hometown, last login. Replaces the hero video &mdash; and "Wyckoff, New Jersey" does more brand work than any full-bleed photo.</li>
       <li><b>2</b> <b>Contact table.</b> Eight actions in 120px: message, share, follow, bookmark, mailing list, fan club, rate. Every conversion sits above the fold.</li>
       <li><b>3</b> <b>URL box.</b> The 2006 share primitive. Now: canonical link plus copy-to-clipboard, which is what people actually want when they're texting a friend.</li>
-      <li><b>4</b> <b>The music player.</b> The single most valuable pixel on the page. Autoplay was the point in 2006; today it's a streaming-link hub with the new single on top.</li>
-      <li><b>5</b> <b>Band Details.</b> The press-kit table. Members, genre, label, latest album, current tour &mdash; scannable in five seconds by a journalist or a promoter.</li>
+      <li><b>4</b> <b>The music player.</b> The single most valuable pixel on the page, which is why it sits top-right above everything else. Autoplay was the point in 2006; today it's a streaming-link hub. Shown in its authentic failed state &mdash; half these embeds were broken by 2008, and that is the argument for owning the player rather than renting it.</li>
+      <li><b>5</b> <b>Band Details.</b> The press-kit table &mdash; members, genre, formed. Scannable in five seconds by a journalist or a promoter.</li>
       <li><b>6</b> <b>Extended network banner.</b> Social proof slot. Swap the number for whatever we're comfortable publishing.</li>
       <li><b>7</b> <b>Upcoming Shows.</b> Tour dates on the homepage, not one click in. This is the revenue module &mdash; it should never require navigation.</li>
       <li><b>8</b> <b>Latest blog entry.</b> Announcements in the band's own voice, above the fold, dated. The thing every artist site buries under a "News" tab.</li>
@@ -756,6 +823,8 @@ body.notes .notes-panel{display:block;}
   </div>
 </div>
 
+<div id="fireglow" aria-hidden="true"></div>
+<canvas id="flames" aria-hidden="true"></canvas>
 <canvas id="fx" aria-hidden="true"></canvas>
 
 <script>
@@ -806,7 +875,8 @@ body.notes .notes-panel{display:block;}
   var PAL = {
     gold: {a:'#FFF7C9', b:'#F0BE22', c:'#7E5000', spark:'#FFFDEB'},
     pink: {a:'#FFD9F1', b:'#EE3B99', c:'#6E0A3F', spark:'#FFFFFF'},
-    ice:  {a:'#EAF5FF', b:'#5C9DF5', c:'#123A78', spark:'#FFFFFF'}
+    ice:  {a:'#EAF5FF', b:'#5C9DF5', c:'#123A78', spark:'#FFFFFF'},
+    red:  {a:'#FF7A7A', b:'#BE1010', c:'#420000', spark:'#FFE2E2'}
   };
 
   var SPEC = {
@@ -823,6 +893,83 @@ body.notes .notes-panel{display:block;}
       {t:'JB 4 EVER',   f:'900 54px "Arial Black","Arial Bold",Arial,sans-serif', y:62},
       {t:'*~ MYSPACE ~*', f:'bold 22px Verdana,sans-serif',                        y:112}
     ]
+  };
+
+  /* Masks that are drawn rather than typed. Swapping in real logo artwork
+     means replacing one of these with a drawImage of the asset - the field,
+     the glow and the toggle all keep working unchanged. */
+  var SHAPE = {
+    crest: function(mc,w,h){
+      var cx = w/2;
+      mc.strokeStyle = '#FFFFFF';
+      mc.fillStyle = '#FFFFFF';
+      mc.lineJoin = 'round';
+      mc.lineCap = 'round';
+
+      function shield(top,bot,hw,lw){
+        mc.lineWidth = lw;
+        mc.beginPath();
+        mc.moveTo(cx-hw, top+26);
+        mc.quadraticCurveTo(cx-hw, top, cx, top);
+        mc.quadraticCurveTo(cx+hw, top, cx+hw, top+26);
+        mc.lineTo(cx+hw, bot-hw*0.85);
+        mc.quadraticCurveTo(cx+hw*0.90, bot, cx, bot);
+        mc.quadraticCurveTo(cx-hw*0.90, bot, cx-hw, bot-hw*0.85);
+        mc.closePath();
+        mc.stroke();
+      }
+
+      /* mirrored scroll flourish */
+      function curl(ox,oy,sc,dir){
+        mc.save();
+        mc.translate(cx + dir*ox, oy);
+        mc.scale(dir*sc, sc);
+        mc.lineWidth = 7/sc;
+        mc.beginPath();
+        mc.moveTo(0,0);
+        mc.bezierCurveTo(26,-30, 74,-30, 86,4);
+        mc.bezierCurveTo(96,32, 66,52, 50,36);
+        mc.bezierCurveTo(38,24, 54,6, 66,18);
+        mc.stroke();
+        mc.beginPath();
+        mc.arc(88,-6,7,0,Math.PI*2);
+        mc.fill();
+        mc.restore();
+      }
+
+      /* crown of points along the top */
+      function crown(y,hw,n){
+        var i,x,r;
+        for(i=0;i<=n;i++){
+          x = cx - hw + (2*hw)*(i/n);
+          r = 7 + 6*Math.sin(Math.PI*(i/n));
+          mc.beginPath();
+          mc.arc(x, y - 16*Math.sin(Math.PI*(i/n)), r, 0, Math.PI*2);
+          mc.fill();
+        }
+      }
+
+      shield(150, h-52, w*0.315, 16);
+      shield(178, h-92, w*0.235, 7);
+      crown(150, w*0.30, 12);
+
+      curl(w*0.30, 210, 1.15,  1);
+      curl(w*0.30, 210, 1.15, -1);
+      curl(w*0.27, 366, 0.95,  1);
+      curl(w*0.27, 366, 0.95, -1);
+
+      /* base flourish */
+      mc.lineWidth = 9;
+      mc.beginPath();
+      mc.moveTo(cx-w*0.20, h-34);
+      mc.quadraticCurveTo(cx, h-8, cx+w*0.20, h-34);
+      mc.stroke();
+
+      mc.textAlign = 'center';
+      mc.textBaseline = 'middle';
+      mc.font = 'bold 150px Georgia,"Times New Roman",serif';
+      mc.fillText('JB', cx, h*0.55);
+    }
   };
 
   function star(ctx,x,y,r){
@@ -874,15 +1021,20 @@ body.notes .notes-panel{display:block;}
   /* All lines go onto ONE offscreen mask. 'destination-in' composites against
      the whole canvas per call, so masking line-by-line would intersect each
      line with the last and leave nothing. Built once, then reused each frame. */
-  function maskFor(cv, lines){
+  function maskFor(cv){
     if(cv._mask) return cv._mask;
     var m = document.createElement('canvas');
     m.width = cv.width; m.height = cv.height;
     var mc = m.getContext('2d');
-    mc.textAlign = 'center';
-    mc.textBaseline = 'middle';
-    mc.fillStyle = '#FFFFFF';
-    lines.forEach(function(L){ mc.font = L.f; mc.fillText(L.t, cv.width/2, L.y); });
+    var kind = cv.dataset.glit;
+    if(SHAPE[kind]){
+      SHAPE[kind](mc, cv.width, cv.height);
+    } else {
+      mc.textAlign = 'center';
+      mc.textBaseline = 'middle';
+      mc.fillStyle = '#FFFFFF';
+      (SPEC[kind]||[]).forEach(function(L){ mc.font = L.f; mc.fillText(L.t, cv.width/2, L.y); });
+    }
     cv._mask = m;
     return m;
   }
@@ -898,11 +1050,11 @@ body.notes .notes-panel{display:block;}
     ctx.clearRect(0,0,w,h);
     field(ctx,w,h,p);
 
-    var lines = SPEC[kind];
-    if(!lines || !lines.length){ return; }   /* plain glitter bar */
+    var masked = SHAPE[kind] || (SPEC[kind] && SPEC[kind].length);
+    if(!masked){ return; }   /* plain glitter bar */
 
     ctx.globalCompositeOperation = 'destination-in';
-    ctx.drawImage(maskFor(cv,lines), 0, 0);
+    ctx.drawImage(maskFor(cv), 0, 0);
     ctx.globalCompositeOperation = 'source-over';
 
     /* glow goes BEHIND the glitter (a dark outline would vanish on black) */
@@ -910,7 +1062,7 @@ body.notes .notes-panel{display:block;}
     ctx.globalAlpha = 0.6;
     ctx.shadowColor = p.b;
     ctx.shadowBlur = 18;
-    ctx.drawImage(maskFor(cv,lines), 0, 0);
+    ctx.drawImage(maskFor(cv), 0, 0);
     ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = 'source-over';
@@ -954,7 +1106,7 @@ body.notes .notes-panel{display:block;}
     if(glitterOn) spawn(e.clientX, e.clientY, 14, false);
   });
 
-  var last = 0, ambient = 0;
+  var last = 0, ambient = 0, fireT = 0;
   function loop(ts){
     requestAnimationFrame(loop);
 
@@ -963,6 +1115,7 @@ body.notes .notes-panel{display:block;}
       last = ts;
       glits.forEach(drawGlit);
     }
+    if(glitterOn && ts - fireT > 33){ fireT = ts; burn(); }
 
     fxc.clearRect(0,0,fx.width,fx.height);
     if(!glitterOn){ bits.length = 0; return; }
@@ -984,16 +1137,76 @@ body.notes .notes-panel{display:block;}
   }
   requestAnimationFrame(loop);
 
-  var glitterBtn = document.getElementById('glitterBtn');
+  /* ---- flames: the Doom fire algorithm on a tiny buffer, scaled up ----
+     Heat starts at maximum along the bottom row and propagates upward with a
+     random horizontal drift and decay. Rendered at 200x90 and stretched by
+     CSS with image-rendering:pixelated, which is what gives it the chunky
+     look of a tiled flame GIF rather than a smooth modern gradient. */
+  var FW = 220, FH = 110;
+  var flames = document.getElementById('flames');
+  var flc = flames.getContext('2d');
+  flames.width = FW; flames.height = FH;
+
+  var FIRE = [];
+  (function(){
+    for(var i=0;i<37;i++){
+      var t = i/36;
+      FIRE.push([
+        Math.min(255, Math.round(t*255/0.35)),
+        t < 0.35 ? 0 : Math.min(255, Math.round((t-0.35)*255/0.50)),
+        t < 0.88 ? 0 : Math.round((t-0.88)*175/0.12)
+      ]);
+    }
+  })();
+
+  var heat = new Uint8Array(FW*FH);
+  for(var fx0=0; fx0<FW; fx0++) heat[(FH-1)*FW + fx0] = 36;
+
+  var fimg = flc.createImageData(FW,FH);
+
+  function burn(){
+    for(var x=0;x<FW;x++){
+      for(var y=1;y<FH;y++){
+        var src = y*FW + x;
+        var rand = (Math.random()*3)|0;
+        var dst = src - rand + 1 - FW;
+        if(dst < 0) continue;
+        var v = heat[src] - (rand & 1);
+        heat[dst] = v < 0 ? 0 : v;
+      }
+    }
+    var d = fimg.data;
+    for(var i=0;i<FW*FH;i++){
+      var c = FIRE[heat[i]] || FIRE[0];
+      var o = i*4;
+      d[o] = c[0]; d[o+1] = c[1]; d[o+2] = c[2];
+      /* fade the tips out rather than cutting them off hard */
+      d[o+3] = heat[i] === 0 ? 0 : Math.min(255, heat[i]*16);
+    }
+    flc.putImageData(fimg,0,0);
+  }
+  for(var warm=0; warm<180; warm++) burn();
+
+  /* ---- band photo: show the real file when it loads, placeholder until ---- */
+  var bandImg = document.querySelector('.photo img');
+  if(bandImg){
+    bandImg.addEventListener('load', function(){
+      bandImg.style.display = 'block';
+      var ph = document.querySelector('.photo-ph');
+      if(ph) ph.style.display = 'none';
+    });
+  }
+
+  var fxBtn = document.getElementById('glitterBtn');
   function setGlitter(v){
     glitterOn = v;
-    glitterBtn.setAttribute('aria-pressed', String(v));
-    glitterBtn.textContent = 'Glitter: ' + (v ? 'on' : 'off');
+    fxBtn.setAttribute('aria-pressed', String(v));
+    fxBtn.textContent = 'Effects: ' + (v ? 'on' : 'off');
     glits.forEach(drawGlit);           /* leave a static frame when paused */
     if(!v) fxc.clearRect(0,0,fx.width,fx.height);
   }
   setGlitter(glitterOn);
-  glitterBtn.addEventListener('click', function(){ setGlitter(!glitterOn); });
+  fxBtn.addEventListener('click', function(){ setGlitter(!glitterOn); });
 
 })();
 </script>

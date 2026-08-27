@@ -15,10 +15,40 @@ site as a route.
 ```
 index.html            the three screens, as markup
 assets/styles.css     all styling — single theme, no framework
-assets/glitter.js     the glitter engine (canvas)
+assets/glitter.js     the glitter engine + flames (canvas)
 assets/app.js         screen switching + annotations layer
+assets/band-photo.jpg YOU ADD THIS — see below
 preview.png           what it should look like
 ```
+
+## Drop in the two real assets
+
+The mockup ships with placeholders for the two things that need real artwork.
+Neither needs a code change beyond adding the file.
+
+**Band photo.** Save it as `assets/band-photo.jpg` and it appears in the profile
+slot automatically. Until then you get a dark "BAND PHOTO" placeholder. It
+renders at 150x150 with `object-fit: cover`, so any aspect ratio works, but a
+square crop is what 2006 would have used.
+
+**The JB crest.** The red glitter crest in the left column is currently an
+original ornate shield drawn in canvas — **not the band's real crest artwork**.
+To use the real logo, replace `SHAPE.crest` in `glitter.js` with a draw of your
+asset. The shape is used as a mask, so a transparent PNG is ideal:
+
+```js
+var logo = new Image();
+logo.src = 'assets/jb-crest.png';
+
+SHAPE.crest = function(mc, w, h){
+  mc.drawImage(logo, 0, 0, w, h);
+};
+```
+
+The animated glitter field, the glow and the effects toggle all keep working
+against whatever shape the mask contains. Masks are cached per canvas on first
+draw, so make sure the image has loaded before the first frame (or clear
+`cv._mask` once it does).
 
 ## What's in it
 
@@ -35,8 +65,9 @@ Two toolbar toggles:
 - **Annotations** — overlays 18 numbered markers and a notes panel mapping each
   MySpace module to the job a modern artist site gives it. This is the thing to
   present from. It also highlights every placeholder value in yellow.
-- **Glitter** — pauses all animation and leaves a static frame, so you can talk
-  over the page without it shimmering behind you.
+- **Effects** — pauses every animation at once (glitter, cursor sparkles and the
+  flames) and leaves a static frame, so you can talk over the page without it
+  moving behind you.
 
 ## Before this goes anywhere public
 
@@ -63,6 +94,17 @@ Two toolbar toggles:
 
 Song titles appear as titles only. No lyrics, no photographs — every avatar,
 album sleeve and sparkle is drawn in code.
+
+## The flames
+
+The background is the Doom fire algorithm on a 220x110 buffer, scaled up by CSS
+with smoothing left on — that soft upscale is what makes it read as a blurry
+tiled fire GIF rather than a crisp modern gradient. Heat starts at maximum along
+the bottom row and propagates upward with random horizontal drift and decay, and
+the tips fade out through alpha rather than cutting off hard.
+
+The simulation is primed with 180 frames before the first paint, so the page
+opens with the fire already burning instead of visibly growing in from cold.
 
 ## Notes for whoever picks this up
 
