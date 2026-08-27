@@ -4,9 +4,23 @@ A concept mockup: the band's site rebuilt as a MySpace profile, circa 2006.
 Made as a pitch piece. **Not a live site, not production code, not affiliated
 with anything.**
 
+## Two copies, pick the right one
+
+**Sharing it with people to look at?** Send `jonasbrothers-myspace.html` — one
+file with the styles, scripts and artwork all inline. Nothing to keep next to
+it, so forwarding it through email or chat cannot break it. This is the copy to
+send for review.
+
+**Working on the code?** Use this folder. `index.html` plus `assets/`, split
+into real files.
+
+Do not send the folder's `index.html` on its own: it points at `assets/` for the
+photo, the crest, the CSS and the scripts, and mail clients routinely forward
+the file without the folder. That is what makes the images disappear.
+
 ## Run it
 
-Double-click `index.html`. That's the whole setup.
+Double-click either HTML file. That's the whole setup.
 
 No build step, no package manager, no dependencies, no network requests.
 It works from `file://`, from any static host, or dropped into an existing

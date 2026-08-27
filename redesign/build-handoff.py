@@ -15,6 +15,7 @@ import base64, io, os, re, sys, shutil, zipfile
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(ROOT, 'index.html')
 NAME = 'jonasbrothers-myspace-mockup'
+STANDALONE = 'jonasbrothers-myspace.html'
 GLITTER_MARK = '  /* ================= GLITTER ENGINE'
 
 APP_HEADER = """/* ------------------------------------------------------------------
@@ -55,6 +56,19 @@ GLITTER_HEADER = """/* ---------------------------------------------------------
 
 def build(outdir):
     src = io.open(SRC, encoding='utf-8').read()
+
+    # Single self-contained file: styles, scripts and artwork all inline, no
+    # relative paths at all. This is the copy to email around - forwarding it
+    # without a folder cannot break it.
+    standalone = os.path.join(outdir, STANDALONE)
+    title_m = re.search(r'<title>(.*?)</title>', src, re.S)
+    io.open(standalone, 'w', encoding='utf-8').write(
+        '<!doctype html>\n<html lang="en">\n<head>\n'
+        '<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+        '</head>\n<body>\n\n%s\n\n</body>\n</html>\n' % src)
+    print('built %s (%d KB, self-contained)'
+          % (standalone, os.path.getsize(standalone) // 1024))
     dest = os.path.join(outdir, NAME)
     if os.path.isdir(dest):
         shutil.rmtree(dest)
