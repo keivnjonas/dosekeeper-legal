@@ -42,6 +42,7 @@ Both real assets ship in this bundle:
 ```
 assets/jb-crest.webp    the JB crest, transparent, 588x793
 assets/band-photo.jpg   band photo, 600x400
+assets/flames-bg.webp   the flames background, 500x500, tiled
 ```
 
 They are wired through a single `window.__ASSETS` block near the bottom of
@@ -112,14 +113,19 @@ album sleeve and sparkle is drawn in code.
 
 ## The flames
 
-The background is the Doom fire algorithm on a 220x110 buffer, scaled up by CSS
-with smoothing left on — that soft upscale is what makes it read as a blurry
-tiled fire GIF rather than a crisp modern gradient. Heat starts at maximum along
-the bottom row and propagates upward with random horizontal drift and decay, and
-the tips fade out through alpha rather than cutting off hard.
+Supplied artwork, tiled along the bottom with `repeat-x` and
+`background-size: auto 100%`, so it scales to the layer height and repeats
+sideways however wide the window gets. The art's left and right edges are close
+enough in value to tile without a visible seam.
 
-The simulation is primed with 180 frames before the first paint, so the page
-opens with the fire already burning instead of visibly growing in from cold.
+A second copy sits on top, mirrored horizontally, blended with `screen` and
+slowly drifting. That is what keeps a static image from reading as frozen, and
+the mirroring further disguises the repeat. Both the drift and its opacity
+flicker park when Effects is switched off, and under `prefers-reduced-motion`
+the second layer holds still at a fixed opacity.
+
+This replaced a generated fire simulation; the artwork reads better, and it
+removed about 40 lines of per-frame canvas work from the render loop.
 
 ## Notes for whoever picks this up
 

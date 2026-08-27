@@ -145,7 +145,8 @@ def extract_assets(src, dest, written):
     for name, uri in re.findall(r'(\w+)\s*:\s*"(data:[^"]+)"', block.group(0)):
         head, b64 = uri.split(',', 1)
         mime = head[5:].split(';')[0]
-        fname = {'crest': 'jb-crest', 'photo': 'band-photo'}.get(name, name)
+        fname = {'crest': 'jb-crest', 'photo': 'band-photo',
+                 'flames': 'flames-bg'}.get(name, name)
         fname += EXT.get(mime, '.bin')
         with open(os.path.join(dest, 'assets', fname), 'wb') as fh:
             fh.write(base64.b64decode(b64))
