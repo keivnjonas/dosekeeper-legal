@@ -549,7 +549,8 @@ body.fxoff #flames2{animation-play-state:paused;}
           <div class="sect-h"><span class="anno">7</span>Upcoming Shows</div>
           <div class="showscroll" id="shows-home" tabindex="0"
                role="region" aria-label="Upcoming shows, scrollable"></div>
-          <div class="scrollhint">Scroll the list for all <b id="showcount-home">47</b> dates.</div>
+          <div class="scrollhint">Scrolling &mdash; <b id="showconf-home">24</b> of
+            <b id="showcount-home">47</b> dates loaded.</div>
           <p class="copy" style="margin-top:6px;">
             47 shows across the US and Canada. Special guests on select dates:
             Magnus Ferrell, Franklin Jonas and All Time Low.
@@ -798,7 +799,9 @@ body.fxoff #flames2{animation-play-state:paused;}
           <div class="sect-h"><span class="anno">16</span>North America &mdash; <span id="showcount-tour">47</span> Dates</div>
           <div class="showscroll tall" id="shows-tour" tabindex="0"
                role="region" aria-label="All tour dates, scrollable"></div>
-          <div class="scrollhint">Every date on the run. Tickets open in a new tab.</div>
+          <div class="scrollhint">Tickets open in a new tab.
+            <b id="showconf-tour">24</b> of <b id="showcount-tour2">47</b> dates loaded &mdash;
+            the rest drop straight into <code>__DATA.shows</code>.</div>
           <p class="copy" style="margin-top:8px;">
             Special guests on select dates: <b>Magnus Ferrell</b>, <b>Franklin Jonas</b> and <b>All Time Low</b>.
           </p>
@@ -884,28 +887,35 @@ window.__DATA = {
   ticketsAll: "https://www.ticketmaster.com/jonas-brothers-tickets/artist/1052712",
   showCount:  47,
   shows: [
-    {d:"AUG 20", venue:"Madison Square Garden", city:"New York, NY", past:true},
-    {d:"AUG 21", venue:"Madison Square Garden", city:"New York, NY", past:true},
-    {d:"AUG 22", venue:"Madison Square Garden", city:"New York, NY", past:true},
-    {d:"SEP 25", venue:"TD Garden",              city:"Boston, MA",      note:"Opening night"},
-    {d:"SEP 26", venue:"SNHU Arena",             city:"Manchester, NH"},
-    {d:"SEP 28", venue:"RBC Amphitheatre",       city:"Toronto, ON"},
-    {d:"SEP 30", venue:"Capital One Arena",      city:"Washington, DC"},
-    {d:"OCT 1",  venue:"Lenovo Center",          city:"Raleigh, NC"},
-    {d:"OCT 2",  venue:"Xfinity Mobile Arena",   city:"Philadelphia, PA"},
-    {d:"OCT 5",  venue:"Kaseya Center",          city:"Miami, FL"},
-    {d:"OCT 6",  venue:"Kia Center",             city:"Orlando, FL"},
-    {d:"OCT 8",  venue:"State Farm Arena",       city:"Atlanta, GA"},
-    {d:"NOV 5",  venue:"Bridgestone Arena",      city:"Nashville, TN"},
-    {d:"NOV 10", venue:"American Airlines Center", city:"Dallas, TX"},
-    {d:"NOV 21", venue:"Chase Center",           city:"San Francisco, CA"},
-    {d:"NOV 22", venue:"Golden 1 Center",        city:"Sacramento, CA"},
-    {d:"DEC 21", venue:"Prudential Center",      city:"Newark, NJ", note:"Final night"},
-    {d:"TBA", venue:"Venue TBA", city:"Charlotte, NC",   tba:true},
+    {d:"AUG 20", venue:"Madison Square Garden",    city:"New York, NY",      past:true},
+    {d:"AUG 21", venue:"Madison Square Garden",    city:"New York, NY",      past:true, url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-new-york-new-york-08-21-2026/event/3B0064E3B9B53258"},
+    {d:"AUG 22", venue:"Madison Square Garden",    city:"New York, NY",      past:true},
+    {d:"SEP 25", venue:"TD Garden",                city:"Boston, MA",        note:"Opening night"},
+    {d:"SEP 26", venue:"SNHU Arena",               city:"Manchester, NH"},
+    {d:"SEP 28", venue:"RBC Amphitheatre",         city:"Toronto, ON"},
+    {d:"SEP 30", venue:"Capital One Arena",        city:"Washington, DC",    url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-all-over-again-washington-09-30-2026/event/15006506289B312F"},
+    {d:"OCT 1",  venue:"Lenovo Center",            city:"Raleigh, NC"},
+    {d:"OCT 2",  venue:"Xfinity Mobile Arena",     city:"Philadelphia, PA"},
+    {d:"OCT 5",  venue:"Kaseya Center",            city:"Miami, FL"},
+    {d:"OCT 6",  venue:"Kia Center",               city:"Orlando, FL"},
+    {d:"OCT 8",  venue:"State Farm Arena",         city:"Atlanta, GA"},
+    {d:"OCT 13", venue:"Spectrum Center",          city:"Charlotte, NC"},
+    {d:"OCT 20", venue:"KeyBank Center",           city:"Buffalo, NY"},
+    {d:"OCT 22", venue:"Allstate Arena",           city:"Rosemont, IL",      url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-rosemont-illinois-10-22-2026/event/0400650E6EDF2A44"},
+    {d:"OCT 25", venue:"Little Caesars Arena",     city:"Detroit, MI"},
+    {d:"OCT 26", venue:"PPG Paints Arena",         city:"Pittsburgh, PA",    url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-pittsburgh-pennsylvania-10-26-2026/event/1600650C24C22E70"},
+    {d:"NOV 1",  venue:"Fiserv Forum",             city:"Milwaukee, WI",     url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-milwaukee-wisconsin-11-01-2026/event/0700650DFC2127EB"},
+    {d:"NOV 5",  venue:"Bridgestone Arena",        city:"Nashville, TN",     url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-nashville-tennessee-11-05-2026/event/1B00650D13C6A27C"},
+    {d:"NOV 10", venue:"American Airlines Center", city:"Dallas, TX",        url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-dallas-texas-11-10-2026/event/0C00650D94FD60CB"},
+    {d:"NOV 21", venue:"Chase Center",             city:"San Francisco, CA"},
+    {d:"NOV 22", venue:"Golden 1 Center",          city:"Sacramento, CA",    url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-sacramento-california-11-22-2026/event/1C00650CFB097E40"},
+    {d:"DEC 2",  venue:"Honda Center",             city:"Anaheim, CA",       url:"https://www.ticketmaster.com/jonas-brothers-the-burning-up-tour-all-over-again-anaheim-12-02-2026/event/0900650C4618D89F"},
+    {d:"DEC 21", venue:"Prudential Center",        city:"Newark, NJ",        note:"Final night"},
+
+    /* Announced routing, dates not yet pasted in. Replace these with the
+       real rows - same shape, add a url for the per-show ticket page. */
     {d:"TBA", venue:"Venue TBA", city:"Columbus, OH",    tba:true},
-    {d:"TBA", venue:"Venue TBA", city:"Buffalo, NY",     tba:true},
-    {d:"TBA", venue:"Venue TBA", city:"Detroit, MI",     tba:true},
-    {d:"TBA", venue:"Venue TBA", city:"Milwaukee, WI",   tba:true},
+    {d:"TBA", venue:"Central Bank Center", city:"Lexington, KY", tba:true},
     {d:"TBA", venue:"Venue TBA", city:"Des Moines, IA",  tba:true},
     {d:"TBA", venue:"Venue TBA", city:"Omaha, NE",       tba:true},
     {d:"TBA", venue:"Venue TBA", city:"Kansas City, MO", tba:true},
@@ -1035,9 +1045,15 @@ window.__ASSETS = {
 
   /* counts stay honest even if the array changes */
   var total = DATA.showCount || (DATA.shows ? DATA.shows.length : 0);
-  ['showcount-home','showcount-tour'].forEach(function(id){
+  ['showcount-home','showcount-tour','showcount-tour2'].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.textContent = total;
+  });
+  /* how many rows carry a real date, so the count can never overstate itself */
+  var loaded = (DATA.shows || []).filter(function(sh){ return !sh.tba; }).length;
+  ['showconf-home','showconf-tour'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.textContent = loaded;
   });
 
   /* every Spotify affordance points at the one URL in the data block */
