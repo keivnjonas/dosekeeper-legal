@@ -21,34 +21,35 @@ assets/band-photo.jpg YOU ADD THIS — see below
 preview.png           what it should look like
 ```
 
-## Drop in the two real assets
+## The artwork
 
-The mockup ships with placeholders for the two things that need real artwork.
-Neither needs a code change beyond adding the file.
+Both real assets ship in this bundle:
 
-**Band photo.** Save it as `assets/band-photo.jpg` and it appears in the profile
-slot automatically. Until then you get a dark "BAND PHOTO" placeholder. It
-renders at 150x150 with `object-fit: cover`, so any aspect ratio works, but a
-square crop is what 2006 would have used.
-
-**The JB crest.** The red glitter crest in the left column is currently an
-original ornate shield drawn in canvas — **not the band's real crest artwork**.
-To use the real logo, replace `SHAPE.crest` in `glitter.js` with a draw of your
-asset. The shape is used as a mask, so a transparent PNG is ideal:
-
-```js
-var logo = new Image();
-logo.src = 'assets/jb-crest.png';
-
-SHAPE.crest = function(mc, w, h){
-  mc.drawImage(logo, 0, 0, w, h);
-};
+```
+assets/jb-crest.webp    the JB crest, transparent, 588x793
+assets/band-photo.jpg   band photo, 600x400
 ```
 
-The animated glitter field, the glow and the effects toggle all keep working
-against whatever shape the mask contains. Masks are cached per canvas on first
-draw, so make sure the image has loaded before the first frame (or clear
-`cv._mask` once it does).
+They are wired through a single `window.__ASSETS` block near the bottom of
+`index.html`. Change a path there and both the page and the glitter engine pick
+it up — nothing else references the files directly.
+
+**The crest keeps its own artwork.** Rather than masking our glitter field into
+its silhouette, the engine draws the real logo and composites an animated
+sparkle layer on top with `source-atop`, at 55% opacity. You get the actual red
+glitter texture of the asset, with live twinkle over it. If the image ever fails
+to load, it falls back to `SHAPE.crest`, an original drawn shield.
+
+**The photo** renders at 150x150 with `object-fit: cover` and
+`object-position: 50% 26%`, which frames the three faces rather than the
+reaching hand. Swap in any crop; the slot handles any aspect ratio.
+
+**Note on the single-file version.** The published page carries both images
+inline as data URIs so it stays one self-contained file. `build-handoff.py`
+decodes them back into `assets/` and rewrites the `__ASSETS` block to paths,
+which is how this bundle got its image files. Edit `redesign/index.html`, re-run
+the script, and both forms stay in sync.
+
 
 ## What's in it
 

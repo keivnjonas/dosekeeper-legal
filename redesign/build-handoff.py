@@ -10,7 +10,7 @@ from one source. Re-run it after any edit to redesign/index.html.
 
 Produces outdir/jonasbrothers-myspace-mockup/ and a .zip beside it.
 """
-import io, os, re, sys, shutil, zipfile
+import base64, io, os, re, sys, shutil, zipfile
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(ROOT, 'index.html')
@@ -60,9 +60,14 @@ def build(outdir):
         shutil.rmtree(dest)
     os.makedirs(os.path.join(dest, 'assets'))
 
+    written_assets = {}
+    src = extract_assets(src, dest, written_assets)
+
     title = re.search(r'<title>(.*?)</title>', src, re.S).group(1).strip()
     css = re.search(r'<style>(.*?)</style>', src, re.S).group(1).strip()
-    script_tag = re.search(r'<script>(.*?)</script>\s*$', src, re.S)
+    # Must not span an earlier <script> (the __ASSETS block sits above this
+    # one), so the captured body is forbidden from containing a closing tag.
+    script_tag = re.search(r'<script>((?:(?!</script>)[\s\S])*)</script>\s*$', src)
     js = script_tag.group(1).strip()
 
     body = src.replace(script_tag.group(0), '')
@@ -102,7 +107,44 @@ def build(outdir):
             for f in sorted(files):
                 full = os.path.join(base, f)
                 z.write(full, os.path.relpath(full, outdir))
+    if written_assets:
+        print('extracted assets: %s' % ', '.join(sorted(written_assets.values())))
     print('built %s' % archive)
+
+
+EXT = {'image/webp': '.webp', 'image/png': '.png',
+       'image/jpeg': '.jpg', 'image/gif': '.gif', 'image/svg+xml': '.svg'}
+
+
+def extract_assets(src, dest, written):
+    """Turn the inlined __ASSETS data URIs back into real files.
+
+    index.html carries the artwork inline so the published page stays a single
+    self-contained file. Developers want actual image files, so each data URI
+    is decoded into assets/ and the block is rewritten to point at the paths.
+    """
+    block = re.search(r'<script>[^<]*?window\.__ASSETS\s*=.*?</script>', src, re.S)
+    if not block:
+        return src
+
+    paths = {}
+    for name, uri in re.findall(r'(\w+)\s*:\s*"(data:[^"]+)"', block.group(0)):
+        head, b64 = uri.split(',', 1)
+        mime = head[5:].split(';')[0]
+        fname = {'crest': 'jb-crest', 'photo': 'band-photo'}.get(name, name)
+        fname += EXT.get(mime, '.bin')
+        with open(os.path.join(dest, 'assets', fname), 'wb') as fh:
+            fh.write(base64.b64decode(b64))
+        paths[name] = 'assets/' + fname
+        written[name] = fname
+
+    if not paths:
+        return src
+
+    lines = ',\n'.join('  %s: "%s"' % (k, v) for k, v in sorted(paths.items()))
+    return src.replace(block.group(0),
+        '<script>\n/* Real artwork, kept as files in assets/. */\n'
+        'window.__ASSETS = {\n%s\n};\n</script>' % lines)
 
 
 def write(dest, rel, text):

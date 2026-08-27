@@ -22,8 +22,8 @@ Five animated glitter surfaces, all drawn in canvas — no image assets:
 - a **glitter graphic** header (pink) captioned as copy-paste fan art
 - a **divider bar** under the marquee
 - a **fan-made glitter graphic** posted in the comments (ice blue)
-- the **JB crest** in the left column (red), masked from a drawn shape rather
-  than text — this is the hook for swapping in real logo artwork
+- the **JB crest** in the left column — the real logo artwork with a live
+  sparkle layer composited on top via `source-atop`
 - the **profile wordmark** (gold), still available but currently replaced by
   the band photo slot
 
@@ -66,11 +66,11 @@ Placeholder (highlighted yellow when annotations are on):
 - Friend counts
 - The TBA routing rows between opening and closing night
 
-Placeholder artwork — drop the real files in, no code change needed:
+Real artwork, supplied and in place:
 
-- **`assets/band-photo.jpg`** fills the profile photo slot automatically
-- The **JB crest** is an original drawn shield, not the band's real crest.
-  Swap it by pointing `SHAPE.crest` at your asset (see HANDOFF.md).
+- **`assets/band-photo.jpg`** in the profile slot
+- **`assets/jb-crest.webp`**, the real JB crest, drawn as-is with an animated
+  sparkle layer composited over it rather than replaced by drawn glitter
 
 The fan comments are invented and carry a visible `SAMPLE COPY` tag.
 Song titles appear as titles only — no lyrics.
