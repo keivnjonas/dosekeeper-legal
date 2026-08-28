@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>listenwhensad. :]</title>
+<style>
+*{box-sizing:border-box;}
+body{
+  margin:0;padding:22px 12px 44px;background:#DCE6F2;
+  font-family:"Andale Mono","Lucida Console","Courier New",monospace;
+  font-size:13px;color:#000000;
+}
+a{color:#0A2ED6;}
+a:focus-visible,button:focus-visible{outline:2px solid #FF6600;outline-offset:1px;}
+/* ---------- survey ---------- */
+.sv{
+  font-family:"Andale Mono","Lucida Console","Courier New",monospace;
+  max-width:720px;margin:0 auto;border:1px solid #000000;background:#FFFFFF;
+}
+.sv-title{
+  background:#0A63D6;color:#FFFFFF;text-align:center;font-weight:bold;
+  font-size:19px;padding:11px 8px;letter-spacing:.02em;
+}
+.sv-title-rule{height:5px;background:#57A0F0;}
+.sv-head{display:flex;gap:18px;padding:14px;align-items:flex-start;}
+.sv-photo{
+  width:150px;height:150px;flex:0 0 150px;position:relative;overflow:hidden;
+  border:1px solid #B7B7B7;background:#EFEFEF;cursor:pointer;padding:0;display:block;
+}
+.sv-photo:hover{border-color:#0A63D6;}
+/* head-and-shoulders placeholder, drawn rather than an image */
+.sv-photo .ph-sil{
+  position:absolute;left:0;right:0;top:0;bottom:0;
+}
+.sv-photo .ph-sil::before{
+  content:"";position:absolute;left:50%;top:17%;
+  width:38%;aspect-ratio:1/1;transform:translateX(-50%);
+  background:#D4D4D4;border-radius:50%;
+}
+.sv-photo .ph-sil::after{
+  content:"";position:absolute;left:15%;right:15%;top:60%;bottom:0;
+  background:#D4D4D4;border-radius:46% 46% 0 0 / 60% 60% 0 0;
+}
+.sv-photo .ph-q{
+  position:absolute;left:0;right:0;top:34%;transform:translateY(-50%);
+  text-align:center;color:#9C9C9C;
+  font:bold 52px "Andale Mono","Lucida Console","Courier New",monospace;
+}
+.sv-photo img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;
+}
+.sv-photo.has-img img{display:block;}
+.sv-photo .hint{
+  position:absolute;left:0;right:0;bottom:0;height:17px;line-height:17px;
+  background:#4A4A4A;color:#FFFFFF;font-size:9px;text-align:center;
+}
+.sv-photo:hover .hint{background:#0A63D6;}
+.sv-byline{flex:1;text-align:center;font-size:13px;line-height:1.7;padding-top:26px;}
+.sv-byline a{color:#0A2ED6;}
+.sv-sect{
+  background:#DCEAF8;text-align:center;font-weight:bold;font-size:14px;
+  padding:9px 8px;border-top:1px solid #FFFFFF;
+}
+.sv-row{display:flex;align-items:center;gap:10px;padding:7px 12px;font-size:13px;}
+.sv-row:nth-child(even){background:#EEF5FC;}
+.sv-row label{flex:0 0 34%;line-height:1.35;}
+.sv-row input{
+  flex:1;min-width:0;background:#FFFFCC;border:1px solid #C9C9A0;
+  font-family:inherit;font-size:13px;padding:5px 6px;color:#000;
+}
+.sv-row input:focus{outline:2px solid #0A63D6;outline-offset:0;background:#FFFFE8;}
+.sv-actions{
+  border-top:2px solid #DCEAF8;padding:14px;display:flex;flex-wrap:wrap;gap:8px;
+  align-items:center;
+}
+.sv-btn{
+  font-family:inherit;font-size:12px;padding:7px 13px;cursor:pointer;color:#062E6B;
+  background:linear-gradient(180deg,#FFFFFF,#DCEAF8);border:1px solid #7FA8D8;
+}
+.sv-btn:hover{background:linear-gradient(180deg,#FFFFFF,#C4DDF6);}
+.sv-btn.primary{
+  background:linear-gradient(180deg,#3F8DEE,#0A63D6);color:#FFFFFF;border-color:#0A4CA6;
+  font-weight:bold;
+}
+.sv-btn.primary:hover{background:linear-gradient(180deg,#5A9DF2,#0B57BC);}
+.sv-note{font-size:11px;color:#5A6472;padding:0 14px 14px;line-height:1.6;}
+.sv-out{padding:0 14px 16px;}
+.sv-out img{width:100%;border:1px solid #9AA6B5;display:block;}
+.sv-status{font-size:12px;color:#0A4CA6;padding:0 14px 12px;min-height:1.2em;}
+.sv-share{display:flex;flex-wrap:wrap;gap:6px;}
+
+
+</style>
+</head>
+<body>
+
+<div class="sv">
+        <div class="sv-title" id="sv-title">listenwhensad. :]</div>
+        <div class="sv-title-rule" aria-hidden="true"></div>
+
+        <div class="sv-head">
+          <button type="button" class="sv-photo" id="sv-photo"
+                  aria-label="Add your profile picture">
+            <span class="ph-sil" aria-hidden="true"></span>
+            <span class="ph-q" aria-hidden="true">?</span>
+            <img id="sv-photo-img" alt="">
+            <span class="hint">click to add ur pic</span>
+          </button>
+          <input type="file" id="sv-file" accept="image/*" hidden>
+          <div class="sv-byline">
+            Created by <b id="sv-author">listenwhensad</b>
+            and taken <b id="sv-taken">72</b> times on MySpace<br>
+            <a href="#" id="sv-who">Click to view people that took this survey</a>
+          </div>
+        </div>
+
+        <form id="sv-form" autocomplete="off"></form>
+
+        <div class="sv-actions">
+          <button type="button" class="sv-btn primary" id="sv-make">Make My Survey Card</button>
+          <button type="button" class="sv-btn" id="sv-copy">Copy As Text</button>
+          <button type="button" class="sv-btn" id="sv-clear">Clear</button>
+        </div>
+        <div class="sv-status" id="sv-status" role="status" aria-live="polite"></div>
+
+        <div class="sv-out" id="sv-out" hidden>
+          <img id="sv-img" alt="Your completed survey card">
+        </div>
+
+        <div class="sv-actions" id="sv-sharebar" hidden>
+          <span style="font-size:12px;color:#5A6472;">share it:</span>
+          <span class="sv-share">
+            <button type="button" class="sv-btn" id="sv-save">Save Image</button>
+            <a class="sv-btn" id="sv-x" href="#" target="_blank" rel="noopener">X</a>
+            <a class="sv-btn" id="sv-fb" href="#" target="_blank" rel="noopener">Facebook</a>
+            <a class="sv-btn" id="sv-tu" href="#" target="_blank" rel="noopener">Tumblr</a>
+            <a class="sv-btn" id="sv-rd" href="#" target="_blank" rel="noopener">Reddit</a>
+            <button type="button" class="sv-btn" id="sv-link">Copy Link</button>
+          </span>
+        </div>
+
+        <p class="sv-note">
+          Your answers stay in this browser. The card is drawn on your device &mdash;
+          nothing is uploaded anywhere. If there's no Save button, long-press or
+          right-click the card to keep it.
+        </p>
+      </div>
+
+<script>
+window.__DATA = { survey: {
+    title:  "listenwhensad. :]",
+    author: "Jonas Brothers",
+    taken:  72,
+    sections: [
+      {t:"basics. let's get to know each other.", q:[
+        {id:"name",   l:"Name:"},
+        {id:"sign",   l:"Astrological Sign:"},
+        {id:"country",l:"Country:"}
+      ]},
+      {t:"now playing.", q:[
+        {id:"nowplaying", l:"What Are U Listening To Right Now:"}
+      ]},
+      {t:"important.", q:[
+        {id:"screenname", l:"What Was Ur First Screenname:"},
+        {id:"lasttxt",    l:"Last Txt U Sent:"}
+      ]},
+      {t:":)", q:[
+        {id:"joy", l:"A Memory That Brings U Joy:"}
+      ]},
+      {t:"random but important.", q:[
+        {id:"owl", l:"Night Owl Or Early Bird?"}
+      ]},
+      {t:"DO U????", q:[
+        {id:"cd",      l:"Do U Remember The Summer She Gave U Her Number On The Back Of That CD????"},
+        {id:"firstjb", l:"First JB Song U Ever Heard:"},
+        {id:"show",    l:"Show U Were At (Or Wish U Were At):"}
+      ]}
+    ]
+  } };
+</script>
+<script>
+(function(){
+  /* ==================== SURVEY ====================
+     Fill in, add a photo, render a shareable card. Everything happens on
+     the device: answers sit in localStorage, the card is drawn in canvas,
+     and the only thing that ever leaves is a file the viewer chooses to
+     save or text they choose to paste. */
+  (function(){
+    var SV = (window.__DATA || {}).survey;
+    var form = document.getElementById('sv-form');
+    if(!SV || !form) return;
+
+    var KEY = 'jb-survey-v1';
+    var answers = {};
+    try { answers = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+    catch(e){ answers = {}; }          /* private mode, blocked storage */
+
+    var photoData = answers.__photo || null;
+    var status = document.getElementById('sv-status');
+
+    function say(msg){ if(status) status.textContent = msg || ''; }
+
+    function persist(){
+      try {
+        var out = {};
+        for(var k in answers) out[k] = answers[k];
+        out.__photo = photoData;
+        localStorage.setItem(KEY, JSON.stringify(out));
+      } catch(e){ /* storage unavailable: the form still works */ }
+    }
+
+    /* ---- build the form from the data ---- */
+    document.getElementById('sv-title').textContent  = SV.title;
+    document.getElementById('sv-author').textContent = SV.author;
+    document.getElementById('sv-taken').textContent  = SV.taken;
+
+    SV.sections.forEach(function(sec){
+      var band = document.createElement('div');
+      band.className = 'sv-sect';
+      band.textContent = sec.t;
+      form.appendChild(band);
+
+      sec.q.forEach(function(q){
+        var row = document.createElement('div');
+        row.className = 'sv-row';
+
+        var lab = document.createElement('label');
+        lab.setAttribute('for', 'sv-' + q.id);
+        lab.textContent = q.l;
+
+        var inp = document.createElement('input');
+        inp.type = 'text';
+        inp.id = 'sv-' + q.id;
+        inp.value = answers[q.id] || '';
+        inp.addEventListener('input', function(){
+          answers[q.id] = inp.value;
+          persist();
+        });
+
+        row.appendChild(lab);
+        row.appendChild(inp);
+        form.appendChild(row);
+      });
+    });
+
+    /* ---- profile picture, read locally, never uploaded ---- */
+    var photoBtn = document.getElementById('sv-photo');
+    var photoImg = document.getElementById('sv-photo-img');
+    var fileInp  = document.getElementById('sv-file');
+
+    function showPhoto(src){
+      photoData = src;
+      photoImg.src = src;
+      photoBtn.classList.add('has-img');
+      persist();
+    }
+    if(photoData) showPhoto(photoData);
+
+    photoBtn.addEventListener('click', function(){ fileInp.click(); });
+    fileInp.addEventListener('change', function(){
+      var f = fileInp.files && fileInp.files[0];
+      if(!f) return;
+      if(f.size > 8 * 1024 * 1024){
+        say('That image is over 8MB — pick a smaller one.');
+        return;
+      }
+      var fr = new FileReader();
+      fr.onload = function(){ showPhoto(String(fr.result)); say('Picture added.'); };
+      fr.onerror = function(){ say("Couldn't read that file. Try another image."); };
+      fr.readAsDataURL(f);
+    });
+
+    /* ---- answered questions, in order ---- */
+    function filled(){
+      var out = [];
+      SV.sections.forEach(function(sec){
+        var qs = sec.q.filter(function(q){ return (answers[q.id] || '').trim(); });
+        if(qs.length) out.push({t: sec.t, q: qs});
+      });
+      return out;
+    }
+
+    /* ---- plain text, for pasting the way bulletins worked ---- */
+    function asText(){
+      var lines = [SV.title, ''];
+      filled().forEach(function(sec){
+        lines.push('--- ' + sec.t + ' ---');
+        sec.q.forEach(function(q){
+          lines.push(q.l + ' ' + answers[q.id].trim());
+        });
+        lines.push('');
+      });
+      lines.push('take it at jonasbrothers.com/survey');
+      return lines.join('\n');
+    }
+
+    /* ---- the card ---- */
+    var MONO = '"Andale Mono","Lucida Console","Courier New",monospace';
+    var W = 1080, PAD = 36, LABW = 360;
+
+    function wrap(ctx, text, max){
+      var words = String(text).split(/\s+/), lines = [], line = '';
+      for(var i=0;i<words.length;i++){
+        var test = line ? line + ' ' + words[i] : words[i];
+        if(ctx.measureText(test).width > max && line){ lines.push(line); line = words[i]; }
+        else line = test;
+      }
+      if(line) lines.push(line);
+      return lines.length ? lines : [''];
+    }
+
+    function buildCard(cb){
+      var secs = filled();
+      var cv = document.createElement('canvas');
+      var ctx = cv.getContext('2d');
+
+      /* pass one: measure, so the canvas is exactly as tall as the content */
+      var blocks = [], y = 0;
+      /* HEAD_H must clear the 190px photo box at y = TITLE_H + 30 */
+      var TITLE_H = 104, HEAD_H = 252, SECT_H = 62, LINE_H = 34, ROW_PAD = 18;
+
+      y = TITLE_H + 8 + HEAD_H;
+      secs.forEach(function(sec){
+        blocks.push({k:'sect', t:sec.t, y:y, h:SECT_H});
+        y += SECT_H;
+        sec.q.forEach(function(q){
+          ctx.font = '22px ' + MONO;
+          var lLines = wrap(ctx, q.l, LABW - 20);
+          var aLines = wrap(ctx, answers[q.id].trim(), W - PAD*2 - LABW - 30);
+          var h = Math.max(lLines.length, aLines.length) * LINE_H + ROW_PAD;
+          blocks.push({k:'row', l:lLines, a:aLines, y:y, h:h});
+          y += h;
+        });
+      });
+      var FOOT_H = 74;
+      cv.width = W;
+      cv.height = Math.max(560, y + FOOT_H);
+
+      var c = cv.getContext('2d');
+      c.textBaseline = 'middle';
+      c.fillStyle = '#FFFFFF';
+      c.fillRect(0,0,cv.width,cv.height);
+
+      /* title bar */
+      c.fillStyle = '#0A63D6';
+      c.fillRect(0,0,W,TITLE_H);
+      c.fillStyle = '#57A0F0';
+      c.fillRect(0,TITLE_H,W,8);
+      c.fillStyle = '#FFFFFF';
+      c.font = 'bold 42px ' + MONO;
+      c.textAlign = 'center';
+      c.fillText(SV.title, W/2, TITLE_H/2);
+
+      /* byline */
+      c.textAlign = 'center';
+      c.fillStyle = '#111111';
+      c.font = '22px ' + MONO;
+      var bx = PAD + 190 + (W - PAD*2 - 190)/2;
+      c.fillText('Created by ' + SV.author + ' and taken', bx, TITLE_H + 78);
+      c.fillText(SV.taken + ' times on MySpace', bx, TITLE_H + 110);
+      c.fillStyle = '#0A2ED6';
+      c.font = '20px ' + MONO;
+      c.fillText('jonasbrothers.com/survey', bx, TITLE_H + 150);
+
+      function rows(){
+        blocks.forEach(function(b, i){
+          if(b.k === 'sect'){
+            c.fillStyle = '#DCEAF8';
+            c.fillRect(0, b.y, W, b.h);
+            c.fillStyle = '#111111';
+            c.font = 'bold 26px ' + MONO;
+            c.textAlign = 'center';
+            c.fillText(b.t, W/2, b.y + b.h/2);
+          } else {
+            if(i % 2){
+              c.fillStyle = '#EEF5FC';
+              c.fillRect(0, b.y, W, b.h);
+            }
+            c.textAlign = 'left';
+            c.font = '22px ' + MONO;
+            c.fillStyle = '#111111';
+            b.l.forEach(function(ln, k){
+              c.fillText(ln, PAD, b.y + ROW_PAD/2 + LINE_H/2 + k*LINE_H);
+            });
+            /* answer sits on the yellow field, same as the form */
+            var ax = PAD + LABW;
+            c.fillStyle = '#FFFFCC';
+            c.fillRect(ax, b.y + 6, W - ax - PAD, b.h - 12);
+            c.strokeStyle = '#C9C9A0';
+            c.lineWidth = 1;
+            c.strokeRect(ax + 0.5, b.y + 6.5, W - ax - PAD - 1, b.h - 13);
+            c.fillStyle = '#111111';
+            b.a.forEach(function(ln, k){
+              c.fillText(ln, ax + 12, b.y + ROW_PAD/2 + LINE_H/2 + k*LINE_H);
+            });
+          }
+        });
+
+        /* footer */
+        c.fillStyle = '#DCEAF8';
+        c.fillRect(0, cv.height - FOOT_H, W, FOOT_H);
+        c.fillStyle = '#0A4CA6';
+        c.font = 'bold 24px ' + MONO;
+        c.textAlign = 'center';
+        c.fillText('jonasbrothers.com', W/2, cv.height - FOOT_H/2);
+        cb(cv);
+      }
+
+      /* photo box, then everything else once it has decoded */
+      var px = PAD, py = TITLE_H + 30, ps = 190;
+      c.strokeStyle = '#B7B7B7';
+      c.lineWidth = 2;
+      if(photoData){
+        var im = new Image();
+        im.onload = function(){
+          /* cover-crop into the square */
+          var r = Math.max(ps/im.width, ps/im.height);
+          var dw = im.width*r, dh = im.height*r;
+          c.save();
+          c.beginPath(); c.rect(px, py, ps, ps); c.clip();
+          c.drawImage(im, px + (ps-dw)/2, py + (ps-dh)/2, dw, dh);
+          c.restore();
+          c.strokeRect(px, py, ps, ps);
+          rows();
+        };
+        im.onerror = function(){ c.strokeRect(px,py,ps,ps); rows(); };
+        im.src = photoData;
+      } else {
+        c.fillStyle = '#EFEFEF';
+        c.fillRect(px, py, ps, ps);
+        c.fillStyle = '#D4D4D4';
+        c.beginPath();
+        c.arc(px + ps/2, py + ps*0.36, ps*0.19, 0, Math.PI*2);
+        c.fill();
+        c.beginPath();
+        c.moveTo(px + ps*0.15, py + ps);
+        c.quadraticCurveTo(px + ps*0.15, py + ps*0.60, px + ps/2, py + ps*0.60);
+        c.quadraticCurveTo(px + ps*0.85, py + ps*0.60, px + ps*0.85, py + ps);
+        c.closePath();
+        c.fill();
+        c.fillStyle = '#9C9C9C';
+        c.font = 'bold ' + Math.round(ps*0.42) + 'px ' + MONO;
+        c.textAlign = 'center';
+        c.fillText('?', px + ps/2, py + ps*0.36);
+        c.strokeRect(px, py, ps, ps);
+        rows();
+      }
+    }
+
+    /* ---- actions ---- */
+    var outWrap = document.getElementById('sv-out');
+    var outImg  = document.getElementById('sv-img');
+    var shareBar= document.getElementById('sv-sharebar');
+    var blob = null;
+
+    function shareText(){
+      var who = (answers.name || '').trim();
+      var np  = (answers.nowplaying || '').trim();
+      var bits = ['I took the ' + SV.title + ' survey'];
+      if(who) bits[0] = who + ' took the ' + SV.title + ' survey';
+      if(np) bits.push('now playing: ' + np);
+      return bits.join(' — ');
+    }
+
+    document.getElementById('sv-make').addEventListener('click', function(){
+      if(!filled().length){
+        say('Answer at least one question first.');
+        return;
+      }
+      say('Drawing your card…');
+      buildCard(function(cv){
+        outImg.src = cv.toDataURL('image/png');
+        outWrap.hidden = false;
+        shareBar.hidden = false;
+        cv.toBlob(function(b){ blob = b; }, 'image/png');
+
+        var url = 'https://www.jonasbrothers.com/survey/';
+        var t = encodeURIComponent(shareText());
+        var u = encodeURIComponent(url);
+        document.getElementById('sv-x').href  = 'https://twitter.com/intent/tweet?text=' + t + '&url=' + u;
+        document.getElementById('sv-fb').href = 'https://www.facebook.com/sharer/sharer.php?u=' + u;
+        document.getElementById('sv-tu').href = 'https://www.tumblr.com/widgets/share/tool?canonicalUrl=' + u + '&caption=' + t;
+        document.getElementById('sv-rd').href = 'https://www.reddit.com/submit?url=' + u + '&title=' + t;
+
+        say('Card ready. Save it, or long-press the image to keep it.');
+        outWrap.scrollIntoView({block:'nearest'});
+      });
+    });
+
+    document.getElementById('sv-copy').addEventListener('click', function(){
+      if(!filled().length){ say('Answer at least one question first.'); return; }
+      var text = asText();
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(
+          function(){ say('Copied — paste it anywhere.'); },
+          function(){ say('Copy blocked by the browser. Select the text and copy manually.'); }
+        );
+      } else {
+        say('Copy blocked by the browser. Select the text and copy manually.');
+      }
+    });
+
+    document.getElementById('sv-link').addEventListener('click', function(){
+      var url = 'https://www.jonasbrothers.com/survey/';
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(url).then(
+          function(){ say('Link copied.'); },
+          function(){ say('Copy blocked by the browser.'); }
+        );
+      } else { say('Copy blocked by the browser.'); }
+    });
+
+    document.getElementById('sv-clear').addEventListener('click', function(){
+      answers = {}; photoData = null;
+      try { localStorage.removeItem(KEY); } catch(e){}
+      [].forEach.call(form.querySelectorAll('input'), function(i){ i.value = ''; });
+      photoBtn.classList.remove('has-img');
+      photoImg.removeAttribute('src');
+      outWrap.hidden = true; shareBar.hidden = true;
+      say('Cleared.');
+    });
+
+    /* Saving a file takes a different route depending on where the page runs.
+       Served as a plain file, an <a download> works normally. Inside the
+       artifact viewer the frame cannot start its own download, so it needs the
+       downloads capability - which resolves later and may resolve null. Either
+       way the card is already on screen, so the button is a convenience: it
+       stays hidden unless a route is actually available. */
+    var saveBtn = document.getElementById('sv-save');
+    saveBtn.hidden = true;
+
+    function fileName(){
+      var who = (answers.name || 'my').trim().replace(/[^\w-]+/g,'-').slice(0,40) || 'my';
+      return who + '-survey.png';
+    }
+
+    function enableDirectSave(){
+      saveBtn.hidden = false;
+      saveBtn.addEventListener('click', function(){
+        if(!blob){ say('Make the card first.'); return; }
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = fileName();
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+        say('Saved to your downloads.');
+      });
+    }
+
+    function enableCapabilitySave(downloads){
+      saveBtn.hidden = false;
+      saveBtn.addEventListener('click', function(){
+        if(!blob){ say('Make the card first.'); return; }
+        downloads.save({filename: fileName(), data: blob}).then(
+          function(){ say('Saved.'); },
+          function(err){
+            var code = err && err.code;
+            if(code === 'declined') say('No problem — the image is still right here.');
+            else if(code === 'too_large') say('That card is too large to save.');
+            else if(code === 'rate_limited') say('One save at a time — try again in a moment.');
+            else { say('Saving is unavailable here — long-press the image instead.'); saveBtn.hidden = true; }
+          }
+        );
+      });
+    }
+
+    if(window.claude && typeof window.claude.use === 'function'){
+      /* framed by the artifact viewer: only the capability can save */
+      window.claude.use('downloads').then(function(downloads){
+        if(downloads) enableCapabilitySave(downloads);
+        /* otherwise leave it hidden - the inline card is the save path */
+      });
+    } else {
+      enableDirectSave();
+    }
+  })();
+})();
+</script>
+</body>
+</html>

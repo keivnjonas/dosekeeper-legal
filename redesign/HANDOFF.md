@@ -142,6 +142,19 @@ still long-press or right-click it. If you host this yourself outside the
 artifact runtime, swap that call for an `<a download>` and drop the capability
 declaration.
 
+## Standalone survey page
+
+`survey.html` is the survey on its own — no site chrome, no IE window — which
+is what would ship at `/survey`. It is **generated**, not maintained by hand:
+
+```
+python3 redesign/build-survey.py
+```
+
+That pulls the survey's CSS, markup, data and script straight out of
+`index.html`, so editing the survey in one place updates both. Re-run it after
+any survey change.
+
 ## The flames
 
 Supplied artwork, tiled along the bottom with `repeat-x` and
