@@ -111,6 +111,37 @@ Two toolbar toggles:
 Song titles appear as titles only. No lyrics, no photographs — every avatar,
 album sleeve and sparkle is drawn in code.
 
+## The survey
+
+A fourth screen: the `listenwhensad. :]` survey, working. Fill it in, add a
+photo, and it renders a shareable card.
+
+Everything is driven by `__DATA.survey` — sections and questions, each with a
+unique `id` that doubles as its localStorage key. Add, cut or reword questions
+there and the form, the card and the copy-as-text output all follow.
+
+How it behaves:
+
+- **Answers** persist per-browser in `localStorage`, wrapped in try/catch so a
+  private window or blocked storage degrades to a form that still works.
+- **The photo** is read with `FileReader` and never leaves the device. It is
+  cover-cropped into the card via a clipped `drawImage`.
+- **The card** is drawn in canvas at 1080px wide with a measure pass first, so
+  the height matches the content exactly and long answers wrap instead of
+  clipping. Only answered questions are drawn.
+- **Copy As Text** puts the filled survey on the clipboard — the way these
+  actually spread in 2006, pasted into bulletins.
+- **Share** opens X, Facebook, Tumblr and Reddit intents prefilled from the
+  answers.
+
+**Saving the image needs a runtime capability.** A published artifact cannot
+start its own download, so the Save button calls the `downloads` capability
+(`claude.use('downloads')`) and is **hidden unless that resolves**. The card
+image always renders inline regardless, so a viewer without the capability can
+still long-press or right-click it. If you host this yourself outside the
+artifact runtime, swap that call for an `<a download>` and drop the capability
+declaration.
+
 ## The flames
 
 Supplied artwork, tiled along the bottom with `repeat-x` and
