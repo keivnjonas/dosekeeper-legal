@@ -155,6 +155,27 @@ That pulls the survey's CSS, markup, data and script straight out of
 `index.html`, so editing the survey in one place updates both. Re-run it after
 any survey change.
 
+## Mobile
+
+The standalone survey is built for phones. Under 600px it stacks the label
+above each field, goes full width, and drops the side-by-side header.
+
+Two details that matter and are easy to lose in a refactor:
+
+- Inputs go to **16px** on small screens. Below that, iOS Safari zooms the whole
+  page every time a field takes focus.
+- Buttons get `min-height: 44px`, and `.sv-btn` is `inline-flex` so that applies
+  to the `<a>` share buttons as well as the `<button>` ones.
+
+The mobile rules are scoped to `body.sv-solo`, which only the standalone page
+sets. Media queries watch the viewport, not the container, so without that scope
+they would also fire on the survey sitting inside the fixed 800px desktop
+mockup and stack its rows in a layout three times wider than the query implies.
+
+The site mockup itself is deliberately **not** responsive: it is an 800px 2006
+desktop page, and it pans horizontally inside its window on a phone. Making it
+reflow would mean abandoning the layout the whole pitch is about.
+
 ## The flames
 
 Supplied artwork, tiled along the bottom with `repeat-x` and

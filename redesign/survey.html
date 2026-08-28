@@ -10,6 +10,10 @@ body{
   margin:0;padding:22px 12px 44px;background:#DCE6F2;
   font-family:"Andale Mono","Lucida Console","Courier New",monospace;
   font-size:13px;color:#000000;
+  -webkit-text-size-adjust:100%;   /* % escaped: this block is a format string */
+}
+@media (max-width:600px){
+  body{padding:10px 8px 32px;}
 }
 a{color:#0A2ED6;}
 a:focus-visible,button:focus-visible{outline:2px solid #FF6600;outline-offset:1px;}
@@ -77,6 +81,8 @@ a:focus-visible,button:focus-visible{outline:2px solid #FF6600;outline-offset:1p
 .sv-btn{
   font-family:inherit;font-size:12px;padding:7px 13px;cursor:pointer;color:#062E6B;
   background:linear-gradient(180deg,#FFFFFF,#DCEAF8);border:1px solid #7FA8D8;
+  display:inline-flex;align-items:center;justify-content:center;
+  text-decoration:none;
 }
 .sv-btn:hover{background:linear-gradient(180deg,#FFFFFF,#C4DDF6);}
 .sv-btn.primary{
@@ -90,10 +96,37 @@ a:focus-visible,button:focus-visible{outline:2px solid #FF6600;outline-offset:1p
 .sv-status{font-size:12px;color:#0A4CA6;padding:0 14px 12px;min-height:1.2em;}
 .sv-share{display:flex;flex-wrap:wrap;gap:6px;}
 
+/* ---------- survey on a phone ----------
+   Scoped to .sv-solo: the standalone page. Inside the site mockup the survey
+   lives in a fixed 800px layout, where stacking these rows would just look
+   broken - media queries watch the viewport, not the container. */
+@media (max-width:600px){
+  .sv-solo .sv{max-width:none;}
+  .sv-solo .sv-title{font-size:16px;padding:10px 6px;}
+  .sv-solo .sv-head{flex-direction:column;align-items:center;gap:10px;padding:12px;}
+  .sv-solo .sv-byline{padding-top:0;font-size:12px;line-height:1.6;}
+  .sv-solo .sv-sect{font-size:12px;padding:9px 6px;}
+
+  /* label above field: at this width a 34% label column wraps to three lines */
+  .sv-solo .sv-row{flex-direction:column;align-items:stretch;gap:5px;padding:10px;}
+  .sv-solo .sv-row label{flex:none;width:auto;font-size:12px;}
+
+  /* 16px is the threshold below which iOS zooms the page on focus */
+  .sv-solo .sv-row input{font-size:16px;padding:10px 8px;}
+
+  .sv-solo .sv-actions{padding:12px 10px;}
+  .sv-solo .sv-btn{
+    font-size:14px;padding:12px 14px;min-height:44px;flex:1 1 auto;
+  }
+  .sv-solo .sv-share{width:100%;}
+  .sv-solo .sv-note,.sv-solo .sv-status{padding-left:10px;padding-right:10px;}
+  .sv-solo .sv-out{padding-left:10px;padding-right:10px;}
+}
+
 
 </style>
 </head>
-<body>
+<body class="sv-solo">
 
 <div class="sv">
         <div class="sv-title" id="sv-title">listenwhensad. :]</div>

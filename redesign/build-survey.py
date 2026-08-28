@@ -82,13 +82,17 @@ body{
   margin:0;padding:22px 12px 44px;background:#DCE6F2;
   font-family:"Andale Mono","Lucida Console","Courier New",monospace;
   font-size:13px;color:#000000;
+  -webkit-text-size-adjust:100%%;   /* %% escaped: this block is a format string */
+}
+@media (max-width:600px){
+  body{padding:10px 8px 32px;}
 }
 a{color:#0A2ED6;}
 a:focus-visible,button:focus-visible{outline:2px solid #FF6600;outline-offset:1px;}
 %s
 </style>
 </head>
-<body>
+<body class="sv-solo">
 
 %s
 
