@@ -1,0 +1,5 @@
+# Test deploy for the fan tools. Only netlify-deploy/ is published —
+# the rest of this repo (legal docs, build scripts, sources) is not.
+[build]
+  publish = "netlify-deploy"
+  command = ""
