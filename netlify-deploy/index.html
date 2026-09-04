@@ -96,9 +96,27 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E836
 .status{padding:0 14px 12px;font-size:12px;color:#E8368F;min-height:1.2em;}
 .note{padding:0 14px 16px;font-size:11px;color:#70707A;line-height:1.7;}
 
-/* spotify */
+/* spotify — the primary way in, so it sits above the manual list */
 .sp{border-top:1px solid #26262E;padding:14px;}
 .sp p{margin:0 0 10px;font-size:11px;color:#8A8A94;line-height:1.7;}
+.sp-primary{
+  background:#171115;border-top:2px solid #E8368F;border-bottom:1px solid #26262E;
+  padding:16px 14px 18px;
+}
+.sp-primary h2{
+  border:0;padding:0 0 8px;font-size:13px;letter-spacing:.18em;
+}
+.sp-primary p{font-size:12px;color:#A09AA4;}
+.sp-primary .btn.go{font-size:15px;padding:14px 20px;}
+.sp-input{
+  flex:1;min-width:180px;background:#0B0B0E;border:1px solid #3A3A46;color:#FFF;
+  font-family:"Caveat","Comic Sans MS",cursive;font-size:22px;padding:11px 12px;
+}
+.sp-input:focus{border-color:#E8368F;background:#150E13;}
+.manual-head{
+  padding:14px 14px 0;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:#6E6E78;
+}
 .sp-off{border:1px dashed #33333D;padding:10px;font-size:11px;color:#9A9AA4;line-height:1.7;}
 .sp-off code{color:#E8368F;}
 .results{list-style:none;margin:10px 0 0;padding:0;max-height:240px;overflow-y:auto;}
@@ -143,6 +161,12 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E836
       </div>
     </div>
 
+    <div class="sp sp-primary">
+      <h2>Search Spotify</h2>
+      <div id="sp-body"></div>
+    </div>
+
+    <div class="manual-head">or type them in</div>
     <ol class="tracks" id="tracks"></ol>
 
     <div class="actions">
@@ -157,11 +181,6 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E836
       <a class="btn" id="sx" href="#" target="_blank" rel="noopener">X</a>
       <a class="btn" id="stu" href="#" target="_blank" rel="noopener">Tumblr</a>
       <button type="button" class="btn" id="slink">Copy Link</button>
-    </div>
-
-    <div class="sp">
-      <h2 style="border:0;padding:0 0 6px;">Spotify</h2>
-      <div id="sp-body"></div>
     </div>
 
     <p class="note">
@@ -703,9 +722,7 @@ window.__PL = {
       '<p>Search Spotify, tap a result to drop it in, then push the whole thing ' +
       'to your account. Track 1 stays pinned.</p>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-        '<input id="sp-q" type="text" placeholder="search songs" ' +
-          'style="flex:1;min-width:180px;background:#0D0D0D;border:1px solid #3A3A3A;' +
-          'color:#fff;font-family:inherit;font-size:16px;padding:9px">' +
+        '<input id="sp-q" class="sp-input" type="text" placeholder="search a song…"> ' +
         '<button type="button" class="btn" id="sp-go">Search</button>' +
         '<button type="button" class="btn go" id="sp-make">Create on Spotify</button>' +
       '</div><ul class="results" id="sp-res"></ul>';
