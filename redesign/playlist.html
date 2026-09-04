@@ -188,7 +188,25 @@ window.__PL = {
        The client SECRET is never used here and must never be put in this file. */
     clientId: "b33c1785959645128bdbf158b7593ea3",
     scopes: ["playlist-modify-public", "playlist-modify-private"],
-    playlistPublic: false
+    playlistPublic: false,
+    /* Every URL registered as a Redirect URI in the Spotify dashboard.
+       Spotify matches these character for character. The page compares its
+       own address against this list and explains itself when it doesn't
+       match, instead of bouncing the visitor to an error page.
+       Add your local test URL here too, e.g.
+       "http://127.0.0.1:5500/playlist.html" */
+    redirectUris: [
+      "https://www.jonasbrothers.com/listenwhensadplaylist/",
+      /* Local testing. Spotify allows plain HTTP only on the loopback IP —
+         127.0.0.1, never "localhost". Register the same strings in the
+         dashboard. 8000 = python -m http.server, 5500 = VS Code Live Server.
+         Both "/" and "/index.html" are listed because which one you get
+         depends on how you open the page. */
+      "http://127.0.0.1:8000/",
+      "http://127.0.0.1:8000/index.html",
+      "http://127.0.0.1:5500/",
+      "http://127.0.0.1:5500/index.html"
+    ]
   }
 };
 </script>
@@ -779,7 +797,40 @@ window.__PL = {
     });
   }
 
+  /* Sign-in needs a top-level page served from a registered URL. Inside an
+     embedded preview the frame cannot hand off to Spotify, and from an
+     unregistered address Spotify rejects the request. Both used to look like
+     a dead button, so say which one is happening. */
+  function authBlocker(){
+    var framed = false;
+    try { framed = window.self !== window.top; } catch(e){ framed = true; }
+    if(framed){
+      return 'This page is running inside an embedded preview, which is not ' +
+             'allowed to hand you over to Spotify — the button would do nothing. ' +
+             'Open the hosted page directly and sign in there.';
+    }
+    var allowed = SP.redirectUris || [];
+    if(allowed.length && allowed.indexOf(redirectUri) === -1){
+      return 'This page is at <code>' + esc(redirectUri) + '</code>, but the ' +
+             'Spotify app is registered for <code>' + esc(allowed[0]) + '</code>. ' +
+             'Spotify matches that exactly, so sign-in would be rejected. Serve ' +
+             'the page at the registered address, or add this one as a Redirect ' +
+             'URI in the dashboard.';
+    }
+    return null;
+  }
+
   function disconnected(){
+    var blocked = authBlocker();
+    if(blocked){
+      body.innerHTML =
+        '<p>Connect Spotify to search the real catalogue and push this playlist ' +
+        'to your own account, with track 1 pinned.</p>' +
+        '<div class="sp-off" style="border-color:#8A5A00;color:#E0B050">' +
+        '<b>Sign-in unavailable here.</b><br>' + blocked + '</div>' +
+        '<p style="margin-top:10px">Everything else on this page works as normal.</p>';
+      return;
+    }
     body.innerHTML =
       '<p>Connect Spotify to search the real catalogue and push this playlist ' +
       'to your own account, with track 1 pinned.</p>' +
