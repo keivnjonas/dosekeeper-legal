@@ -231,7 +231,10 @@ window.__PL = {
      regardless — search and playlist creation are the only things gated.
      See the README for the four setup steps. */
   spotify: {
-    clientId: "",
+    /* Public by design: with PKCE the client id travels in the authorize URL
+       and is visible in page source. It is an identifier, not a credential.
+       The client SECRET is never used here and must never be put in this file. */
+    clientId: "b33c1785959645128bdbf158b7593ea3",
     scopes: ["playlist-modify-public", "playlist-modify-private"],
     playlistPublic: false
   }
@@ -599,6 +602,10 @@ window.__PL = {
 (function(){
   var CFG = window.__PL, API = window.__PL_API;
   var SP = CFG.spotify;
+  function esc(v){
+    return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
   var body = document.getElementById('sp-body');
   var TOKEN_KEY = 'jb-sp-token', VERIFIER_KEY = 'jb-sp-verifier';
   var redirectUri = location.origin + location.pathname;
@@ -690,7 +697,14 @@ window.__PL = {
 
   /* ---- UI ---- */
   function connected(){
-    body.innerHTML =
+    var pinWarning = CFG.locked.uri ? '' :
+      '<div class="sp-off" style="border-color:#8A5A00;color:#E0B050;margin-bottom:10px">' +
+      '<b>Track 1 has no Spotify URI yet.</b><br>' +
+      'Playlists created now will not include ' + esc(CFG.locked.title) + '. ' +
+      'Paste it into <code>__PL.locked.uri</code> as <code>spotify:track:&lt;id&gt;</code>.' +
+      '</div>';
+
+    body.innerHTML = pinWarning +
       '<p>Search Spotify, tap a result to drop it in, then push the whole thing ' +
       'to your account. Track 1 stays pinned.</p>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
@@ -737,6 +751,9 @@ window.__PL = {
       if(CFG.locked.uri) uris.push(CFG.locked.uri);   /* pinned first, always */
       API.filled().forEach(function(t){ if(t.uri) uris.push(t.uri); });
       if(!uris.length){ API.say('Add some songs from search first.'); return; }
+      if(!CFG.locked.uri){
+        API.say('Heads up: track 1 has no URI set, so it will be missing from Spotify.');
+      }
 
       API.say('Creating playlist…');
       api('/me').then(function(me){
