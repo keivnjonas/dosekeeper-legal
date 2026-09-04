@@ -135,6 +135,14 @@
       ok('playlist named from the mix', newBody.name.indexOf(window.__PL.mixName) === 0);
       ok('private by default', newBody.public === false);
 
+      /* The share card is 4:5 for feeds; the Spotify tile has to be square, so
+         it must come from the cover art rather than a squashed card. */
+      var cardCv = API.discCanvas();
+      ok('share card is 4:5', Math.abs((cardCv.height / cardCv.width) - 1.25) < 0.001);
+      var coverImg = API.coverImage();
+      ok('spotify cover is the square art',
+         !!coverImg && coverImg.naturalWidth > 0 && coverImg.naturalWidth === coverImg.naturalHeight);
+
       var imgCall = MOCK.find(/\/images$/, 'PUT')[0];
       ok('cover uploaded as jpeg', (imgCall.headers['Content-Type'] || '') === 'image/jpeg');
       ok('cover is bare base64', typeof imgCall.body === 'string' && imgCall.body.indexOf('data:') !== 0);
