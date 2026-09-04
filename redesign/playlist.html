@@ -6,7 +6,7 @@
 <title>Listen When Sad Mix</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Caveat:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rock+Salt&family=Permanent+Marker&family=Caveat+Brush&family=Caveat:wght@600;700&display=swap">
 <style>
 /* ============================================================
    Burned mix CD. Single theme on purpose - a disc on a dark
@@ -74,8 +74,8 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E836
 .tr.locked .n{color:#E8368F;}
 .tr.locked .fixed{flex:1;min-width:0;}
 .tr.locked .fixed b{
-  display:block;font-family:"Permanent Marker","Comic Sans MS",cursive;
-  font-size:19px;font-weight:400;color:#FFF;
+  display:block;font-family:"Rock Salt","Permanent Marker","Comic Sans MS",cursive;
+  font-size:15px;font-weight:400;color:#FFF;line-height:1.35;
 }
 .tr.locked .fixed span{font-size:12px;color:#9A7A8C;}
 .pin{
@@ -257,6 +257,13 @@ window.__PL = {
      Drawn as a real burned CD: holographic sheen, scratches, a centre hub,
      and the tracklist written on in marker. Lines whose y falls across the
      hub start to its right, the way you write around the hole. */
+  /* The sharpie. Rock Salt is a real hand scrawl - uneven baseline, dry
+     stroke ends - which is what writing on a disc actually looks like;
+     Permanent Marker reads more like a printed poster face. Swap the first
+     name here to try another: "Caveat Brush" (softer, faster hand),
+     "Sedgwick Ave Display" (fatter), "Just Another Hand" (tall + narrow).
+     Whatever goes first, the title fits itself to the rim below. */
+  var SHARPIE = '"Rock Salt","Permanent Marker","Comic Sans MS",cursive';
   var MARKER = '"Permanent Marker","Comic Sans MS",cursive';
   var HAND   = '"Caveat","Comic Sans MS",cursive';
 
@@ -280,6 +287,13 @@ window.__PL = {
 
   /* Text bent along a circle. `flip` puts it on the bottom rim still reading
      left to right, instead of upside down. */
+  /* How much of the rim a line of text would eat, in radians. */
+  function arcSpan(c, text, radius, gap){
+    var total = 0;
+    for(var i = 0; i < text.length; i++) total += c.measureText(text[i]).width + gap;
+    return total / radius;
+  }
+
   function arcText(c, text, cx, cy, radius, centerAngle, gap, flip){
     var widths = [], total = 0;
     for(var i = 0; i < text.length; i++){
@@ -336,12 +350,28 @@ window.__PL = {
     }
 
     /* ---- marker: title arced over the top ---- */
-    /* Lettered like the single cover: black marker caps, arced over the top. */
+    /* Lettered like the single cover: black sharpie caps, arced over the top.
+       Rock Salt sets far wider than Permanent Marker did, so size the title to
+       the rim rather than to a fixed number - that also keeps a longer mix
+       name from wrapping round the sides. */
     var title = CFG.mixName.toUpperCase();
+    var tRad = R*0.870, tGap = S*0.006, tfs, tSpan;
+    for(tfs = S*0.050; tfs > S*0.024; tfs -= 1){
+      c.font = '400 ' + Math.round(tfs) + 'px ' + SHARPIE;
+      tSpan = arcSpan(c, title, tRad, tGap);
+      /* The ends of the arc hang lower than its middle, and a full mix
+         needs that room for tracks - so cap the sweep tightly and let the
+         letters shrink instead. */
+      if(tSpan <= 1.9) break;                 /* ~109 deg of rim, at most */
+    }
     c.fillStyle = '#131318';
-    c.font = '400 ' + Math.round(S*0.052) + 'px ' + MARKER;
     c.textAlign = 'center'; c.textBaseline = 'middle';
-    arcText(c, title, cx, cy, R*0.870, -Math.PI/2, S*0.006, false);
+    arcText(c, title, cx, cy, tRad, -Math.PI/2, tGap, false);
+    /* The ends of the arc hang lower than its middle, and how much lower
+       depends on the font and the name. Measure it so the tracklist can
+       start underneath instead of guessing a clearance that stops being
+       true the moment either changes. */
+    var titleBottom = cy - tRad*Math.cos(Math.min(tSpan, 1.9)/2) + tfs*0.60;
 
     /* byline rides the bottom rim, so the whole face is free for tracks */
     if(state.by){
@@ -358,11 +388,11 @@ window.__PL = {
        gets the disc's full width instead of a gutter beside the hole.
        Shrink the line height until enough slots exist for the whole list. */
     var lh, fs, slots;
-    for(lh = S*0.056; lh > S*0.026; lh -= 1){
+    for(lh = S*0.056; lh > S*0.021; lh -= 1){
       fs = Math.min(S*0.042, lh*0.80);
       slots = [];
       /* starts clear of the arced title so the two never collide */
-      for(var yy = cy - R*0.50; yy <= cy + R*0.68; yy += lh){
+      for(var yy = Math.max(cy - R*0.50, titleBottom + lh*0.55); yy <= cy + R*0.68; yy += lh){
         if(Math.abs(yy - cy) < HUB + fs*0.80) continue;   /* the hole */
         slots.push(yy);
       }
@@ -582,6 +612,7 @@ window.__PL = {
   render();
   if(document.fonts && document.fonts.load){
     Promise.all([
+      document.fonts.load('400 46px "Rock Salt"'),
       document.fonts.load('400 62px "Permanent Marker"'),
       document.fonts.load('700 42px "Caveat"')
     ]).then(preview).catch(function(){});
