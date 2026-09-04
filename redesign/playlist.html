@@ -1,0 +1,800 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>listen when sad. — make your playlist</title>
+<style>
+/* ============================================================
+   Playlist builder. Single theme on purpose: this is a burned-CD
+   tracklist, so every colour is painted explicitly.
+   ============================================================ */
+*{box-sizing:border-box;}
+body{
+  margin:0;padding:20px 12px 48px;background:#0B0B0B;color:#F2F2F2;
+  font-family:"Andale Mono","Lucida Console","Courier New",monospace;
+  font-size:13px;-webkit-text-size-adjust:100%;
+}
+a{color:#7FB4FF;}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #25E05A;outline-offset:2px;}
+
+.pl{max-width:720px;margin:0 auto;border:1px solid #3A3A3A;background:#141414;}
+
+/* transport strip, same furniture as the site's player */
+.pl-bar{
+  display:flex;align-items:center;gap:8px;padding:7px 8px;
+  background:linear-gradient(180deg,#5C5C5C,#2E2E2E);border-bottom:1px solid #000;
+}
+.pl-bar .b{
+  width:30px;height:26px;background:linear-gradient(180deg,#EDEDED,#B4B4B4);
+  border:1px outset #FFF;display:flex;align-items:center;justify-content:center;
+  color:#1A1A1A;font-size:11px;
+}
+.pl-lcd{
+  flex:1;min-width:0;height:38px;background:#0D0D0D;border:2px inset #6E6E6E;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 9px;
+  font-size:11px;color:#25E05A;overflow:hidden;white-space:nowrap;
+}
+.pl-lcd b{overflow:hidden;text-overflow:ellipsis;}
+.pl-lcd i{font-style:normal;color:#1B8F3C;letter-spacing:2px;}
+
+.pl-head{display:flex;gap:14px;padding:14px;align-items:flex-start;border-bottom:1px solid #2A2A2A;}
+.cover{
+  width:132px;height:132px;flex:0 0 132px;position:relative;overflow:hidden;
+  border:1px solid #3A3A3A;background:#000;cursor:pointer;padding:0;display:block;
+}
+.cover .art{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:6px;text-align:center;padding:8px;
+  background:radial-gradient(circle at 50% 38%,#243B6B,#0A0F1E 72%);
+}
+.cover .art b{font:bold 15px "Arial Black",Arial,sans-serif;color:#FFF;line-height:1.15;letter-spacing:-.3px;}
+.cover .art span{font-size:9px;color:#8FA6C6;letter-spacing:.18em;}
+.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
+.cover.has-img img{display:block;}
+.cover.has-img .art{display:none;}
+.cover .hint{
+  position:absolute;left:0;right:0;bottom:0;height:17px;line-height:17px;
+  background:#25E05A;color:#062E12;font-size:9px;text-align:center;font-weight:bold;
+}
+.meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;}
+.meta label{display:block;font-size:10px;color:#8A8A8A;letter-spacing:.14em;margin-bottom:3px;}
+.meta input{
+  width:100%;background:#0D0D0D;border:1px solid #3A3A3A;color:#FFF;
+  font-family:inherit;font-size:14px;padding:8px;
+}
+.meta input:focus{border-color:#25E05A;background:#101A12;}
+
+/* the tracklist */
+.tracks{list-style:none;margin:0;padding:0;}
+.tr{display:flex;gap:9px;align-items:center;padding:9px 12px;border-top:1px solid #232323;}
+.tr:nth-child(even){background:#181818;}
+.tr .n{
+  width:26px;flex:0 0 26px;text-align:right;color:#25E05A;
+  font-variant-numeric:tabular-nums;font-size:12px;
+}
+.tr .f{flex:1;min-width:0;display:flex;gap:8px;}
+.tr .f input{
+  min-width:0;background:#0D0D0D;border:1px solid #333;color:#FFF;
+  font-family:inherit;font-size:14px;padding:8px;
+}
+.tr .f .t{flex:3;}
+.tr .f .a{flex:2;}
+.tr .f input:focus{border-color:#25E05A;background:#101A12;}
+.tr .ctl{display:flex;gap:3px;flex:0 0 auto;}
+.tr .ctl button{
+  width:30px;height:30px;background:#242424;border:1px solid #3A3A3A;color:#CFCFCF;
+  font-family:inherit;font-size:12px;cursor:pointer;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+}
+.tr .ctl button:hover{background:#2F2F2F;color:#FFF;border-color:#25E05A;}
+.tr .ctl button[disabled]{opacity:.28;cursor:default;}
+
+/* track one never moves */
+.tr.locked{background:#101C13;border-top:1px solid #25E05A;}
+.tr.locked .n{color:#25E05A;font-weight:bold;}
+.tr.locked .fixed{flex:1;min-width:0;line-height:1.4;}
+.tr.locked .fixed b{display:block;font-size:14px;color:#FFF;}
+.tr.locked .fixed span{font-size:11px;color:#7FA98A;}
+.pin{
+  flex:0 0 auto;background:#25E05A;color:#062E12;font-size:9px;font-weight:bold;
+  padding:3px 6px;letter-spacing:.1em;
+}
+
+.pl-actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px;border-top:1px solid #2A2A2A;}
+.btn{
+  font-family:inherit;font-size:13px;padding:10px 14px;cursor:pointer;
+  background:#242424;border:1px solid #4A4A4A;color:#EDEDED;
+  display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+}
+.btn:hover{background:#2F2F2F;border-color:#25E05A;}
+.btn.go{background:linear-gradient(180deg,#2FD866,#12A544);border-color:#0C7A31;color:#04250F;font-weight:bold;}
+.btn.go:hover{background:linear-gradient(180deg,#45E378,#16B94D);}
+.btn[disabled]{opacity:.4;cursor:default;}
+.status{padding:0 14px 12px;font-size:12px;color:#25E05A;min-height:1.2em;}
+.note{padding:0 14px 16px;font-size:11px;color:#7E7E7E;line-height:1.7;}
+.out{padding:0 14px 16px;}
+.out img{width:100%;border:1px solid #3A3A3A;display:block;}
+
+/* spotify panel */
+.sp{border-top:1px solid #2A2A2A;padding:14px;}
+.sp h2{margin:0 0 6px;font-size:12px;color:#25E05A;letter-spacing:.12em;}
+.sp p{margin:0 0 10px;font-size:11px;color:#8A8A8A;line-height:1.7;}
+.sp-off{border:1px dashed #3A3A3A;padding:10px;font-size:11px;color:#9A9A9A;line-height:1.7;}
+.sp-off code{color:#25E05A;}
+.results{list-style:none;margin:10px 0 0;padding:0;max-height:240px;overflow-y:auto;}
+.results li{
+  display:flex;gap:9px;align-items:center;padding:8px;border-top:1px solid #232323;
+  font-size:12px;cursor:pointer;
+}
+.results li:hover{background:#1E1E1E;}
+.results li b{display:block;color:#FFF;}
+.results li span{color:#8A8A8A;font-size:11px;}
+
+@media (max-width:600px){
+  body{padding:10px 8px 34px;}
+  .pl-head{flex-direction:column;align-items:stretch;}
+  .cover{width:100%;height:190px;flex:none;}
+  .tr{flex-wrap:wrap;gap:7px;}
+  .tr .f{flex-direction:column;width:100%;order:3;flex-basis:100%;}
+  .tr .n{order:1;}
+  .tr .ctl{order:2;margin-left:auto;}
+  .tr .ctl button{width:38px;height:38px;}   /* thumb-sized */
+  .tr.locked .fixed{order:3;flex-basis:100%;}
+  .btn{flex:1 1 auto;min-height:44px;}
+  /* 16px keeps iOS from zooming the page on focus */
+  .meta input,.tr .f input{font-size:16px;}
+}
+</style>
+</head>
+<body>
+
+<div class="pl">
+  <div class="pl-bar">
+    <span class="b" aria-hidden="true">&#9632;</span>
+    <span class="b" aria-hidden="true">&#9664;&#124;</span>
+    <span class="b" aria-hidden="true">&#9654;</span>
+    <span class="b" aria-hidden="true">&#124;&#9654;</span>
+    <span class="pl-lcd"><b id="lcd">listen when sad.</b><i id="lcd-n">01</i></span>
+  </div>
+
+  <div class="pl-head">
+    <button type="button" class="cover" id="cover" aria-label="Add playlist cover art">
+      <span class="art" aria-hidden="true">
+        <b>LISTEN<br>WHEN<br>SAD.</b>
+        <span>YOUR MIX</span>
+      </span>
+      <img id="cover-img" alt="">
+      <span class="hint">add cover</span>
+    </button>
+    <input type="file" id="cover-file" accept="image/*" hidden>
+    <div class="meta">
+      <div>
+        <label for="pl-name">PLAYLIST NAME</label>
+        <input id="pl-name" type="text" maxlength="60" placeholder="songs for the drive home">
+      </div>
+      <div>
+        <label for="pl-by">MADE BY</label>
+        <input id="pl-by" type="text" maxlength="40" placeholder="ur name">
+      </div>
+    </div>
+  </div>
+
+  <ol class="tracks" id="tracks"></ol>
+
+  <div class="pl-actions">
+    <button type="button" class="btn go" id="add">+ Add Track</button>
+    <button type="button" class="btn" id="make">Make Playlist Card</button>
+    <button type="button" class="btn" id="copy">Copy As Text</button>
+    <button type="button" class="btn" id="clear">Clear</button>
+  </div>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+
+  <div class="out" id="out" hidden><img id="img" alt="Your playlist card"></div>
+
+  <div class="pl-actions" id="sharebar" hidden>
+    <button type="button" class="btn" id="save">Save Image</button>
+    <a class="btn" id="sx" href="#" target="_blank" rel="noopener">X</a>
+    <a class="btn" id="stu" href="#" target="_blank" rel="noopener">Tumblr</a>
+    <button type="button" class="btn" id="slink">Copy Link</button>
+  </div>
+
+  <div class="sp">
+    <h2>SPOTIFY</h2>
+    <div id="sp-body"></div>
+  </div>
+
+  <p class="note">
+    Your playlist stays in this browser. The card is drawn on your device &mdash;
+    nothing is uploaded. If there's no Save button, long-press or right-click the card.
+  </p>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   CONFIG — the only block you need to touch.
+   ------------------------------------------------------------------ */
+window.__PL = {
+  /* Track 1 is pinned and cannot be removed or reordered. */
+  locked: {
+    title: "Listen When Sad",
+    artist: "Jonas Brothers",
+    /* Paste the real track URI to have it pinned in the Spotify playlist too.
+       Find it in Spotify: track ... Share ... Copy Song Link, the id is the
+       last path segment: spotify:track:<id> */
+    uri: ""
+  },
+  maxTracks: 12,
+  shareUrl: "https://www.jonasbrothers.com/playlist/",
+
+  /* Spotify stays OFF until clientId is filled in. Everything above works
+     regardless — search and playlist creation are the only things gated.
+     See the README for the four setup steps. */
+  spotify: {
+    clientId: "",
+    scopes: ["playlist-modify-public", "playlist-modify-private"],
+    playlistPublic: false
+  }
+};
+</script>
+<script>
+(function(){
+  var CFG = window.__PL;
+  var KEY = 'jb-playlist-v1';
+
+  var $ = function(id){ return document.getElementById(id); };
+  var statusEl = $('status');
+  function say(m){ statusEl.textContent = m || ''; }
+  function esc(v){
+    return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ---------------- state ---------------- */
+  var state = {name:'', by:'', cover:null, tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(saved && Array.isArray(saved.tracks)) state = saved;
+  } catch(e){}
+
+  function persist(){
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){}
+  }
+
+  /* ---------------- tracklist ---------------- */
+  var list = $('tracks');
+
+  function render(){
+    list.innerHTML = '';
+
+    var li = document.createElement('li');
+    li.className = 'tr locked';
+    li.innerHTML =
+      '<span class="n">01</span>' +
+      '<span class="fixed"><b>' + esc(CFG.locked.title) + '</b>' +
+      '<span>' + esc(CFG.locked.artist) + '</span></span>' +
+      '<span class="pin">PINNED</span>';
+    list.appendChild(li);
+
+    state.tracks.forEach(function(tr, i){
+      var row = document.createElement('li');
+      row.className = 'tr';
+      var n = i + 2;
+      row.innerHTML =
+        '<span class="n">' + (n < 10 ? '0' + n : n) + '</span>' +
+        '<span class="f">' +
+          '<input class="t" type="text" maxlength="80" placeholder="song" value="' + esc(tr.t) + '">' +
+          '<input class="a" type="text" maxlength="60" placeholder="artist" value="' + esc(tr.a) + '">' +
+        '</span>' +
+        '<span class="ctl">' +
+          '<button type="button" data-up="' + i + '" title="Move up" aria-label="Move up"' + (i === 0 ? ' disabled' : '') + '>&#9650;</button>' +
+          '<button type="button" data-down="' + i + '" title="Move down" aria-label="Move down"' + (i === state.tracks.length - 1 ? ' disabled' : '') + '>&#9660;</button>' +
+          '<button type="button" data-del="' + i + '" title="Remove" aria-label="Remove">&times;</button>' +
+        '</span>';
+      list.appendChild(row);
+    });
+
+    $('lcd-n').textContent = (filled().length + 1) < 10
+      ? '0' + (filled().length + 1) : String(filled().length + 1);
+    $('add').disabled = state.tracks.length >= CFG.maxTracks - 1;
+  }
+
+  function filled(){
+    return state.tracks.filter(function(t){ return (t.t || '').trim(); });
+  }
+
+  list.addEventListener('input', function(e){
+    var row = e.target.closest('.tr');
+    if(!row) return;
+    var i = [].indexOf.call(list.children, row) - 1;   /* row 0 is the pinned track */
+    if(i < 0) return;
+    if(e.target.classList.contains('t')) state.tracks[i].t = e.target.value;
+    if(e.target.classList.contains('a')) state.tracks[i].a = e.target.value;
+    persist();
+    $('lcd').textContent = state.name || CFG.locked.title.toLowerCase() + '.';
+  });
+
+  list.addEventListener('click', function(e){
+    var b = e.target.closest('button');
+    if(!b) return;
+    var up = b.getAttribute('data-up'), dn = b.getAttribute('data-down'), del = b.getAttribute('data-del');
+    if(up !== null){ var i = +up; var s = state.tracks.splice(i,1)[0]; state.tracks.splice(i-1,0,s); }
+    else if(dn !== null){ var j = +dn; var s2 = state.tracks.splice(j,1)[0]; state.tracks.splice(j+1,0,s2); }
+    else if(del !== null){ state.tracks.splice(+del,1); if(!state.tracks.length) state.tracks.push({t:'',a:''}); }
+    else return;
+    persist(); render();
+  });
+
+  $('add').addEventListener('click', function(){
+    if(state.tracks.length >= CFG.maxTracks - 1){ say('That is the whole disc.'); return; }
+    state.tracks.push({t:'',a:''});
+    persist(); render();
+    var inputs = list.querySelectorAll('.tr .t');
+    if(inputs.length) inputs[inputs.length-1].focus();
+  });
+
+  $('pl-name').value = state.name;
+  $('pl-by').value = state.by;
+  $('pl-name').addEventListener('input', function(){
+    state.name = this.value; persist();
+    $('lcd').textContent = state.name || 'listen when sad.';
+  });
+  $('pl-by').addEventListener('input', function(){ state.by = this.value; persist(); });
+
+  /* ---------------- cover art ---------------- */
+  var cover = $('cover'), coverImg = $('cover-img'), coverFile = $('cover-file');
+  function showCover(src){
+    state.cover = src; coverImg.src = src; cover.classList.add('has-img'); persist();
+  }
+  if(state.cover) showCover(state.cover);
+  cover.addEventListener('click', function(){ coverFile.click(); });
+  coverFile.addEventListener('change', function(){
+    var f = coverFile.files && coverFile.files[0];
+    if(!f) return;
+    if(f.size > 8*1024*1024){ say('That image is over 8MB — pick a smaller one.'); return; }
+    var fr = new FileReader();
+    fr.onload = function(){ showCover(String(fr.result)); say('Cover added.'); };
+    fr.onerror = function(){ say("Couldn't read that file."); };
+    fr.readAsDataURL(f);
+  });
+
+  /* ---------------- plain text ---------------- */
+  function asText(){
+    var out = [];
+    out.push((state.name || 'untitled mix').toUpperCase());
+    if(state.by) out.push('by ' + state.by);
+    out.push('');
+    out.push('01. ' + CFG.locked.title + ' — ' + CFG.locked.artist);
+    filled().forEach(function(t, i){
+      var n = i + 2;
+      out.push((n<10?'0'+n:n) + '. ' + t.t.trim() + (t.a.trim() ? ' — ' + t.a.trim() : ''));
+    });
+    out.push('');
+    out.push('make yours at ' + CFG.shareUrl);
+    return out.join('\n');
+  }
+
+  /* ---------------- the card ---------------- */
+  var MONO = '"Andale Mono","Lucida Console","Courier New",monospace';
+  var W = 1080, PAD = 56;
+
+  function buildCard(cb){
+    var rows = filled();
+    var TOP = 300, LINE = 62, FOOT = 96;
+    var cv = document.createElement('canvas');
+    cv.width = W;
+    cv.height = TOP + (rows.length + 1) * LINE + FOOT;
+    var c = cv.getContext('2d');
+    c.textBaseline = 'middle';
+
+    c.fillStyle = '#0B0B0B';
+    c.fillRect(0,0,cv.width,cv.height);
+
+    function chrome(){
+      /* title block */
+      c.textAlign = 'left';
+      c.fillStyle = '#FFFFFF';
+      c.font = 'bold 44px "Arial Black",Arial,sans-serif';
+      var title = (state.name || 'untitled mix');
+      if(title.length > 26) title = title.slice(0,25) + '…';
+      c.fillText(title, PAD + 200, 118);
+      c.fillStyle = '#25E05A';
+      c.font = '22px ' + MONO;
+      c.fillText(state.by ? 'made by ' + state.by : 'a listen when sad mix', PAD + 200, 162);
+      c.fillStyle = '#6E6E6E';
+      c.font = '18px ' + MONO;
+      c.fillText((rows.length + 1) + ' tracks', PAD + 200, 200);
+
+      /* tracks */
+      var y = TOP;
+      function line(n, t, a, pinned){
+        if(pinned){
+          c.fillStyle = '#101C13';
+          c.fillRect(0, y - LINE/2, W, LINE);
+        }
+        c.textAlign = 'right';
+        c.fillStyle = pinned ? '#25E05A' : '#4E7F5F';
+        c.font = '24px ' + MONO;
+        c.fillText(n, PAD + 46, y);
+
+        c.textAlign = 'left';
+        c.fillStyle = '#FFFFFF';
+        c.font = (pinned ? 'bold ' : '') + '26px ' + MONO;
+        var maxT = W - PAD*2 - 80 - 250;
+        var tt = t;
+        while(c.measureText(tt).width > maxT && tt.length > 4) tt = tt.slice(0,-2) + '…';
+        c.fillText(tt, PAD + 76, y);
+
+        if(a){
+          c.textAlign = 'right';
+          c.fillStyle = '#8A8A8A';
+          c.font = '20px ' + MONO;
+          var aa = a;
+          while(c.measureText(aa).width > 240 && aa.length > 4) aa = aa.slice(0,-2) + '…';
+          c.fillText(aa, W - PAD, y);
+        }
+        y += LINE;
+      }
+
+      line('01', CFG.locked.title, CFG.locked.artist, true);
+      rows.forEach(function(t, i){
+        var n = i + 2;
+        line((n<10?'0'+n:String(n)), t.t.trim(), t.a.trim(), false);
+      });
+
+      /* footer */
+      c.fillStyle = '#141414';
+      c.fillRect(0, cv.height - FOOT, W, FOOT);
+      c.textAlign = 'center';
+      c.fillStyle = '#25E05A';
+      c.font = 'bold 24px ' + MONO;
+      c.fillText('jonasbrothers.com', W/2, cv.height - FOOT/2);
+      cb(cv);
+    }
+
+    /* cover square, then the rest once it has decoded */
+    var cs = 160, cx = PAD, cy = 56;
+    if(state.cover){
+      var im = new Image();
+      im.onload = function(){
+        var r = Math.max(cs/im.width, cs/im.height);
+        var dw = im.width*r, dh = im.height*r;
+        c.save(); c.beginPath(); c.rect(cx,cy,cs,cs); c.clip();
+        c.drawImage(im, cx + (cs-dw)/2, cy + (cs-dh)/2, dw, dh);
+        c.restore();
+        c.strokeStyle = '#3A3A3A'; c.lineWidth = 2; c.strokeRect(cx,cy,cs,cs);
+        chrome();
+      };
+      im.onerror = function(){ chrome(); };
+      im.src = state.cover;
+    } else {
+      var g = c.createRadialGradient(cx+cs/2, cy+cs*0.38, 8, cx+cs/2, cy+cs*0.38, cs);
+      g.addColorStop(0,'#243B6B'); g.addColorStop(1,'#0A0F1E');
+      c.fillStyle = g; c.fillRect(cx,cy,cs,cs);
+      c.strokeStyle = '#3A3A3A'; c.lineWidth = 2; c.strokeRect(cx,cy,cs,cs);
+      c.textAlign = 'center'; c.fillStyle = '#FFFFFF';
+      c.font = 'bold 20px "Arial Black",Arial,sans-serif';
+      c.fillText('LISTEN', cx+cs/2, cy+cs*0.34);
+      c.fillText('WHEN', cx+cs/2, cy+cs*0.52);
+      c.fillText('SAD.', cx+cs/2, cy+cs*0.70);
+      chrome();
+    }
+  }
+
+  /* ---------------- actions ---------------- */
+  var blob = null;
+  $('make').addEventListener('click', function(){
+    say('Drawing your card…');
+    buildCard(function(cv){
+      $('img').src = cv.toDataURL('image/png');
+      $('out').hidden = false;
+      $('sharebar').hidden = false;
+      cv.toBlob(function(b){ blob = b; }, 'image/png');
+      var t = encodeURIComponent((state.name || 'my listen when sad mix') + ' — track 1 is non-negotiable');
+      var u = encodeURIComponent(CFG.shareUrl);
+      $('sx').href = 'https://twitter.com/intent/tweet?text=' + t + '&url=' + u;
+      $('stu').href = 'https://www.tumblr.com/widgets/share/tool?canonicalUrl=' + u + '&caption=' + t;
+      say('Card ready.');
+    });
+  });
+
+  $('copy').addEventListener('click', function(){
+    var text = asText();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(
+        function(){ say('Copied — paste it anywhere.'); },
+        function(){ say('Copy blocked by the browser.'); });
+    } else say('Copy blocked by the browser.');
+  });
+
+  $('slink').addEventListener('click', function(){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(CFG.shareUrl).then(
+        function(){ say('Link copied.'); }, function(){ say('Copy blocked.'); });
+    }
+  });
+
+  $('clear').addEventListener('click', function(){
+    state = {name:'', by:'', cover:null, tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
+    try { localStorage.removeItem(KEY); } catch(e){}
+    $('pl-name').value = ''; $('pl-by').value = '';
+    cover.classList.remove('has-img'); coverImg.removeAttribute('src');
+    $('out').hidden = true; $('sharebar').hidden = true;
+    render(); say('Cleared.');
+  });
+
+  /* Save route depends on where this runs: a plain file can use <a download>,
+     the artifact viewer cannot and needs the downloads capability. */
+  var saveBtn = $('save');
+  saveBtn.hidden = true;
+  function fileName(){
+    var n = (state.name || 'my').trim().replace(/[^\w-]+/g,'-').slice(0,40) || 'my';
+    return n + '-playlist.png';
+  }
+  if(window.claude && typeof window.claude.use === 'function'){
+    window.claude.use('downloads').then(function(d){
+      if(!d) return;
+      saveBtn.hidden = false;
+      saveBtn.addEventListener('click', function(){
+        if(!blob){ say('Make the card first.'); return; }
+        d.save({filename:fileName(), data:blob}).then(
+          function(){ say('Saved.'); },
+          function(err){
+            if(err && err.code === 'declined') say('No problem — the card is still here.');
+            else { say('Saving is unavailable here — long-press the card.'); saveBtn.hidden = true; }
+          });
+      });
+    });
+  } else {
+    saveBtn.hidden = false;
+    saveBtn.addEventListener('click', function(){
+      if(!blob){ say('Make the card first.'); return; }
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = fileName();
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      say('Saved to your downloads.');
+    });
+  }
+
+  render();
+  $('lcd').textContent = state.name || 'listen when sad.';
+
+  /* expose for the Spotify module */
+  window.__PL_API = {
+    state: state,
+    addTrack: function(title, artist, uri){
+      var slot = null;
+      for(var i=0;i<state.tracks.length;i++){
+        if(!(state.tracks[i].t || '').trim()){ slot = i; break; }
+      }
+      if(slot === null){
+        if(state.tracks.length >= CFG.maxTracks - 1) return false;
+        state.tracks.push({t:'',a:''});
+        slot = state.tracks.length - 1;
+      }
+      state.tracks[slot] = {t:title, a:artist, uri:uri};
+      persist(); render();
+      return true;
+    },
+    filled: filled,
+    say: say
+  };
+})();
+</script>
+<script>
+/* ------------------------------------------------------------------
+   SPOTIFY — optional. Everything above works without it.
+
+   Turn it on by pasting a client id into window.__PL.spotify.clientId.
+   Auth is Authorization Code + PKCE, which needs no client secret and so
+   is safe in a static page. Tokens live in sessionStorage and die with
+   the tab.
+
+   NOT YET EXERCISED AGAINST THE LIVE API — this environment cannot reach
+   accounts.spotify.com, so the flow below is written to the documented
+   contract but has not been run. Test it on the real domain before launch.
+   ------------------------------------------------------------------ */
+(function(){
+  var CFG = window.__PL, API = window.__PL_API;
+  var SP = CFG.spotify;
+  var body = document.getElementById('sp-body');
+  var TOKEN_KEY = 'jb-sp-token', VERIFIER_KEY = 'jb-sp-verifier';
+  var redirectUri = location.origin + location.pathname;
+
+  if(!SP.clientId){
+    body.innerHTML =
+      '<p>Users can build and share a playlist right now. Connecting Spotify adds ' +
+      'real search and one-tap playlist creation on the listener\'s own account.</p>' +
+      '<div class="sp-off"><b>Not configured.</b><br>' +
+      '1. Create an app at developer.spotify.com/dashboard<br>' +
+      '2. Add this exact redirect URI: <code>' + redirectUri + '</code><br>' +
+      '3. Paste the client id into <code>__PL.spotify.clientId</code><br>' +
+      '4. Paste the pinned track URI into <code>__PL.locked.uri</code><br>' +
+      '<br>New apps are capped at 25 listed users until Spotify grants a ' +
+      'quota extension — request that before any public push.</div>';
+    return;
+  }
+
+  /* ---- PKCE ---- */
+  function rand(n){
+    var a = new Uint8Array(n);
+    crypto.getRandomValues(a);
+    return Array.from(a).map(function(x){
+      return 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~'[x % 66];
+    }).join('');
+  }
+  function b64url(buf){
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)))
+      .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+  function challenge(v){
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(v)).then(b64url);
+  }
+
+  function login(){
+    var v = rand(64);
+    sessionStorage.setItem(VERIFIER_KEY, v);
+    challenge(v).then(function(ch){
+      location.href = 'https://accounts.spotify.com/authorize?' + new URLSearchParams({
+        client_id: SP.clientId,
+        response_type: 'code',
+        redirect_uri: redirectUri,
+        code_challenge_method: 'S256',
+        code_challenge: ch,
+        scope: SP.scopes.join(' ')
+      }).toString();
+    });
+  }
+
+  function exchange(code){
+    var v = sessionStorage.getItem(VERIFIER_KEY);
+    return fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: redirectUri,
+        client_id: SP.clientId,
+        code_verifier: v
+      })
+    }).then(function(r){
+      if(!r.ok) throw new Error('token exchange failed (' + r.status + ')');
+      return r.json();
+    }).then(function(j){
+      sessionStorage.setItem(TOKEN_KEY, j.access_token);
+      sessionStorage.removeItem(VERIFIER_KEY);
+      return j.access_token;
+    });
+  }
+
+  function token(){ return sessionStorage.getItem(TOKEN_KEY); }
+
+  function api(path, opts){
+    opts = opts || {};
+    opts.headers = Object.assign({
+      'Authorization': 'Bearer ' + token(),
+      'Content-Type': 'application/json'
+    }, opts.headers || {});
+    return fetch('https://api.spotify.com/v1' + path, opts).then(function(r){
+      if(r.status === 401){
+        sessionStorage.removeItem(TOKEN_KEY);
+        throw new Error('Session expired — connect again.');
+      }
+      if(!r.ok) return r.text().then(function(t){ throw new Error('Spotify ' + r.status + ': ' + t.slice(0,120)); });
+      return r.status === 204 ? null : r.json();
+    });
+  }
+
+  /* ---- UI ---- */
+  function connected(){
+    body.innerHTML =
+      '<p>Search Spotify, tap a result to drop it in, then push the whole thing ' +
+      'to your account. Track 1 stays pinned.</p>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+        '<input id="sp-q" type="text" placeholder="search songs" ' +
+          'style="flex:1;min-width:180px;background:#0D0D0D;border:1px solid #3A3A3A;' +
+          'color:#fff;font-family:inherit;font-size:16px;padding:9px">' +
+        '<button type="button" class="btn" id="sp-go">Search</button>' +
+        '<button type="button" class="btn go" id="sp-make">Create on Spotify</button>' +
+      '</div><ul class="results" id="sp-res"></ul>';
+
+    var q = document.getElementById('sp-q');
+    var res = document.getElementById('sp-res');
+
+    function search(){
+      var term = q.value.trim();
+      if(!term) return;
+      API.say('Searching…');
+      api('/search?' + new URLSearchParams({q: term, type: 'track', limit: '8'}))
+        .then(function(j){
+          var items = (j && j.tracks && j.tracks.items) || [];
+          res.innerHTML = items.map(function(t){
+            var artists = t.artists.map(function(a){ return a.name; }).join(', ');
+            return '<li data-uri="' + t.uri + '" data-t="' + t.name.replace(/"/g,'&quot;') +
+                   '" data-a="' + artists.replace(/"/g,'&quot;') + '">' +
+                   '<b>' + t.name + '</b><span>' + artists + '</span></li>';
+          }).join('') || '<li><span>No matches.</span></li>';
+          API.say(items.length ? 'Tap a song to add it.' : 'No matches.');
+        })
+        .catch(function(e){ API.say(e.message); });
+    }
+
+    document.getElementById('sp-go').addEventListener('click', search);
+    q.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); search(); } });
+
+    res.addEventListener('click', function(e){
+      var li = e.target.closest('li[data-uri]');
+      if(!li) return;
+      var ok = API.addTrack(li.getAttribute('data-t'), li.getAttribute('data-a'), li.getAttribute('data-uri'));
+      API.say(ok ? 'Added.' : 'Playlist is full.');
+    });
+
+    document.getElementById('sp-make').addEventListener('click', function(){
+      var uris = [];
+      if(CFG.locked.uri) uris.push(CFG.locked.uri);   /* pinned first, always */
+      API.filled().forEach(function(t){ if(t.uri) uris.push(t.uri); });
+      if(!uris.length){ API.say('Add some songs from search first.'); return; }
+
+      API.say('Creating playlist…');
+      api('/me').then(function(me){
+        return api('/users/' + encodeURIComponent(me.id) + '/playlists', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: API.state.name || 'listen when sad — my mix',
+            public: !!SP.playlistPublic,
+            description: 'Made at ' + CFG.shareUrl
+          })
+        });
+      }).then(function(pl){
+        return api('/playlists/' + pl.id + '/tracks', {
+          method: 'POST',
+          body: JSON.stringify({uris: uris})
+        }).then(function(){ return pl; });
+      }).then(function(pl){
+        API.say('Playlist created.');
+        var url = (pl.external_urls && pl.external_urls.spotify) || '';
+        if(url){
+          var a = document.createElement('a');
+          a.href = url; a.target = '_blank'; a.rel = 'noopener';
+          a.className = 'btn go';
+          a.textContent = 'Open it in Spotify';
+          a.style.marginTop = '10px';
+          body.appendChild(a);
+        }
+      }).catch(function(e){ API.say(e.message); });
+    });
+  }
+
+  function disconnected(){
+    body.innerHTML =
+      '<p>Connect Spotify to search the real catalogue and push this playlist ' +
+      'to your own account, with track 1 pinned.</p>' +
+      '<button type="button" class="btn go" id="sp-login">Connect Spotify</button>';
+    document.getElementById('sp-login').addEventListener('click', login);
+  }
+
+  /* returning from the Spotify redirect */
+  var params = new URLSearchParams(location.search);
+  if(params.get('code') && sessionStorage.getItem(VERIFIER_KEY)){
+    body.innerHTML = '<p>Connecting…</p>';
+    exchange(params.get('code'))
+      .then(function(){
+        history.replaceState({}, '', redirectUri);
+        connected();
+      })
+      .catch(function(e){ body.innerHTML = '<p>' + e.message + '</p>'; disconnected(); });
+  } else if(params.get('error')){
+    history.replaceState({}, '', redirectUri);
+    disconnected();
+  } else if(token()){
+    connected();
+  } else {
+    disconnected();
+  }
+})();
+</script>
+</body>
+</html>
