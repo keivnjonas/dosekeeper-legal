@@ -118,11 +118,47 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E836
   color:#6E6E78;
 }
 .sp-off{border:1px dashed #33333D;padding:10px;font-size:11px;color:#9A9AA4;line-height:1.7;}
+
+/* Per-row Spotify status. A song that cannot be matched is the one thing a
+   fan must see BEFORE they hit create, not in an error afterwards. */
+.chip-slot{flex:0 0 auto;display:flex;}
+.sp-chip{
+  flex:0 0 auto;font:700 9px/1 "Helvetica Neue",Arial,sans-serif;letter-spacing:.09em;
+  text-transform:uppercase;padding:4px 6px;border:1px solid;white-space:nowrap;
+}
+.sp-chip.ok{color:#1DB954;border-color:#1A7A3C;background:#0B1A11;}
+.sp-chip.no{color:#E0B050;border-color:#7A5000;background:#1A1408;}
+.sp-chip.wait{color:#8A8A94;border-color:#33333D;}
+.results li.have{opacity:.45;}
+.results li.have b:after{content:" · already on your disc";color:#1DB954;font-weight:400;}
+.sp-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.sp-note{margin-top:10px;font-size:11px;color:#8A8A94;line-height:1.7;}
+.sp-note b{color:#E0B050;}
+.sp-acct{
+  display:flex;align-items:center;gap:8px;justify-content:space-between;
+  font-size:11px;color:#8A8A94;margin-bottom:10px;
+}
+.sp-acct .who{color:#1DB954;font-weight:700;}
+.linkbtn{
+  background:none;border:0;color:#8FD0FF;font-size:11px;cursor:pointer;
+  padding:4px;text-decoration:underline;
+}
 .sp-off code{color:#E8368F;}
 .results{list-style:none;margin:10px 0 0;padding:0;max-height:240px;overflow-y:auto;}
 .results li{display:flex;gap:9px;align-items:center;padding:8px;border-top:1px solid #212129;
   font-size:12px;cursor:pointer;}
 .results li:hover{background:#1C1C23;}
+.results li .body{flex:1;min-width:0;}
+.results li .out{
+  flex:0 0 auto;color:#1DB954;font-size:14px;text-decoration:none;padding:4px 6px;
+  border:1px solid #1A7A3C;line-height:1;
+}
+.results li .out:hover{background:#0B1A11;}
+.sp-credit{
+  margin-top:10px;font-size:10px;color:#6E6E78;letter-spacing:.04em;
+}
+.sp-credit a{color:#1DB954;text-decoration:none;}
+.sp-credit a:hover{text-decoration:underline;}
 .results li b{display:block;color:#FFF;}
 .results li span{color:#8A8A94;font-size:11px;}
 
@@ -134,6 +170,9 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E836
   .tr .ctl{order:2;margin-left:auto;}
   .tr .ctl button{width:38px;height:38px;}
   .tr.locked .fixed{order:3;flex-basis:100%;}
+  .chip-slot{order:2;}
+  /* keep the pinned row reading 01 - status - PINNED once it wraps */
+  .pin{order:4;}
   .btn{flex:1 1 auto;min-height:44px;}
   /* 16px+ keeps iOS from zooming the page on focus */
   .fields input,.tr .f input{font-size:20px;}
@@ -208,7 +247,9 @@ window.__PL = {
        and is visible in page source. It is an identifier, not a credential.
        The client SECRET is never used here and must never be put in this file. */
     clientId: "b33c1785959645128bdbf158b7593ea3",
-    scopes: ["playlist-modify-public", "playlist-modify-private"],
+    /* ugc-image-upload is what lets the fan's own disc become the playlist
+       cover. Drop it and everything else still works, minus the artwork. */
+    scopes: ["playlist-modify-public", "playlist-modify-private", "ugc-image-upload"],
     playlistPublic: false,
     /* Every URL registered as a Redirect URI in the Spotify dashboard.
        Spotify matches these character for character. The page compares its
@@ -251,6 +292,34 @@ window.__PL = {
     if(saved && Array.isArray(saved.tracks)) state = saved;
   } catch(e){}
   function persist(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+
+  /* The Spotify layer fills this in; the form only ever reads it, so the page
+     works exactly the same with Spotify switched off. */
+  var SPX = {connected:false, resolve:null};
+
+  /* A link of the form #m=<packed> carries someone else's mix. Load it over
+     whatever is saved - following a shared link is an explicit act. */
+  var sharedMix = null;
+  try {
+    var mh = (location.hash || '').match(/[#&]m=([A-Za-z0-9_-]+)/);
+    if(mh){
+      var padded = mh[1].replace(/-/g,'+').replace(/_/g,'/');
+      while(padded.length % 4) padded += '=';
+      var raw = atob(padded), u8 = new Uint8Array(raw.length);
+      for(var bi = 0; bi < raw.length; bi++) u8[bi] = raw.charCodeAt(bi);
+      var got = JSON.parse(new TextDecoder().decode(u8));
+      if(got && Array.isArray(got.t)){
+        sharedMix = {
+          by: typeof got.b === 'string' ? got.b.slice(0,28) : '',
+          tracks: got.t.slice(0, 24).map(function(r){
+            return {t: String(r[0] || '').slice(0,42), a: String(r[1] || '').slice(0,30)};
+          })
+        };
+        if(!sharedMix.tracks.length) sharedMix = null;
+      }
+    }
+  } catch(e){ sharedMix = null; }
+  if(sharedMix){ state = {by: sharedMix.by, tracks: sharedMix.tracks}; persist(); }
   function filled(){ return state.tracks.filter(function(t){ return (t.t||'').trim(); }); }
 
   /* ==================== THE DISC ====================
@@ -448,6 +517,27 @@ window.__PL = {
 
   /* ---------------- form ---------------- */
   var list = $('tracks');
+
+  /* A song with no Spotify match still belongs on the disc - it just cannot
+     travel to the playlist. Saying so per row, while they type, beats a
+     surprise in the create summary. */
+  function chipHtml(tr){
+    if(!SPX.connected) return '';
+    if(!(tr.t || '').trim()) return '';
+    if(tr.uri) return '<span class="sp-chip ok">on spotify</span>';
+    if(tr.sp === 'no') return '<span class="sp-chip no">not found</span>';
+    return '<span class="sp-chip wait">checking</span>';
+  }
+  function paintChips(){
+    var rows = list.querySelectorAll('.tr');
+    for(var i = 1; i < rows.length; i++){
+      var slot = rows[i].querySelector('.chip-slot');
+      if(slot) slot.innerHTML = chipHtml(state.tracks[i-1] || {});
+    }
+    var lslot = rows[0] && rows[0].querySelector('.chip-slot');
+    if(lslot) lslot.innerHTML = SPX.connected && CFG.locked.uri
+      ? '<span class="sp-chip ok">on spotify</span>' : '';
+  }
   function render(){
     list.innerHTML = '';
     var li = document.createElement('li');
@@ -455,6 +545,7 @@ window.__PL = {
     li.innerHTML = '<span class="n">01</span>' +
       '<span class="fixed"><b>' + esc(CFG.locked.title) + '</b>' +
       '<span>' + esc(CFG.locked.artist) + '</span></span>' +
+      '<span class="chip-slot"></span>' +
       '<span class="pin">PINNED</span>';
     list.appendChild(li);
 
@@ -464,6 +555,7 @@ window.__PL = {
       row.className = 'tr';
       row.innerHTML =
         '<span class="n">' + (n<10?'0'+n:n) + '</span>' +
+        '<span class="chip-slot"></span>' +
         '<span class="f">' +
           '<input class="t" type="text" maxlength="42" placeholder="song" value="' + esc(tr.t) + '">' +
           '<input class="a" type="text" maxlength="30" placeholder="artist" value="' + esc(tr.a) + '">' +
@@ -476,6 +568,8 @@ window.__PL = {
       list.appendChild(row);
     });
     $('add').disabled = state.tracks.length >= CFG.maxTracks - 1;
+    paintChips();
+    refreshShare();
     preview();
   }
 
@@ -488,12 +582,24 @@ window.__PL = {
     pending = requestAnimationFrame(function(){ drawDisc($('disc')); });
   }
 
+  var reMatch = {};
   list.addEventListener('input', function(e){
     var row = e.target.closest('.tr'); if(!row) return;
     var i = [].indexOf.call(list.children, row) - 1; if(i < 0) return;
     if(e.target.classList.contains('t')) state.tracks[i].t = e.target.value;
-    if(e.target.classList.contains('a')) state.tracks[i].a = e.target.value;
-    persist(); preview();
+    else if(e.target.classList.contains('a')) state.tracks[i].a = e.target.value;
+    else return;
+    /* Edited text is no longer the song that was matched, so drop the link to
+       Spotify and look it up again once they stop typing. */
+    delete state.tracks[i].uri;
+    delete state.tracks[i].sp;
+    var slot = row.querySelector('.chip-slot');
+    if(slot) slot.innerHTML = chipHtml(state.tracks[i]);
+    if(SPX.connected && SPX.resolve){
+      clearTimeout(reMatch[i]);
+      reMatch[i] = setTimeout(function(){ SPX.resolve(i); }, 700);
+    }
+    persist(); refreshShare(); preview();
   });
 
   list.addEventListener('click', function(e){
@@ -542,10 +648,12 @@ window.__PL = {
     } else say('Copy blocked by the browser.');
   });
   $('slink').addEventListener('click', function(){
+    var url = mixLink();
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(CFG.shareUrl).then(
-        function(){ say('Link copied.'); }, function(){ say('Copy blocked.'); });
-    }
+      navigator.clipboard.writeText(url).then(
+        function(){ say(url === CFG.shareUrl ? 'Link copied.' : 'Link copied — it opens your disc.'); },
+        function(){ say('Copy blocked.'); });
+    } else say('Copy blocked by the browser.');
   });
   $('clear').addEventListener('click', function(){
     state = {by:'', tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
@@ -554,10 +662,37 @@ window.__PL = {
     render(); say('Cleared.');
   });
 
-  var t = encodeURIComponent('my listen when sad playlist — track 1 is non-negotiable');
-  var u = encodeURIComponent(CFG.shareUrl);
-  $('sx').href = 'https://twitter.com/intent/tweet?text=' + t + '&url=' + u;
-  $('stu').href = 'https://www.tumblr.com/widgets/share/tool?canonicalUrl=' + u + '&caption=' + t;
+  /* A share link carries the mix itself, so opening it shows THAT disc rather
+     than an empty one. It rides in the fragment, not the query string: the
+     Spotify redirect comes back with ?code=... and the two must not collide. */
+  function utf8b64(str){
+    var bytes = new TextEncoder().encode(str), bin = '';
+    for(var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+  function b64utf8(b64){
+    var pad = b64.replace(/-/g,'+').replace(/_/g,'/');
+    while(pad.length % 4) pad += '=';
+    var bin = atob(pad), bytes = new Uint8Array(bin.length);
+    for(var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function mixLink(){
+    var songs = filled().map(function(t){ return [t.t.trim(), (t.a||'').trim()]; });
+    if(!songs.length && !state.by) return CFG.shareUrl;
+    var packed = utf8b64(JSON.stringify({b: state.by || '', t: songs}));
+    /* Long mixes can outgrow what some apps will carry. Fall back to the
+       plain page rather than handing out a link that arrives truncated. */
+    var url = CFG.shareUrl + '#m=' + packed;
+    return url.length > 1800 ? CFG.shareUrl : url;
+  }
+  function refreshShare(){
+    var t = encodeURIComponent('my listen when sad playlist — track 1 is non-negotiable');
+    var u = encodeURIComponent(mixLink());
+    $('sx').href = 'https://twitter.com/intent/tweet?text=' + t + '&url=' + u;
+    $('stu').href = 'https://www.tumblr.com/widgets/share/tool?canonicalUrl=' + u + '&caption=' + t;
+  }
+  refreshShare();
 
   var saveBtn = $('save');
   function fileName(){
@@ -625,49 +760,109 @@ window.__PL = {
       return true;
     },
     filled: filled,
-    say: say
+    say: say,
+
+    /* --- for the Spotify layer --- */
+    spx: SPX,
+    /* Record what a lookup found. A miss is remembered too, so the row shows
+       "not found" instead of sitting on "checking" forever. */
+    setMatch: function(i, uri){
+      var tr = state.tracks[i];
+      if(!tr) return;
+      if(uri){ tr.uri = uri; delete tr.sp; }
+      else { delete tr.uri; tr.sp = 'no'; }
+      persist(); paintChips();
+    },
+    /* Every row that needs a lookup, newest state, with its index. */
+    unmatched: function(){
+      var out = [];
+      state.tracks.forEach(function(tr, i){
+        if((tr.t||'').trim() && !tr.uri) out.push({i:i, t:tr.t.trim(), a:(tr.a||'').trim()});
+      });
+      return out;
+    },
+    /* The pinned track first, then every row that resolved to a real song. */
+    uris: function(){
+      var u = [];
+      if(CFG.locked.uri) u.push(CFG.locked.uri);
+      filled().forEach(function(t){ if(t.uri && u.indexOf(t.uri) === -1) u.push(t.uri); });
+      return u;
+    },
+    /* Songs that will NOT travel to Spotify, so the summary can name them. */
+    missing: function(){
+      return filled().filter(function(t){ return !t.uri; })
+                     .map(function(t){ return t.t.trim(); });
+    },
+    hasUri: function(uri){
+      if(uri && CFG.locked.uri === uri) return true;
+      return state.tracks.some(function(t){ return t.uri === uri; });
+    },
+    repaint: paintChips,
+    discCanvas: function(){ return $('disc'); },
+    refresh: render
   };
 })();
 </script>
 <script>
 /* ------------------------------------------------------------------
-   SPOTIFY — optional. Everything above works without it.
+   SPOTIFY
 
-   Turn it on by pasting a client id into window.__PL.spotify.clientId.
-   Auth is Authorization Code + PKCE, which needs no client secret and so
-   is safe in a static page. Tokens live in sessionStorage and die with
-   the tab.
+   Auth is Authorization Code + PKCE: no client secret, so it is safe in a
+   static page. The client id in __PL is public by design. The client SECRET
+   is never used here and must never be put in this file.
 
-   NOT YET EXERCISED AGAINST THE LIVE API — this environment cannot reach
-   accounts.spotify.com, so the flow below is written to the documented
-   contract but has not been run. Test it on the real domain before launch.
+   Beyond signing in, this layer:
+     - matches every hand-typed row against the real catalogue, so a mix
+       somebody typed out arrives complete instead of as one pinned song
+     - creates the playlist on the listener's own account, pinned track first
+     - uploads their disc as the playlist's cover art
+     - refreshes the session, so it does not die after an hour
+     - updates the same playlist on a second press instead of piling up copies
+
+   NOT EXERCISED AGAINST THE LIVE API from the machine this was written on -
+   it cannot reach accounts.spotify.com. Every branch below is driven by a
+   fake Spotify in test/spotify-mock.html; the contract is from Spotify's
+   docs. Run the real thing once before launch.
    ------------------------------------------------------------------ */
 (function(){
   var CFG = window.__PL, API = window.__PL_API;
   var SP = CFG.spotify;
+  var SPX = API.spx;
+  var body = document.getElementById('sp-body');
+
   function esc(v){
     return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
-  var body = document.getElementById('sp-body');
-  var TOKEN_KEY = 'jb-sp-token', VERIFIER_KEY = 'jb-sp-verifier';
+  function delay(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+  function el(id){ return document.getElementById(id); }
+
+  var TOK_KEY = 'jb-sp-tok', VERIFIER_KEY = 'jb-sp-verifier', PL_KEY = 'jb-sp-playlist';
+  var AUTH = 'https://accounts.spotify.com/authorize';
+  var TOKEN = 'https://accounts.spotify.com/api/token';
   var redirectUri = location.origin + location.pathname;
+
+  /* Storage can throw outright in private mode, so every touch is guarded. */
+  function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch(e){ return null; } }
+  function writeJSON(k, v){
+    try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch(e){}
+  }
 
   if(!SP.clientId){
     body.innerHTML =
-      '<p>Users can build and share a playlist right now. Connecting Spotify adds ' +
-      'real search and one-tap playlist creation on the listener\'s own account.</p>' +
+      '<p>Fans can build and share a disc right now. Connecting Spotify adds real ' +
+      'search and one-tap playlist creation on the listener\'s own account.</p>' +
       '<div class="sp-off"><b>Not configured.</b><br>' +
       '1. Create an app at developer.spotify.com/dashboard<br>' +
-      '2. Add this exact redirect URI: <code>' + redirectUri + '</code><br>' +
+      '2. Add this exact redirect URI: <code>' + esc(redirectUri) + '</code><br>' +
       '3. Paste the client id into <code>__PL.spotify.clientId</code><br>' +
       '4. Paste the pinned track URI into <code>__PL.locked.uri</code><br>' +
-      '<br>New apps are capped at 25 listed users until Spotify grants a ' +
-      'quota extension — request that before any public push.</div>';
+      '<br>New apps are capped at 25 named users until Spotify grants a quota ' +
+      'extension — request that before any public push.</div>';
     return;
   }
 
-  /* ---- PKCE ---- */
+  /* ================= PKCE ================= */
   function rand(n){
     var a = new Uint8Array(n);
     crypto.getRandomValues(a);
@@ -685,9 +880,12 @@ window.__PL = {
 
   function login(){
     var v = rand(64);
-    sessionStorage.setItem(VERIFIER_KEY, v);
+    try { sessionStorage.setItem(VERIFIER_KEY, v); } catch(e){
+      API.say('This browser is blocking storage, so sign-in cannot complete.');
+      return;
+    }
     challenge(v).then(function(ch){
-      location.href = 'https://accounts.spotify.com/authorize?' + new URLSearchParams({
+      location.href = AUTH + '?' + new URLSearchParams({
         client_id: SP.clientId,
         response_type: 'code',
         redirect_uri: redirectUri,
@@ -698,9 +896,21 @@ window.__PL = {
     });
   }
 
+  function store(j){
+    var t = readJSON(TOK_KEY) || {};
+    t.access = j.access_token;
+    t.exp = Date.now() + ((j.expires_in || 3600) * 1000);
+    /* A refresh response may omit the refresh token; keep the one we have. */
+    if(j.refresh_token) t.refresh = j.refresh_token;
+    writeJSON(TOK_KEY, t);
+    return t.access;
+  }
+
   function exchange(code){
-    var v = sessionStorage.getItem(VERIFIER_KEY);
-    return fetch('https://accounts.spotify.com/api/token', {
+    var v = null;
+    try { v = sessionStorage.getItem(VERIFIER_KEY); } catch(e){}
+    if(!v) return Promise.reject(new Error('Sign-in could not be completed in this tab. Try connecting again.'));
+    return fetch(TOKEN, {
       method: 'POST',
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body: new URLSearchParams({
@@ -711,35 +921,343 @@ window.__PL = {
         code_verifier: v
       })
     }).then(function(r){
-      if(!r.ok) throw new Error('token exchange failed (' + r.status + ')');
+      if(!r.ok) return r.text().then(function(t){
+        throw new Error('Spotify would not issue a token (' + r.status + '). ' +
+          'Usually the redirect URI does not match the one registered.');
+      });
       return r.json();
     }).then(function(j){
-      sessionStorage.setItem(TOKEN_KEY, j.access_token);
-      sessionStorage.removeItem(VERIFIER_KEY);
-      return j.access_token;
+      try { sessionStorage.removeItem(VERIFIER_KEY); } catch(e){}
+      return store(j);
     });
   }
 
-  function token(){ return sessionStorage.getItem(TOKEN_KEY); }
+  /* One refresh at a time: several calls can find the token stale at once,
+     and Spotify rotates refresh tokens, so a second exchange would fail. */
+  /* Any way a session can end - a rejected refresh, a 401 that survived a
+     retry - has to put the UI back to Connect. Clearing the token while the
+     screen still says "connected" leaves no way back in. */
+  function sessionLost(){
+    writeJSON(TOK_KEY, null);
+    SPX.connected = false;
+    API.repaint();
+    disconnected();
+  }
 
-  function api(path, opts){
+  var refreshing = null;
+  function doRefresh(rt){
+    return fetch(TOKEN, {
+      method: 'POST',
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: rt,
+        client_id: SP.clientId
+      })
+    }).then(function(r){
+      if(!r.ok) throw new Error('refresh rejected');
+      return r.json();
+    }).then(store);
+  }
+  function refresh(rt){
+    if(refreshing) return refreshing;
+    refreshing = doRefresh(rt).catch(function(){
+      sessionLost();
+      throw new Error('Your Spotify session ended — connect again.');
+    });
+    refreshing.then(function(){ refreshing = null; }, function(){ refreshing = null; });
+    return refreshing;
+  }
+
+  /* A valid access token, refreshing first if it is stale or nearly so. */
+  function fresh(){
+    var t = readJSON(TOK_KEY);
+    if(!t || !t.access) return Promise.reject(new Error('Not connected to Spotify.'));
+    if(Date.now() < (t.exp || 0) - 60000) return Promise.resolve(t.access);
+    if(!t.refresh){
+      sessionLost();
+      return Promise.reject(new Error('Your Spotify session ended — connect again.'));
+    }
+    return refresh(t.refresh);
+  }
+  function signedIn(){ var t = readJSON(TOK_KEY); return !!(t && t.access); }
+
+  /* ================= the API call ================= */
+  function explain(status, text){
+    if(status === 403){
+      return 'Spotify refused that (403). Either this account is not on the ' +
+             'app\'s allow-list — apps in Development Mode are limited to 25 ' +
+             'named users — or it did not grant playlist permission. Sign out ' +
+             'and connect again, and accept every permission Spotify asks for.';
+    }
+    if(status === 404) return 'Spotify could not find that (404). The playlist may have been deleted.';
+    if(status === 413) return 'That image was too large for Spotify.';
+    var snip = (text || '').slice(0, 140);
+    return 'Spotify returned ' + status + (snip ? ': ' + snip : '') + '.';
+  }
+
+  function api(path, opts, retried){
     opts = opts || {};
-    opts.headers = Object.assign({
-      'Authorization': 'Bearer ' + token(),
-      'Content-Type': 'application/json'
-    }, opts.headers || {});
-    return fetch('https://api.spotify.com/v1' + path, opts).then(function(r){
-      if(r.status === 401){
-        sessionStorage.removeItem(TOKEN_KEY);
-        throw new Error('Session expired — connect again.');
+    return fresh().then(function(at){
+      var h = Object.assign({'Authorization': 'Bearer ' + at}, opts.headers || {});
+      if(opts.body && !h['Content-Type']) h['Content-Type'] = 'application/json';
+      return fetch('https://api.spotify.com/v1' + path, {
+        method: opts.method || 'GET', headers: h, body: opts.body
+      }).catch(function(){
+        throw new Error('Could not reach Spotify. Check the connection and try again.');
+      });
+    }).then(function(r){
+      /* One retry each for a stale token, a rate limit, and a server blip. */
+      if(r.status === 401 && !retried){
+        var t = readJSON(TOK_KEY);
+        if(t){ t.exp = 0; writeJSON(TOK_KEY, t); }
+        return api(path, opts, true);
       }
-      if(!r.ok) return r.text().then(function(t){ throw new Error('Spotify ' + r.status + ': ' + t.slice(0,120)); });
-      return r.status === 204 ? null : r.json();
+      if(r.status === 429 && !retried){
+        var wait = (parseInt(r.headers.get('Retry-After') || '1', 10) || 1) * 1000;
+        return delay(Math.min(wait, 8000)).then(function(){ return api(path, opts, true); });
+      }
+      if(r.status >= 500 && !retried){
+        return delay(800).then(function(){ return api(path, opts, true); });
+      }
+      if(r.status === 401){
+        sessionLost();
+        throw new Error('Your Spotify session ended — connect again.');
+      }
+      if(!r.ok) return r.text().then(function(t){ throw new Error(explain(r.status, t)); });
+      if(r.status === 204) return null;
+      return r.text().then(function(t){ return t ? JSON.parse(t) : null; });
     });
   }
 
-  /* ---- UI ---- */
+  /* ================= matching typed songs ================= */
+  /* Fans type "Sucker" and "the jonas brothers", not catalogue strings. Strip
+     everything that is decoration so a human's spelling still matches. */
+  function norm(x){
+    return String(x == null ? '' : x).toLowerCase()
+      .replace(/\(.*?\)|\[.*?\]/g, ' ')
+      .replace(/\b(feat|ft|featuring|w\/|with)\b[\s\S]*$/, ' ')
+      .replace(/&/g, ' and ')
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+  }
+  function near(a, b){
+    if(!a || !b) return false;
+    return a === b || a.indexOf(b) !== -1 || b.indexOf(a) !== -1;
+  }
+  function pick(items, title, artist){
+    var nt = norm(title), na = norm(artist);
+    for(var i = 0; i < items.length; i++){
+      var it = items[i];
+      if(!near(norm(it.name), nt)) continue;
+      if(na){
+        var who = (it.artists || []).map(function(a){ return norm(a.name); });
+        var hit = who.some(function(w){ return near(w, na); });
+        if(!hit) continue;
+      }
+      return it;
+    }
+    /* With no artist to check against, an exact title on the top hit is the
+       most a search can honestly claim. */
+    if(!na && items.length && norm(items[0].name) === nt) return items[0];
+    return null;
+  }
+  function searchTracks(q, limit){
+    return api('/search?' + new URLSearchParams({q: q, type: 'track', limit: String(limit || 8)}))
+      .then(function(j){ return (j && j.tracks && j.tracks.items) || []; });
+  }
+  function lookup(title, artist){
+    var strict = artist ? 'track:"' + title + '" artist:"' + artist + '"' : 'track:"' + title + '"';
+    return searchTracks(strict, 5).then(function(items){
+      var hit = pick(items, title, artist);
+      if(hit) return hit;
+      /* Field filters are unforgiving about spelling; a plain search is not. */
+      return searchTracks((title + ' ' + artist).trim(), 8).then(function(loose){
+        return pick(loose, title, artist);
+      });
+    });
+  }
+
+  var inflight = {};
+  function resolveRow(i){
+    var tr = API.state.tracks[i];
+    if(!tr || !(tr.t || '').trim() || tr.uri) return Promise.resolve();
+    var was = {t: tr.t, a: tr.a || ''};
+    var key = i + '|' + was.t + '|' + was.a;
+    if(inflight[key]) return inflight[key];
+    inflight[key] = lookup(was.t.trim(), was.a.trim())
+      .then(function(hit){
+        var now = API.state.tracks[i];
+        /* They may have kept typing: only apply to the text we searched for. */
+        if(!now || now.t !== was.t || (now.a || '') !== was.a) return;
+        API.setMatch(i, hit ? hit.uri : null);
+      })
+      .catch(function(){ /* leave it unresolved - create() tries again */ })
+      .then(function(){ delete inflight[key]; });
+    return inflight[key];
+  }
+  SPX.resolve = resolveRow;
+
+  /* Sequential: a dozen rows at once is a burst Spotify may rate-limit, and
+     there is no hurry here. */
+  function resolveAll(){
+    var todo = API.unmatched();
+    if(!todo.length) return Promise.resolve();
+    API.say('Matching your songs on Spotify…');
+    return todo.reduce(function(p, row){
+      return p.then(function(){ return resolveRow(row.i); });
+    }, Promise.resolve());
+  }
+
+  /* ================= cover art ================= */
+  /* The disc they made becomes the playlist's artwork. Spotify takes base64
+     JPEG only, capped at 256KB, and JPEG has no transparency - so the disc is
+     flattened onto the page's own background first. */
+  function coverJpeg(){
+    try {
+      var src = API.discCanvas();
+      if(!src || !src.width) return Promise.resolve(null);
+      var cv = document.createElement('canvas'), c = cv.getContext('2d');
+      var size = 640, q = 0.82, out = null;
+      for(var attempt = 0; attempt < 7; attempt++){
+        cv.width = cv.height = size;
+        c.fillStyle = '#0A0A0C';
+        c.fillRect(0, 0, size, size);
+        c.drawImage(src, 0, 0, size, size);
+        out = (cv.toDataURL('image/jpeg', q).split(',')[1] || '');
+        if(out.length <= 256 * 1024) return Promise.resolve(out);
+        if(q > 0.5) q -= 0.12; else size = Math.round(size * 0.8);
+      }
+      return Promise.resolve(null);
+    } catch(e){ return Promise.resolve(null); }
+  }
+  function putCover(id, b64){
+    return api('/playlists/' + id + '/images', {
+      method: 'PUT', headers: {'Content-Type': 'image/jpeg'}, body: b64
+    });
+  }
+
+  /* ================= create / update ================= */
+  function playlistName(){
+    return CFG.mixName + (API.state.by ? ' — ' + API.state.by : '');
+  }
+  function describe(){
+    return 'Track 1 is non-negotiable. Made at ' + CFG.shareUrl;
+  }
+  function wantPublic(){
+    var box = el('sp-public');
+    return box ? !!box.checked : !!SP.playlistPublic;
+  }
+
+  function createNew(uris){
+    return api('/me').then(function(me){
+      return api('/users/' + encodeURIComponent(me.id) + '/playlists', {
+        method: 'POST',
+        body: JSON.stringify({name: playlistName(), public: wantPublic(), description: describe()})
+      });
+    }).then(function(pl){
+      return api('/playlists/' + pl.id + '/tracks', {
+        method: 'POST', body: JSON.stringify({uris: uris})
+      }).then(function(){
+        var url = (pl.external_urls && pl.external_urls.spotify) || '';
+        writeJSON(PL_KEY, {id: pl.id, url: url});
+        return {id: pl.id, url: url, made: true, count: uris.length};
+      });
+    });
+  }
+
+  function updateExisting(saved, uris){
+    /* PUT replaces the whole tracklist, so reordering on the disc reorders on
+       Spotify rather than appending a second copy of everything. */
+    return api('/playlists/' + saved.id + '/tracks', {
+      method: 'PUT', body: JSON.stringify({uris: uris})
+    }).then(function(){
+      return api('/playlists/' + saved.id, {
+        method: 'PUT',
+        body: JSON.stringify({name: playlistName(), public: wantPublic(), description: describe()})
+      });
+    }).then(function(){
+      return {id: saved.id, url: saved.url, made: false, count: uris.length};
+    });
+  }
+
+  var busy = false;
+  function push(){
+    if(busy) return;
+    var btn = el('sp-make');
+    busy = true;
+    if(btn){ btn.disabled = true; btn.textContent = 'Working…'; }
+
+    resolveAll().then(function(){
+      var uris = API.uris();
+      if(!uris.length) throw new Error('Add some songs first — none of these could be found on Spotify.');
+      var saved = readJSON(PL_KEY);
+      if(saved && saved.id){
+        return updateExisting(saved, uris).catch(function(e){
+          /* Deleted on Spotify's side: start a fresh one rather than dead-end. */
+          writeJSON(PL_KEY, null);
+          return createNew(uris);
+        });
+      }
+      return createNew(uris);
+    }).then(function(res){
+      /* Cover art is a bonus, never a reason to fail a created playlist. */
+      return coverJpeg().then(function(b64){
+        if(!b64) return Object.assign(res, {cover: false});
+        return putCover(res.id, b64).then(
+          function(){ return Object.assign(res, {cover: true}); },
+          function(){ return Object.assign(res, {cover: false}); });
+      });
+    }).then(function(res){
+      showResult(res, API.missing());
+    }).catch(function(e){
+      API.say(e.message || 'Something went wrong.');
+    }).then(function(){
+      busy = false;
+      var b = el('sp-make');
+      if(b){ b.disabled = false; b.textContent = makeLabel(); }
+    });
+  }
+
+  function makeLabel(){
+    var saved = readJSON(PL_KEY);
+    return saved && saved.id ? 'Update on Spotify' : 'Create on Spotify';
+  }
+
+  function showResult(res, missing){
+    API.say((res.made ? 'Playlist created.' : 'Playlist updated.') + ' ' +
+            res.count + ' song' + (res.count === 1 ? '' : 's') + ' on Spotify.');
+    var box = el('sp-result');
+    if(!box) return;
+    var html = '';
+    if(res.url){
+      html += '<a class="btn go" href="' + esc(res.url) + '" target="_blank" rel="noopener" ' +
+              'style="margin-top:10px">Open it in Spotify</a>';
+    }
+    html += '<div class="sp-note">';
+    html += res.cover
+      ? 'Your disc is the playlist cover.'
+      : '<b>Cover art could not be set</b> — the playlist itself is fine.';
+    if(missing.length){
+      html += '<br><b>Not on Spotify:</b> ' + missing.map(esc).join(', ') +
+              '. They stay on your disc — Spotify just has no match for them.';
+    }
+    html += '</div>';
+    box.innerHTML = html;
+  }
+
+  /* ================= UI ================= */
+  function signOut(){
+    writeJSON(TOK_KEY, null);
+    writeJSON(PL_KEY, null);
+    SPX.connected = false;
+    API.repaint();
+    disconnected();
+    API.say('Signed out of Spotify.');
+  }
+
   function connected(){
+    SPX.connected = true;
     var pinWarning = CFG.locked.uri ? '' :
       '<div class="sp-off" style="border-color:#8A5A00;color:#E0B050;margin-bottom:10px">' +
       '<b>Track 1 has no Spotify URI yet.</b><br>' +
@@ -747,82 +1265,97 @@ window.__PL = {
       'Paste it into <code>__PL.locked.uri</code> as <code>spotify:track:&lt;id&gt;</code>.' +
       '</div>';
 
-    body.innerHTML = pinWarning +
-      '<p>Search Spotify, tap a result to drop it in, then push the whole thing ' +
-      'to your account. Track 1 stays pinned.</p>' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
-        '<input id="sp-q" class="sp-input" type="text" placeholder="search a song…"> ' +
+    body.innerHTML =
+      '<div class="sp-acct"><span>Connected<span id="sp-who"></span></span>' +
+      '<button type="button" class="linkbtn" id="sp-out">Sign out</button></div>' +
+      pinWarning +
+      '<p>Search the real catalogue, tap a result to drop it in, then push the ' +
+      'whole disc to your account. Track 1 stays pinned.</p>' +
+      '<div class="sp-row">' +
+        '<input id="sp-q" class="sp-input" type="text" placeholder="search a song…" ' +
+        'autocomplete="off" autocorrect="off" spellcheck="false">' +
         '<button type="button" class="btn" id="sp-go">Search</button>' +
-        '<button type="button" class="btn go" id="sp-make">Create on Spotify</button>' +
-      '</div><ul class="results" id="sp-res"></ul>';
+      '</div>' +
+      '<ul class="results" id="sp-res"></ul>' +
+      '<div class="sp-credit">Search results and playlists provided by ' +
+      '<a href="https://www.spotify.com/" target="_blank" rel="noopener">Spotify</a>.</div>' +
+      '<div class="sp-row" style="margin-top:12px">' +
+        '<button type="button" class="btn go" id="sp-make">' + makeLabel() + '</button>' +
+        '<label style="font-size:11px;color:#8A8A94;display:flex;align-items:center;gap:6px">' +
+        '<input type="checkbox" id="sp-public"' + (SP.playlistPublic ? ' checked' : '') + '> public' +
+        '</label>' +
+      '</div>' +
+      '<div id="sp-result"></div>';
 
-    var q = document.getElementById('sp-q');
-    var res = document.getElementById('sp-res');
+    API.repaint();
 
-    function search(){
-      var term = q.value.trim();
-      if(!term) return;
-      API.say('Searching…');
-      api('/search?' + new URLSearchParams({q: term, type: 'track', limit: '8'}))
-        .then(function(j){
-          var items = (j && j.tracks && j.tracks.items) || [];
-          res.innerHTML = items.map(function(t){
-            var artists = t.artists.map(function(a){ return a.name; }).join(', ');
-            return '<li data-uri="' + t.uri + '" data-t="' + t.name.replace(/"/g,'&quot;') +
-                   '" data-a="' + artists.replace(/"/g,'&quot;') + '">' +
-                   '<b>' + t.name + '</b><span>' + artists + '</span></li>';
-          }).join('') || '<li><span>No matches.</span></li>';
-          API.say(items.length ? 'Tap a song to add it.' : 'No matches.');
-        })
-        .catch(function(e){ API.say(e.message); });
+    api('/me').then(function(me){
+      var who = el('sp-who');
+      if(who && me && (me.display_name || me.id)) who.textContent = ' as ' + (me.display_name || me.id);
+    }).catch(function(){});
+
+    var q = el('sp-q'), res = el('sp-res'), timer = null, seq = 0;
+
+    function paintResults(items){
+      if(!items.length){ res.innerHTML = '<li><span>No matches.</span></li>'; return; }
+      res.innerHTML = items.map(function(t){
+        var artists = (t.artists || []).map(function(a){ return a.name; }).join(', ');
+        var out = (t.external_urls && t.external_urls.spotify) || '';
+        /* Spotify's guidelines want their content linked back to Spotify, so
+           every result can be opened there as well as added here. */
+        return '<li class="' + (API.hasUri(t.uri) ? 'have' : '') + '" data-uri="' + esc(t.uri) +
+               '" data-t="' + esc(t.name) + '" data-a="' + esc(artists) + '">' +
+               '<span class="body"><b>' + esc(t.name) + '</b><span>' + esc(artists) + '</span></span>' +
+               (out ? '<a class="out" href="' + esc(out) + '" target="_blank" rel="noopener" ' +
+                      'aria-label="Open on Spotify" title="Open on Spotify">&#8599;</a>' : '') +
+               '</li>';
+      }).join('');
     }
 
-    document.getElementById('sp-go').addEventListener('click', search);
-    q.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); search(); } });
+    function run(){
+      var term = q.value.trim();
+      if(term.length < 2){ res.innerHTML = ''; return; }
+      var mine = ++seq;
+      API.say('Searching…');
+      searchTracks(term, 8).then(function(items){
+        if(mine !== seq) return;           /* a later keystroke already won */
+        paintResults(items);
+        API.say(items.length ? 'Tap a song to add it.' : 'No matches.');
+      }).catch(function(e){
+        if(mine !== seq) return;
+        API.say(e.message);
+      });
+    }
 
-    res.addEventListener('click', function(e){
-      var li = e.target.closest('li[data-uri]');
-      if(!li) return;
-      var ok = API.addTrack(li.getAttribute('data-t'), li.getAttribute('data-a'), li.getAttribute('data-uri'));
-      API.say(ok ? 'Added.' : 'Playlist is full.');
+    el('sp-go').addEventListener('click', run);
+    q.addEventListener('input', function(){
+      clearTimeout(timer);
+      timer = setTimeout(run, 350);
+    });
+    q.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ e.preventDefault(); clearTimeout(timer); run(); }
     });
 
-    document.getElementById('sp-make').addEventListener('click', function(){
-      var uris = [];
-      if(CFG.locked.uri) uris.push(CFG.locked.uri);   /* pinned first, always */
-      API.filled().forEach(function(t){ if(t.uri) uris.push(t.uri); });
-      if(!uris.length){ API.say('Add some songs from search first.'); return; }
-      if(!CFG.locked.uri){
-        API.say('Heads up: track 1 has no URI set, so it will be missing from Spotify.');
-      }
+    res.addEventListener('click', function(e){
+      if(e.target.closest('a.out')) return;      /* opening it is not adding it */
+      var li = e.target.closest('li[data-uri]');
+      if(!li) return;
+      var uri = li.getAttribute('data-uri');
+      if(API.hasUri(uri)){ API.say('That one is already on your disc.'); return; }
+      var ok = API.addTrack(li.getAttribute('data-t'), li.getAttribute('data-a'), uri);
+      API.say(ok ? 'Added.' : 'That is the whole disc — remove one first.');
+      if(ok) li.classList.add('have');
+    });
 
-      API.say('Creating playlist…');
-      api('/me').then(function(me){
-        return api('/users/' + encodeURIComponent(me.id) + '/playlists', {
-          method: 'POST',
-          body: JSON.stringify({
-            name: CFG.mixName + (API.state.by ? ' — ' + API.state.by : ''),
-            public: !!SP.playlistPublic,
-            description: 'Made at ' + CFG.shareUrl
-          })
-        });
-      }).then(function(pl){
-        return api('/playlists/' + pl.id + '/tracks', {
-          method: 'POST',
-          body: JSON.stringify({uris: uris})
-        }).then(function(){ return pl; });
-      }).then(function(pl){
-        API.say('Playlist created.');
-        var url = (pl.external_urls && pl.external_urls.spotify) || '';
-        if(url){
-          var a = document.createElement('a');
-          a.href = url; a.target = '_blank'; a.rel = 'noopener';
-          a.className = 'btn go';
-          a.textContent = 'Open it in Spotify';
-          a.style.marginTop = '10px';
-          body.appendChild(a);
-        }
-      }).catch(function(e){ API.say(e.message); });
+    el('sp-make').addEventListener('click', push);
+    el('sp-out').addEventListener('click', signOut);
+
+    /* Anything they typed before connecting gets looked up now, so the chips
+       are truthful before they press create. */
+    resolveAll().then(function(){
+      var miss = API.missing();
+      if(miss.length) API.say(miss.length + ' song' + (miss.length === 1 ? '' : 's') +
+                              ' could not be found on Spotify — check the marked rows.');
     });
   }
 
@@ -850,6 +1383,8 @@ window.__PL = {
   }
 
   function disconnected(){
+    SPX.connected = false;
+    API.repaint();
     var blocked = authBlocker();
     if(blocked){
       body.innerHTML =
@@ -862,25 +1397,34 @@ window.__PL = {
     }
     body.innerHTML =
       '<p>Connect Spotify to search the real catalogue and push this playlist ' +
-      'to your own account, with track 1 pinned.</p>' +
+      'to your own account — with track 1 pinned, and your disc as the cover.</p>' +
       '<button type="button" class="btn go" id="sp-login">Connect Spotify</button>';
-    document.getElementById('sp-login').addEventListener('click', login);
+    el('sp-login').addEventListener('click', login);
   }
 
-  /* returning from the Spotify redirect */
+  /* ---- returning from the Spotify redirect ---- */
   var params = new URLSearchParams(location.search);
-  if(params.get('code') && sessionStorage.getItem(VERIFIER_KEY)){
+  if(params.get('code')){
     body.innerHTML = '<p>Connecting…</p>';
     exchange(params.get('code'))
       .then(function(){
         history.replaceState({}, '', redirectUri);
         connected();
       })
-      .catch(function(e){ body.innerHTML = '<p>' + e.message + '</p>'; disconnected(); });
+      .catch(function(e){
+        history.replaceState({}, '', redirectUri);
+        disconnected();
+        API.say(e.message);
+      });
   } else if(params.get('error')){
+    var why = params.get('error');
     history.replaceState({}, '', redirectUri);
     disconnected();
-  } else if(token()){
+    API.say(why === 'access_denied'
+      ? 'Spotify sign-in was cancelled.'
+      : 'Spotify refused the sign-in (' + why + '). If this account is not on the ' +
+        'app\'s allow-list, add it in the dashboard — Development Mode allows 25.');
+  } else if(signedIn()){
     connected();
   } else {
     disconnected();
