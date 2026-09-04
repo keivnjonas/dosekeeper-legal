@@ -85,6 +85,31 @@ rather than a script — read the current form before pasting anything.
 > sets the CD image as the playlist cover. It is a fan engagement piece tied to
 > the single; it does not stream, download, or alter any audio.
 
+**Ready to paste** (fill in the one blank, and check it still matches the
+form's questions before sending):
+
+> **Listen When Sad Playlist** is a fan-facing page on the official Jonas
+> Brothers website, built around the single "Listen When Sad." Fans assemble a
+> playlist in the browser — the first track is pinned by the artist, and they
+> search the Spotify catalogue through the Web API for the rest — and the page
+> draws their tracklist onto an illustrated burned CD. If a fan chooses to
+> connect their Spotify account, the page creates that playlist on their own
+> account and sets the CD image they made as its cover. We use Authorization
+> Code with PKCE, so there is no client secret, and we request only three
+> scopes: `playlist-modify-private` and `playlist-modify-public` to create the
+> playlist the user has explicitly asked for, and `ugc-image-upload` to set its
+> cover art. Playlists are created only on an explicit button press, are
+> private by default, and are written to the fan's own account; we do not read
+> listening history, saved library, or any profile data beyond the user ID and
+> display name needed to create the playlist. No audio is streamed, downloaded,
+> or cached, and no Spotify content or metadata is modified — Spotify is
+> credited on the page and every search result links back to the track on
+> Spotify. We expect on the order of ___ users in the first month, from a
+> single link on the band's own site. As this is an official artist property
+> the integration is commercial in nature, so please let us know if it should
+> be handled under a commercial arrangement rather than a standard quota
+> extension.
+
 **Points worth making explicitly:**
 
 - Playlists are created **on the fan's own account**, only when they press the
