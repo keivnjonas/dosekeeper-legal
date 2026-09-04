@@ -4,232 +4,184 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Listen When Sad Mix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Caveat:wght@600;700&display=swap">
 <style>
 /* ============================================================
-   Playlist builder. Single theme on purpose: this is a burned-CD
-   tracklist, so every colour is painted explicitly.
+   Burned mix CD. Single theme on purpose - a disc on a dark
+   table - so every colour is painted explicitly.
    ============================================================ */
 *{box-sizing:border-box;}
 body{
-  margin:0;padding:20px 12px 48px;background:#0B0B0B;color:#F2F2F2;
-  font-family:"Andale Mono","Lucida Console","Courier New",monospace;
-  font-size:13px;-webkit-text-size-adjust:100%;
+  margin:0;padding:18px 12px 44px;background:#0A0A0C;color:#EDEDED;
+  font-family:"Helvetica Neue",Arial,sans-serif;font-size:14px;
+  -webkit-text-size-adjust:100%;
 }
-a{color:#7FB4FF;}
-a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #25E05A;outline-offset:2px;}
+a{color:#8FD0FF;}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E8368F;outline-offset:2px;}
 
-.pl{max-width:720px;margin:0 auto;border:1px solid #3A3A3A;background:#141414;}
+.wrap{max-width:660px;margin:0 auto;}
 
-/* transport strip, same furniture as the site's player */
-.pl-bar{
-  display:flex;align-items:center;gap:8px;padding:7px 8px;
-  background:linear-gradient(180deg,#5C5C5C,#2E2E2E);border-bottom:1px solid #000;
+/* the disc, live */
+.disc-stage{position:relative;margin:0 0 18px;}
+#disc{width:100%;height:auto;display:block;}
+.disc-cap{
+  text-align:center;font-size:11px;color:#6E6E76;letter-spacing:.14em;
+  text-transform:uppercase;margin-top:6px;
 }
-.pl-bar .b{
-  width:30px;height:26px;background:linear-gradient(180deg,#EDEDED,#B4B4B4);
-  border:1px outset #FFF;display:flex;align-items:center;justify-content:center;
-  color:#1A1A1A;font-size:11px;
-}
-.pl-lcd{
-  flex:1;min-width:0;height:38px;background:#0D0D0D;border:2px inset #6E6E6E;
-  display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 9px;
-  font-size:11px;color:#25E05A;overflow:hidden;white-space:nowrap;
-}
-.pl-lcd b{overflow:hidden;text-overflow:ellipsis;}
-.pl-lcd i{font-style:normal;color:#1B8F3C;letter-spacing:2px;}
 
-.pl-head{display:flex;gap:14px;padding:14px;align-items:flex-start;border-bottom:1px solid #2A2A2A;}
-.cover{
-  width:132px;height:132px;flex:0 0 132px;position:relative;overflow:hidden;
-  border:1px solid #3A3A3A;background:#000;cursor:pointer;padding:0;display:block;
+.panel{background:#131317;border:1px solid #26262E;}
+.panel h2{
+  margin:0;padding:11px 14px;font:700 12px/1 "Helvetica Neue",Arial,sans-serif;
+  letter-spacing:.18em;text-transform:uppercase;color:#E8368F;
+  border-bottom:1px solid #26262E;
 }
-.cover .art{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:6px;text-align:center;padding:8px;
-  background:radial-gradient(circle at 50% 38%,#243B6B,#0A0F1E 72%);
+.fields{padding:14px;display:flex;flex-direction:column;gap:12px;}
+.fields label{display:block;font-size:10px;color:#8A8A94;letter-spacing:.16em;
+  text-transform:uppercase;margin-bottom:5px;}
+.fields input{
+  width:100%;background:#0B0B0E;border:1px solid #2E2E38;color:#FFF;
+  font-family:"Caveat","Comic Sans MS",cursive;font-size:22px;padding:7px 10px;
 }
-.cover .art b{font:bold 15px "Arial Black",Arial,sans-serif;color:#FFF;line-height:1.15;letter-spacing:-.3px;}
-.cover .art span{font-size:9px;color:#8FA6C6;letter-spacing:.18em;}
-.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
-.cover.has-img img{display:block;}
-.cover.has-img .art{display:none;}
-.cover .hint{
-  position:absolute;left:0;right:0;bottom:0;height:17px;line-height:17px;
-  background:#25E05A;color:#062E12;font-size:9px;text-align:center;font-weight:bold;
-}
-.meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;}
-.meta label{display:block;font-size:10px;color:#8A8A8A;letter-spacing:.14em;margin-bottom:3px;}
-.meta input{
-  width:100%;background:#0D0D0D;border:1px solid #3A3A3A;color:#FFF;
-  font-family:inherit;font-size:14px;padding:8px;
-}
-.meta input:focus{border-color:#25E05A;background:#101A12;}
+.fields input:focus{border-color:#E8368F;background:#150E13;}
 
-/* the tracklist */
+/* tracklist */
 .tracks{list-style:none;margin:0;padding:0;}
-.tr{display:flex;gap:9px;align-items:center;padding:9px 12px;border-top:1px solid #232323;}
-.tr:nth-child(even){background:#181818;}
+.tr{display:flex;gap:9px;align-items:center;padding:8px 12px;border-top:1px solid #212129;}
 .tr .n{
-  width:26px;flex:0 0 26px;text-align:right;color:#25E05A;
-  font-variant-numeric:tabular-nums;font-size:12px;
+  width:24px;flex:0 0 24px;text-align:right;color:#E8368F;
+  font:700 13px "Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums;
 }
 .tr .f{flex:1;min-width:0;display:flex;gap:8px;}
 .tr .f input{
-  min-width:0;background:#0D0D0D;border:1px solid #333;color:#FFF;
-  font-family:inherit;font-size:14px;padding:8px;
+  min-width:0;background:#0B0B0E;border:1px solid #2A2A33;color:#FFF;
+  font-family:"Caveat","Comic Sans MS",cursive;font-size:21px;padding:6px 9px;
 }
 .tr .f .t{flex:3;}
 .tr .f .a{flex:2;}
-.tr .f input:focus{border-color:#25E05A;background:#101A12;}
+.tr .f input:focus{border-color:#E8368F;background:#150E13;}
 .tr .ctl{display:flex;gap:3px;flex:0 0 auto;}
 .tr .ctl button{
-  width:30px;height:30px;background:#242424;border:1px solid #3A3A3A;color:#CFCFCF;
-  font-family:inherit;font-size:12px;cursor:pointer;line-height:1;
-  display:flex;align-items:center;justify-content:center;
+  width:30px;height:30px;background:#1D1D24;border:1px solid #33333D;color:#B8B8C2;
+  font-size:12px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;
 }
-.tr .ctl button:hover{background:#2F2F2F;color:#FFF;border-color:#25E05A;}
-.tr .ctl button[disabled]{opacity:.28;cursor:default;}
+.tr .ctl button:hover{background:#26262E;color:#FFF;border-color:#E8368F;}
+.tr .ctl button[disabled]{opacity:.25;cursor:default;}
 
-/* track one never moves */
-.tr.locked{background:#101C13;border-top:1px solid #25E05A;}
-.tr.locked .n{color:#25E05A;font-weight:bold;}
-.tr.locked .fixed{flex:1;min-width:0;line-height:1.4;}
-.tr.locked .fixed b{display:block;font-size:14px;color:#FFF;}
-.tr.locked .fixed span{font-size:11px;color:#7FA98A;}
+/* track one is written in permanent marker */
+.tr.locked{background:#171014;border-top:1px solid #E8368F;}
+.tr.locked .n{color:#E8368F;}
+.tr.locked .fixed{flex:1;min-width:0;}
+.tr.locked .fixed b{
+  display:block;font-family:"Permanent Marker","Comic Sans MS",cursive;
+  font-size:19px;font-weight:400;color:#FFF;
+}
+.tr.locked .fixed span{font-size:12px;color:#9A7A8C;}
 .pin{
-  flex:0 0 auto;background:#25E05A;color:#062E12;font-size:9px;font-weight:bold;
+  flex:0 0 auto;background:#E8368F;color:#160309;font-size:9px;font-weight:700;
   padding:3px 6px;letter-spacing:.1em;
 }
 
-.pl-actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px;border-top:1px solid #2A2A2A;}
+.actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px;border-top:1px solid #26262E;}
 .btn{
-  font-family:inherit;font-size:13px;padding:10px 14px;cursor:pointer;
-  background:#242424;border:1px solid #4A4A4A;color:#EDEDED;
+  font:600 13px "Helvetica Neue",Arial,sans-serif;padding:10px 14px;cursor:pointer;
+  background:#1D1D24;border:1px solid #3A3A46;color:#EDEDED;
   display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
 }
-.btn:hover{background:#2F2F2F;border-color:#25E05A;}
-.btn.go{background:linear-gradient(180deg,#2FD866,#12A544);border-color:#0C7A31;color:#04250F;font-weight:bold;}
-.btn.go:hover{background:linear-gradient(180deg,#45E378,#16B94D);}
+.btn:hover{background:#26262E;border-color:#E8368F;}
+.btn.go{background:#E8368F;border-color:#C01C6E;color:#180209;}
+.btn.go:hover{background:#F455A2;}
 .btn[disabled]{opacity:.4;cursor:default;}
-.status{padding:0 14px 12px;font-size:12px;color:#25E05A;min-height:1.2em;}
-.note{padding:0 14px 16px;font-size:11px;color:#7E7E7E;line-height:1.7;}
-.out{padding:0 14px 16px;}
-.out img{width:100%;border:1px solid #3A3A3A;display:block;}
+.status{padding:0 14px 12px;font-size:12px;color:#E8368F;min-height:1.2em;}
+.note{padding:0 14px 16px;font-size:11px;color:#70707A;line-height:1.7;}
 
-/* spotify panel */
-.sp{border-top:1px solid #2A2A2A;padding:14px;}
-.sp h2{margin:0 0 6px;font-size:12px;color:#25E05A;letter-spacing:.12em;}
-.sp p{margin:0 0 10px;font-size:11px;color:#8A8A8A;line-height:1.7;}
-.sp-off{border:1px dashed #3A3A3A;padding:10px;font-size:11px;color:#9A9A9A;line-height:1.7;}
-.sp-off code{color:#25E05A;}
+/* spotify */
+.sp{border-top:1px solid #26262E;padding:14px;}
+.sp p{margin:0 0 10px;font-size:11px;color:#8A8A94;line-height:1.7;}
+.sp-off{border:1px dashed #33333D;padding:10px;font-size:11px;color:#9A9AA4;line-height:1.7;}
+.sp-off code{color:#E8368F;}
 .results{list-style:none;margin:10px 0 0;padding:0;max-height:240px;overflow-y:auto;}
-.results li{
-  display:flex;gap:9px;align-items:center;padding:8px;border-top:1px solid #232323;
-  font-size:12px;cursor:pointer;
-}
-.results li:hover{background:#1E1E1E;}
+.results li{display:flex;gap:9px;align-items:center;padding:8px;border-top:1px solid #212129;
+  font-size:12px;cursor:pointer;}
+.results li:hover{background:#1C1C23;}
 .results li b{display:block;color:#FFF;}
-.results li span{color:#8A8A8A;font-size:11px;}
+.results li span{color:#8A8A94;font-size:11px;}
 
 @media (max-width:600px){
-  body{padding:10px 8px 34px;}
-  .pl-head{flex-direction:column;align-items:stretch;}
-  .cover{width:100%;height:190px;flex:none;}
+  body{padding:10px 8px 32px;}
   .tr{flex-wrap:wrap;gap:7px;}
   .tr .f{flex-direction:column;width:100%;order:3;flex-basis:100%;}
   .tr .n{order:1;}
   .tr .ctl{order:2;margin-left:auto;}
-  .tr .ctl button{width:38px;height:38px;}   /* thumb-sized */
+  .tr .ctl button{width:38px;height:38px;}
   .tr.locked .fixed{order:3;flex-basis:100%;}
   .btn{flex:1 1 auto;min-height:44px;}
-  /* 16px keeps iOS from zooming the page on focus */
-  .meta input,.tr .f input{font-size:16px;}
+  /* 16px+ keeps iOS from zooming the page on focus */
+  .fields input,.tr .f input{font-size:20px;}
 }
 </style>
 </head>
 <body>
 
-<div class="pl">
-  <div class="pl-bar">
-    <span class="b" aria-hidden="true">&#9632;</span>
-    <span class="b" aria-hidden="true">&#9664;&#124;</span>
-    <span class="b" aria-hidden="true">&#9654;</span>
-    <span class="b" aria-hidden="true">&#124;&#9654;</span>
-    <span class="pl-lcd"><b id="lcd">listen when sad.</b><i id="lcd-n">01</i></span>
+<div class="wrap">
+  <div class="disc-stage">
+    <canvas id="disc" width="1080" height="1080" aria-label="Your mix CD"></canvas>
+    <div class="disc-cap" id="disc-cap">your disc updates as you type</div>
   </div>
 
-  <div class="pl-head">
-    <button type="button" class="cover" id="cover" aria-label="Add playlist cover art">
-      <span class="art" aria-hidden="true">
-        <b>LISTEN<br>WHEN<br>SAD.</b>
-        <span>YOUR MIX</span>
-      </span>
-      <img id="cover-img" alt="">
-      <span class="hint">add cover</span>
-    </button>
-    <input type="file" id="cover-file" accept="image/*" hidden>
-    <div class="meta">
+  <div class="panel">
+    <h2>Burn Your Mix</h2>
+    <div class="fields">
       <div>
-        <label for="pl-name">PLAYLIST NAME</label>
-        <input id="pl-name" type="text" maxlength="60" placeholder="songs for the drive home">
+        <label for="pl-name">Playlist name</label>
+        <input id="pl-name" type="text" maxlength="34" placeholder="summer mix">
       </div>
       <div>
-        <label for="pl-by">MADE BY</label>
-        <input id="pl-by" type="text" maxlength="40" placeholder="ur name">
+        <label for="pl-by">Made by</label>
+        <input id="pl-by" type="text" maxlength="28" placeholder="ur name">
       </div>
     </div>
+
+    <ol class="tracks" id="tracks"></ol>
+
+    <div class="actions">
+      <button type="button" class="btn go" id="add">+ Add Track</button>
+      <button type="button" class="btn" id="copy">Copy As Text</button>
+      <button type="button" class="btn" id="clear">Clear</button>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+
+    <div class="actions" id="sharebar">
+      <button type="button" class="btn" id="save">Save Disc</button>
+      <a class="btn" id="sx" href="#" target="_blank" rel="noopener">X</a>
+      <a class="btn" id="stu" href="#" target="_blank" rel="noopener">Tumblr</a>
+      <button type="button" class="btn" id="slink">Copy Link</button>
+    </div>
+
+    <div class="sp">
+      <h2 style="border:0;padding:0 0 6px;">Spotify</h2>
+      <div id="sp-body"></div>
+    </div>
+
+    <p class="note">
+      Your mix stays in this browser. The disc is drawn on your device &mdash;
+      nothing is uploaded. If there's no Save button, long-press or right-click the disc.
+    </p>
   </div>
-
-  <ol class="tracks" id="tracks"></ol>
-
-  <div class="pl-actions">
-    <button type="button" class="btn go" id="add">+ Add Track</button>
-    <button type="button" class="btn" id="make">Make Playlist Card</button>
-    <button type="button" class="btn" id="copy">Copy As Text</button>
-    <button type="button" class="btn" id="clear">Clear</button>
-  </div>
-  <div class="status" id="status" role="status" aria-live="polite"></div>
-
-  <div class="out" id="out" hidden><img id="img" alt="Your playlist card"></div>
-
-  <div class="pl-actions" id="sharebar" hidden>
-    <button type="button" class="btn" id="save">Save Image</button>
-    <a class="btn" id="sx" href="#" target="_blank" rel="noopener">X</a>
-    <a class="btn" id="stu" href="#" target="_blank" rel="noopener">Tumblr</a>
-    <button type="button" class="btn" id="slink">Copy Link</button>
-  </div>
-
-  <div class="sp">
-    <h2>SPOTIFY</h2>
-    <div id="sp-body"></div>
-  </div>
-
-  <p class="note">
-    Your playlist stays in this browser. The card is drawn on your device &mdash;
-    nothing is uploaded. If there's no Save button, long-press or right-click the card.
-  </p>
 </div>
 
 <script>
-/* ------------------------------------------------------------------
-   CONFIG — the only block you need to touch.
-   ------------------------------------------------------------------ */
 window.__PL = {
-  /* Track 1 is pinned and cannot be removed or reordered. */
   locked: {
     title: "Listen When Sad",
     artist: "Jonas Brothers",
-    /* Paste the real track URI to have it pinned in the Spotify playlist too.
-       Find it in Spotify: track ... Share ... Copy Song Link, the id is the
-       last path segment: spotify:track:<id> */
+    /* Spotify → the track → Share → Copy Song Link; the id is the last path
+       segment, so this value is spotify:track:<id> */
     uri: ""
   },
   maxTracks: 12,
-  shareUrl: "https://www.jonasbrothers.com/playlist/",
-
-  /* Spotify stays OFF until clientId is filled in. Everything above works
-     regardless — search and playlist creation are the only things gated.
-     See the README for the four setup steps. */
+  shareUrl: "https://www.jonasbrothers.com/listenwhensadplaylist/",
   spotify: {
     /* Public by design: with PKCE the client id travels in the authorize URL
        and is visible in page source. It is an identifier, not a credential.
@@ -243,86 +195,262 @@ window.__PL = {
 <script>
 (function(){
   var CFG = window.__PL;
-  var KEY = 'jb-playlist-v1';
-
+  var KEY = 'jb-playlist-v2';
   var $ = function(id){ return document.getElementById(id); };
-  var statusEl = $('status');
-  function say(m){ statusEl.textContent = m || ''; }
+  function say(m){ $('status').textContent = m || ''; }
   function esc(v){
     return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;')
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  /* ---------------- state ---------------- */
-  var state = {name:'', by:'', cover:null, tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
+  var state = {name:'', by:'', tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
   try {
     var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
     if(saved && Array.isArray(saved.tracks)) state = saved;
   } catch(e){}
+  function persist(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+  function filled(){ return state.tracks.filter(function(t){ return (t.t||'').trim(); }); }
 
-  function persist(){
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){}
+  /* ==================== THE DISC ====================
+     Drawn as a real burned CD: holographic sheen, scratches, a centre hub,
+     and the tracklist written on in marker. Lines whose y falls across the
+     hub start to its right, the way you write around the hole. */
+  var MARKER = '"Permanent Marker","Comic Sans MS",cursive';
+  var HAND   = '"Caveat","Comic Sans MS",cursive';
+
+  function heart(c, x, y, s, broken){
+    c.save(); c.translate(x,y); c.scale(s,s);
+    c.beginPath();
+    c.moveTo(0,3);
+    c.bezierCurveTo(-6,-4,-13,1,-8,7);
+    c.bezierCurveTo(-5,11,0,14,0,14);
+    c.bezierCurveTo(0,14,5,11,8,7);
+    c.bezierCurveTo(13,1,6,-4,0,3);
+    c.closePath(); c.fill();
+    if(broken){
+      c.strokeStyle = '#0A0A0C'; c.lineWidth = 1.6; c.lineJoin = 'miter';
+      c.beginPath();
+      c.moveTo(0,3); c.lineTo(2.4,6.4); c.lineTo(-1.4,9); c.lineTo(1.2,13.6);
+      c.stroke();
+    }
+    c.restore();
   }
 
-  /* ---------------- tracklist ---------------- */
-  var list = $('tracks');
+  /* Text bent along a circle. `flip` puts it on the bottom rim still reading
+     left to right, instead of upside down. */
+  function arcText(c, text, cx, cy, radius, centerAngle, gap, flip){
+    var widths = [], total = 0;
+    for(var i = 0; i < text.length; i++){
+      var w = c.measureText(text[i]).width + gap;
+      widths.push(w); total += w;
+    }
+    var span = total / radius;
+    var acc = centerAngle + (flip ? span/2 : -span/2);
+    for(var j = 0; j < text.length; j++){
+      var idx = flip ? j : j;
+      var step = widths[idx] / radius;
+      var a = flip ? acc - step/2 : acc + step/2;
+      c.save();
+      c.translate(cx + Math.cos(a)*radius, cy + Math.sin(a)*radius);
+      c.rotate(flip ? a - Math.PI/2 : a + Math.PI/2);
+      c.fillText(text[idx], 0, 0);
+      c.restore();
+      acc += flip ? -step : step;
+    }
+  }
 
+  function drawDisc(cv, cb){
+    var S = cv.width, cx = S/2, cy = S/2;
+    var R = S*0.462, HUB = S*0.109, HOLE = S*0.0435;
+    var c = cv.getContext('2d');
+    c.setTransform(1,0,0,1,0,0);
+    c.clearRect(0,0,S,S);
+
+    /* table */
+    c.fillStyle = '#0A0A0C';
+    c.fillRect(0,0,S,S);
+
+    /* silver body */
+    c.save();
+    c.beginPath(); c.arc(cx,cy,R,0,Math.PI*2); c.closePath(); c.clip();
+    var g = c.createRadialGradient(cx-R*0.22, cy-R*0.28, R*0.04, cx, cy, R);
+    g.addColorStop(0,'#FBFBFC'); g.addColorStop(0.34,'#C9CCD3');
+    g.addColorStop(0.58,'#EDEEF1'); g.addColorStop(0.82,'#B4B8C0');
+    g.addColorStop(1,'#8E929B');
+    c.fillStyle = g; c.fillRect(cx-R,cy-R,R*2,R*2);
+
+    /* holographic sweep */
+    if(typeof c.createConicGradient === 'function'){
+      var cg = c.createConicGradient(-0.6, cx, cy);
+      [[0,'rgba(255,120,180,.17)'],[0.14,'rgba(255,225,120,.15)'],
+       [0.30,'rgba(130,255,190,.14)'],[0.46,'rgba(120,200,255,.17)'],
+       [0.62,'rgba(200,140,255,.14)'],[0.78,'rgba(255,150,150,.13)'],
+       [0.92,'rgba(200,255,220,.14)'],[1,'rgba(255,120,180,.17)']
+      ].forEach(function(s){ cg.addColorStop(s[0], s[1]); });
+      c.globalCompositeOperation = 'overlay';
+      c.fillStyle = cg; c.fillRect(cx-R,cy-R,R*2,R*2);
+      c.globalCompositeOperation = 'source-over';
+    }
+
+    /* pressing rings + scratches */
+    c.globalAlpha = 0.10; c.strokeStyle = '#FFFFFF'; c.lineWidth = 1;
+    for(var r = HUB+8; r < R; r += 7){ c.beginPath(); c.arc(cx,cy,r,0,Math.PI*2); c.stroke(); }
+    c.globalAlpha = 0.16;
+    for(var i = 0; i < 26; i++){
+      var a0 = Math.random()*Math.PI*2, len = 0.06 + Math.random()*0.5;
+      var rr = HUB + 14 + Math.random()*(R-HUB-24);
+      c.strokeStyle = Math.random() < 0.5 ? '#FFFFFF' : '#8C8F98';
+      c.lineWidth = Math.random() < 0.8 ? 1 : 2;
+      c.beginPath(); c.arc(cx,cy,rr,a0,a0+len); c.stroke();
+    }
+    c.globalAlpha = 1;
+    c.restore();
+
+    /* rim */
+    c.strokeStyle = 'rgba(0,0,0,.55)'; c.lineWidth = 2;
+    c.beginPath(); c.arc(cx,cy,R,0,Math.PI*2); c.stroke();
+
+    /* ---- marker: title arced over the top ---- */
+    var title = (state.name || 'untitled mix');
+    c.fillStyle = '#E8368F';
+    c.font = '400 ' + Math.round(S*0.058) + 'px ' + MARKER;
+    c.textAlign = 'center'; c.textBaseline = 'middle';
+    arcText(c, title, cx, cy, R*0.83, -Math.PI/2, S*0.004, false);
+
+    /* byline rides the bottom rim, so the whole face is free for tracks */
+    if(state.by){
+      c.font = '400 ' + Math.round(S*0.030) + 'px ' + HAND;
+      c.fillStyle = '#C0246F';
+      arcText(c, '~ ' + state.by + ' ~', cx, cy, R*0.86, Math.PI/2, S*0.003, true);
+    }
+
+    /* ---- the tracklist, in pen ---- */
+    var rows = [{n:1, t:CFG.locked.title, a:CFG.locked.artist}];
+    filled().forEach(function(t,i){ rows.push({n:i+2, t:t.t.trim(), a:t.a.trim()}); });
+
+    /* No line crosses the hub: slots skip that band entirely, so every track
+       gets the disc's full width instead of a gutter beside the hole.
+       Shrink the line height until enough slots exist for the whole list. */
+    var lh, fs, slots;
+    for(lh = S*0.056; lh > S*0.026; lh -= 1){
+      fs = Math.min(S*0.042, lh*0.80);
+      slots = [];
+      for(var yy = cy - R*0.66; yy <= cy + R*0.66; yy += lh){
+        if(Math.abs(yy - cy) < HUB + fs*0.80) continue;   /* the hole */
+        slots.push(yy);
+      }
+      if(slots.length >= rows.length) break;
+    }
+
+    c.font = '700 ' + Math.round(fs) + 'px ' + HAND;
+    c.textAlign = 'left'; c.textBaseline = 'middle';
+
+    rows.forEach(function(row, i){
+      var y = slots[i];
+      if(y === undefined) return;
+      /* the disc is round, so usable width depends on how high up we are */
+      var half = Math.sqrt(Math.max(0, R*R - (y-cy)*(y-cy))) * 0.86;
+      var x = cx - half, right = cx + half;
+      /* Prefer dropping the artist over clipping the song — a truncated
+         title reads as a mistake, especially on the pinned track. */
+      var label = row.n + '- ' + row.t + (row.a ? ' - ' + row.a : '');
+      if(c.measureText(label).width > (right - x) && row.a){
+        label = row.n + '- ' + row.t;
+      }
+      while(c.measureText(label).width > (right - x) && label.length > 6){
+        label = label.slice(0, -2) + '…';
+      }
+      c.fillStyle = row.n === 1 ? '#101014' : '#1B1B22';
+      c.save();
+      c.translate(x, y);
+      c.rotate(-0.012 + Math.random()*0.024);   /* hand-written wobble */
+      c.fillText(label, 0, 0);
+      c.restore();
+    });
+
+    /* ---- doodles, if the list left room ---- */
+    var lastY = slots.length ? slots[Math.min(rows.length, slots.length) - 1] : 0;
+    if(lastY < cy + R*0.40){
+      c.fillStyle = '#15151A';
+      heart(c, cx - S*0.062, cy + R*0.55, S*0.0028, true);
+      heart(c, cx + S*0.062, cy + R*0.55, S*0.0028, false);
+    }
+
+    /* ---- hub + hole ---- */
+    c.save();
+    c.beginPath(); c.arc(cx,cy,HUB,0,Math.PI*2);
+    c.fillStyle = 'rgba(12,12,16,.92)'; c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.18)'; c.lineWidth = 2; c.stroke();
+    c.beginPath(); c.arc(cx,cy,HUB*0.62,0,Math.PI*2);
+    c.strokeStyle = 'rgba(255,255,255,.10)'; c.lineWidth = 8; c.stroke();
+    c.beginPath(); c.arc(cx,cy,HOLE,0,Math.PI*2);
+    c.fillStyle = '#0A0A0C'; c.fill();
+    c.restore();
+
+    /* ---- where it came from ---- */
+    c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    c.font = '400 ' + Math.round(S*0.022) + 'px ' + HAND;
+    c.fillStyle = '#6E6E78';
+    c.fillText('jonasbrothers.com', cx, S - S*0.018);
+
+    if(cb) cb(cv);
+  }
+
+  /* ---------------- form ---------------- */
+  var list = $('tracks');
   function render(){
     list.innerHTML = '';
-
     var li = document.createElement('li');
     li.className = 'tr locked';
-    li.innerHTML =
-      '<span class="n">01</span>' +
+    li.innerHTML = '<span class="n">01</span>' +
       '<span class="fixed"><b>' + esc(CFG.locked.title) + '</b>' +
       '<span>' + esc(CFG.locked.artist) + '</span></span>' +
       '<span class="pin">PINNED</span>';
     list.appendChild(li);
 
-    state.tracks.forEach(function(tr, i){
+    state.tracks.forEach(function(tr,i){
+      var n = i+2;
       var row = document.createElement('li');
       row.className = 'tr';
-      var n = i + 2;
       row.innerHTML =
-        '<span class="n">' + (n < 10 ? '0' + n : n) + '</span>' +
+        '<span class="n">' + (n<10?'0'+n:n) + '</span>' +
         '<span class="f">' +
-          '<input class="t" type="text" maxlength="80" placeholder="song" value="' + esc(tr.t) + '">' +
-          '<input class="a" type="text" maxlength="60" placeholder="artist" value="' + esc(tr.a) + '">' +
+          '<input class="t" type="text" maxlength="42" placeholder="song" value="' + esc(tr.t) + '">' +
+          '<input class="a" type="text" maxlength="30" placeholder="artist" value="' + esc(tr.a) + '">' +
         '</span>' +
         '<span class="ctl">' +
-          '<button type="button" data-up="' + i + '" title="Move up" aria-label="Move up"' + (i === 0 ? ' disabled' : '') + '>&#9650;</button>' +
-          '<button type="button" data-down="' + i + '" title="Move down" aria-label="Move down"' + (i === state.tracks.length - 1 ? ' disabled' : '') + '>&#9660;</button>' +
-          '<button type="button" data-del="' + i + '" title="Remove" aria-label="Remove">&times;</button>' +
+          '<button type="button" data-up="' + i + '" aria-label="Move up"' + (i===0?' disabled':'') + '>&#9650;</button>' +
+          '<button type="button" data-down="' + i + '" aria-label="Move down"' + (i===state.tracks.length-1?' disabled':'') + '>&#9660;</button>' +
+          '<button type="button" data-del="' + i + '" aria-label="Remove">&times;</button>' +
         '</span>';
       list.appendChild(row);
     });
-
-    $('lcd-n').textContent = (filled().length + 1) < 10
-      ? '0' + (filled().length + 1) : String(filled().length + 1);
     $('add').disabled = state.tracks.length >= CFG.maxTracks - 1;
+    preview();
   }
 
-  function filled(){
-    return state.tracks.filter(function(t){ return (t.t || '').trim(); });
+  var pending = null, drawnOnce = false;
+  function preview(){
+    /* First paint is synchronous: rAF can be starved (background tab, some
+       embedded viewers) and the disc must never come up blank. */
+    if(!drawnOnce){ drawnOnce = true; drawDisc($('disc')); return; }
+    if(pending) cancelAnimationFrame(pending);
+    pending = requestAnimationFrame(function(){ drawDisc($('disc')); });
   }
 
   list.addEventListener('input', function(e){
-    var row = e.target.closest('.tr');
-    if(!row) return;
-    var i = [].indexOf.call(list.children, row) - 1;   /* row 0 is the pinned track */
-    if(i < 0) return;
+    var row = e.target.closest('.tr'); if(!row) return;
+    var i = [].indexOf.call(list.children, row) - 1; if(i < 0) return;
     if(e.target.classList.contains('t')) state.tracks[i].t = e.target.value;
     if(e.target.classList.contains('a')) state.tracks[i].a = e.target.value;
-    persist();
-    $('lcd').textContent = state.name || CFG.locked.title.toLowerCase() + '.';
+    persist(); preview();
   });
 
   list.addEventListener('click', function(e){
-    var b = e.target.closest('button');
-    if(!b) return;
-    var up = b.getAttribute('data-up'), dn = b.getAttribute('data-down'), del = b.getAttribute('data-del');
-    if(up !== null){ var i = +up; var s = state.tracks.splice(i,1)[0]; state.tracks.splice(i-1,0,s); }
-    else if(dn !== null){ var j = +dn; var s2 = state.tracks.splice(j,1)[0]; state.tracks.splice(j+1,0,s2); }
+    var b = e.target.closest('button'); if(!b) return;
+    var up=b.getAttribute('data-up'), dn=b.getAttribute('data-down'), del=b.getAttribute('data-del'), s;
+    if(up !== null){ var i=+up; s=state.tracks.splice(i,1)[0]; state.tracks.splice(i-1,0,s); }
+    else if(dn !== null){ var j=+dn; s=state.tracks.splice(j,1)[0]; state.tracks.splice(j+1,0,s); }
     else if(del !== null){ state.tracks.splice(+del,1); if(!state.tracks.length) state.tracks.push({t:'',a:''}); }
     else return;
     persist(); render();
@@ -330,252 +458,118 @@ window.__PL = {
 
   $('add').addEventListener('click', function(){
     if(state.tracks.length >= CFG.maxTracks - 1){ say('That is the whole disc.'); return; }
-    state.tracks.push({t:'',a:''});
-    persist(); render();
-    var inputs = list.querySelectorAll('.tr .t');
-    if(inputs.length) inputs[inputs.length-1].focus();
+    state.tracks.push({t:'',a:''}); persist(); render();
+    var ins = list.querySelectorAll('.tr .t');
+    if(ins.length) ins[ins.length-1].focus();
   });
 
   $('pl-name').value = state.name;
   $('pl-by').value = state.by;
-  $('pl-name').addEventListener('input', function(){
-    state.name = this.value; persist();
-    $('lcd').textContent = state.name || 'listen when sad.';
-  });
-  $('pl-by').addEventListener('input', function(){ state.by = this.value; persist(); });
+  $('pl-name').addEventListener('input', function(){ state.name = this.value; persist(); preview(); });
+  $('pl-by').addEventListener('input', function(){ state.by = this.value; persist(); preview(); });
 
-  /* ---------------- cover art ---------------- */
-  var cover = $('cover'), coverImg = $('cover-img'), coverFile = $('cover-file');
-  function showCover(src){
-    state.cover = src; coverImg.src = src; cover.classList.add('has-img'); persist();
-  }
-  if(state.cover) showCover(state.cover);
-  cover.addEventListener('click', function(){ coverFile.click(); });
-  coverFile.addEventListener('change', function(){
-    var f = coverFile.files && coverFile.files[0];
-    if(!f) return;
-    if(f.size > 8*1024*1024){ say('That image is over 8MB — pick a smaller one.'); return; }
-    var fr = new FileReader();
-    fr.onload = function(){ showCover(String(fr.result)); say('Cover added.'); };
-    fr.onerror = function(){ say("Couldn't read that file."); };
-    fr.readAsDataURL(f);
-  });
-
-  /* ---------------- plain text ---------------- */
   function asText(){
-    var out = [];
-    out.push((state.name || 'untitled mix').toUpperCase());
+    var out = [(state.name || 'untitled mix').toUpperCase()];
     if(state.by) out.push('by ' + state.by);
     out.push('');
-    out.push('01. ' + CFG.locked.title + ' — ' + CFG.locked.artist);
-    filled().forEach(function(t, i){
-      var n = i + 2;
-      out.push((n<10?'0'+n:n) + '. ' + t.t.trim() + (t.a.trim() ? ' — ' + t.a.trim() : ''));
+    out.push('1- ' + CFG.locked.title + ' - ' + CFG.locked.artist);
+    filled().forEach(function(t,i){
+      out.push((i+2) + '- ' + t.t.trim() + (t.a.trim() ? ' - ' + t.a.trim() : ''));
     });
-    out.push('');
-    out.push('make yours at ' + CFG.shareUrl);
+    out.push('', 'burn yours at ' + CFG.shareUrl);
     return out.join('\n');
   }
 
-  /* ---------------- the card ---------------- */
-  var MONO = '"Andale Mono","Lucida Console","Courier New",monospace';
-  var W = 1080, PAD = 56;
-
-  function buildCard(cb){
-    var rows = filled();
-    var TOP = 300, LINE = 62, FOOT = 96;
-    var cv = document.createElement('canvas');
-    cv.width = W;
-    cv.height = TOP + (rows.length + 1) * LINE + FOOT;
-    var c = cv.getContext('2d');
-    c.textBaseline = 'middle';
-
-    c.fillStyle = '#0B0B0B';
-    c.fillRect(0,0,cv.width,cv.height);
-
-    function chrome(){
-      /* title block */
-      c.textAlign = 'left';
-      c.fillStyle = '#FFFFFF';
-      c.font = 'bold 44px "Arial Black",Arial,sans-serif';
-      var title = (state.name || 'untitled mix');
-      if(title.length > 26) title = title.slice(0,25) + '…';
-      c.fillText(title, PAD + 200, 118);
-      c.fillStyle = '#25E05A';
-      c.font = '22px ' + MONO;
-      c.fillText(state.by ? 'made by ' + state.by : 'a listen when sad mix', PAD + 200, 162);
-      c.fillStyle = '#6E6E6E';
-      c.font = '18px ' + MONO;
-      c.fillText((rows.length + 1) + ' tracks', PAD + 200, 200);
-
-      /* tracks */
-      var y = TOP;
-      function line(n, t, a, pinned){
-        if(pinned){
-          c.fillStyle = '#101C13';
-          c.fillRect(0, y - LINE/2, W, LINE);
-        }
-        c.textAlign = 'right';
-        c.fillStyle = pinned ? '#25E05A' : '#4E7F5F';
-        c.font = '24px ' + MONO;
-        c.fillText(n, PAD + 46, y);
-
-        c.textAlign = 'left';
-        c.fillStyle = '#FFFFFF';
-        c.font = (pinned ? 'bold ' : '') + '26px ' + MONO;
-        var maxT = W - PAD*2 - 80 - 250;
-        var tt = t;
-        while(c.measureText(tt).width > maxT && tt.length > 4) tt = tt.slice(0,-2) + '…';
-        c.fillText(tt, PAD + 76, y);
-
-        if(a){
-          c.textAlign = 'right';
-          c.fillStyle = '#8A8A8A';
-          c.font = '20px ' + MONO;
-          var aa = a;
-          while(c.measureText(aa).width > 240 && aa.length > 4) aa = aa.slice(0,-2) + '…';
-          c.fillText(aa, W - PAD, y);
-        }
-        y += LINE;
-      }
-
-      line('01', CFG.locked.title, CFG.locked.artist, true);
-      rows.forEach(function(t, i){
-        var n = i + 2;
-        line((n<10?'0'+n:String(n)), t.t.trim(), t.a.trim(), false);
-      });
-
-      /* footer */
-      c.fillStyle = '#141414';
-      c.fillRect(0, cv.height - FOOT, W, FOOT);
-      c.textAlign = 'center';
-      c.fillStyle = '#25E05A';
-      c.font = 'bold 24px ' + MONO;
-      c.fillText('jonasbrothers.com', W/2, cv.height - FOOT/2);
-      cb(cv);
-    }
-
-    /* cover square, then the rest once it has decoded */
-    var cs = 160, cx = PAD, cy = 56;
-    if(state.cover){
-      var im = new Image();
-      im.onload = function(){
-        var r = Math.max(cs/im.width, cs/im.height);
-        var dw = im.width*r, dh = im.height*r;
-        c.save(); c.beginPath(); c.rect(cx,cy,cs,cs); c.clip();
-        c.drawImage(im, cx + (cs-dw)/2, cy + (cs-dh)/2, dw, dh);
-        c.restore();
-        c.strokeStyle = '#3A3A3A'; c.lineWidth = 2; c.strokeRect(cx,cy,cs,cs);
-        chrome();
-      };
-      im.onerror = function(){ chrome(); };
-      im.src = state.cover;
-    } else {
-      var g = c.createRadialGradient(cx+cs/2, cy+cs*0.38, 8, cx+cs/2, cy+cs*0.38, cs);
-      g.addColorStop(0,'#243B6B'); g.addColorStop(1,'#0A0F1E');
-      c.fillStyle = g; c.fillRect(cx,cy,cs,cs);
-      c.strokeStyle = '#3A3A3A'; c.lineWidth = 2; c.strokeRect(cx,cy,cs,cs);
-      c.textAlign = 'center'; c.fillStyle = '#FFFFFF';
-      c.font = 'bold 20px "Arial Black",Arial,sans-serif';
-      c.fillText('LISTEN', cx+cs/2, cy+cs*0.34);
-      c.fillText('WHEN', cx+cs/2, cy+cs*0.52);
-      c.fillText('SAD.', cx+cs/2, cy+cs*0.70);
-      chrome();
-    }
+  /* ---------------- share ---------------- */
+  var blob = null;
+  function refreshBlob(){
+    $('disc').toBlob(function(b){ blob = b; }, 'image/png');
   }
 
-  /* ---------------- actions ---------------- */
-  var blob = null;
-  $('make').addEventListener('click', function(){
-    say('Drawing your card…');
-    buildCard(function(cv){
-      $('img').src = cv.toDataURL('image/png');
-      $('out').hidden = false;
-      $('sharebar').hidden = false;
-      cv.toBlob(function(b){ blob = b; }, 'image/png');
-      var t = encodeURIComponent((state.name || 'my listen when sad mix') + ' — track 1 is non-negotiable');
-      var u = encodeURIComponent(CFG.shareUrl);
-      $('sx').href = 'https://twitter.com/intent/tweet?text=' + t + '&url=' + u;
-      $('stu').href = 'https://www.tumblr.com/widgets/share/tool?canonicalUrl=' + u + '&caption=' + t;
-      say('Card ready.');
-    });
-  });
-
   $('copy').addEventListener('click', function(){
-    var text = asText();
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(
+      navigator.clipboard.writeText(asText()).then(
         function(){ say('Copied — paste it anywhere.'); },
         function(){ say('Copy blocked by the browser.'); });
     } else say('Copy blocked by the browser.');
   });
-
   $('slink').addEventListener('click', function(){
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(CFG.shareUrl).then(
         function(){ say('Link copied.'); }, function(){ say('Copy blocked.'); });
     }
   });
-
   $('clear').addEventListener('click', function(){
-    state = {name:'', by:'', cover:null, tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
+    state = {name:'', by:'', tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
     try { localStorage.removeItem(KEY); } catch(e){}
-    $('pl-name').value = ''; $('pl-by').value = '';
-    cover.classList.remove('has-img'); coverImg.removeAttribute('src');
-    $('out').hidden = true; $('sharebar').hidden = true;
+    $('pl-name').value=''; $('pl-by').value='';
     render(); say('Cleared.');
   });
 
-  /* Save route depends on where this runs: a plain file can use <a download>,
-     the artifact viewer cannot and needs the downloads capability. */
+  var t = encodeURIComponent('my listen when sad mix — track 1 is non-negotiable');
+  var u = encodeURIComponent(CFG.shareUrl);
+  $('sx').href = 'https://twitter.com/intent/tweet?text=' + t + '&url=' + u;
+  $('stu').href = 'https://www.tumblr.com/widgets/share/tool?canonicalUrl=' + u + '&caption=' + t;
+
   var saveBtn = $('save');
-  saveBtn.hidden = true;
   function fileName(){
     var n = (state.name || 'my').trim().replace(/[^\w-]+/g,'-').slice(0,40) || 'my';
-    return n + '-playlist.png';
+    return n + '-mix.png';
   }
+  saveBtn.hidden = true;
   if(window.claude && typeof window.claude.use === 'function'){
     window.claude.use('downloads').then(function(d){
       if(!d) return;
       saveBtn.hidden = false;
       saveBtn.addEventListener('click', function(){
-        if(!blob){ say('Make the card first.'); return; }
-        d.save({filename:fileName(), data:blob}).then(
-          function(){ say('Saved.'); },
-          function(err){
-            if(err && err.code === 'declined') say('No problem — the card is still here.');
-            else { say('Saving is unavailable here — long-press the card.'); saveBtn.hidden = true; }
-          });
+        refreshBlob();
+        setTimeout(function(){
+          if(!blob){ say('Give it a second, then try again.'); return; }
+          d.save({filename:fileName(), data:blob}).then(
+            function(){ say('Saved.'); },
+            function(err){
+              if(err && err.code === 'declined') say('No problem — the disc is still here.');
+              else { say('Saving is unavailable here — long-press the disc.'); saveBtn.hidden = true; }
+            });
+        }, 120);
       });
     });
   } else {
     saveBtn.hidden = false;
     saveBtn.addEventListener('click', function(){
-      if(!blob){ say('Make the card first.'); return; }
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url; a.download = fileName();
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
-      say('Saved to your downloads.');
+      refreshBlob();
+      setTimeout(function(){
+        if(!blob){ say('Give it a second, then try again.'); return; }
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url; a.download = fileName();
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+        say('Saved to your downloads.');
+      }, 120);
     });
   }
 
+  /* draw once now, and again once the marker fonts land */
   render();
-  $('lcd').textContent = state.name || 'listen when sad.';
+  if(document.fonts && document.fonts.load){
+    Promise.all([
+      document.fonts.load('400 62px "Permanent Marker"'),
+      document.fonts.load('700 42px "Caveat"')
+    ]).then(preview).catch(function(){});
+    document.fonts.ready.then(preview).catch(function(){});
+  }
 
-  /* expose for the Spotify module */
   window.__PL_API = {
     state: state,
     addTrack: function(title, artist, uri){
       var slot = null;
       for(var i=0;i<state.tracks.length;i++){
-        if(!(state.tracks[i].t || '').trim()){ slot = i; break; }
+        if(!(state.tracks[i].t||'').trim()){ slot = i; break; }
       }
       if(slot === null){
         if(state.tracks.length >= CFG.maxTracks - 1) return false;
-        state.tracks.push({t:'',a:''});
-        slot = state.tracks.length - 1;
+        state.tracks.push({t:'',a:''}); slot = state.tracks.length - 1;
       }
       state.tracks[slot] = {t:title, a:artist, uri:uri};
       persist(); render();
