@@ -52,3 +52,14 @@ https://listen-when-sad-playlist.netlify.app/
 
 It is already listed in the page's `redirectUris`, so once Spotify has it too,
 **Connect Spotify** works and you can run the full round trip.
+
+## Link previews on a Netlify URL
+
+`og.png` ships alongside `index.html` and is what shows when the link is
+posted. The `og:image` and `og:url` meta tags at the top of `index.html` are
+absolute and hardcoded to `https://www.jonasbrothers.com/listenwhensadplaylist/`,
+because crawlers do not run scripts and cannot be told the host at runtime.
+
+Testing previews from the Netlify domain means editing those two lines to the
+Netlify URL first. Leave them alone if you are only testing the app itself —
+the page works either way; only the preview card is affected.

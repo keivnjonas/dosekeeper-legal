@@ -4,6 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Listen When Sad</title>
+<meta name="description" content="Pin the song. Build the rest. Burn it to a disc.">
+<!-- Link previews are read by crawlers that do not run scripts, so these are
+     static and point at a picture of the page, not at anyone's own mix. A
+     per-mix preview needs something rendering images server-side - see
+     "Per-mix link previews" in README.md. Absolute URLs are required; swap the
+     host when serving from anywhere but the production path. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jonas Brothers">
+<meta property="og:title" content="Listen When Sad — make your playlist">
+<meta property="og:description" content="Pin the song. Build the rest. Burn it to a disc.">
+<meta property="og:url" content="https://www.jonasbrothers.com/listenwhensadplaylist/">
+<meta property="og:image" content="https://www.jonasbrothers.com/listenwhensadplaylist/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A burned CD with Listen When Sad written on it in marker">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rock+Salt&family=Permanent+Marker&family=Caveat+Brush&family=Caveat:wght@600;700&display=swap">
@@ -212,6 +228,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E836
     <div class="status" id="status" role="status" aria-live="polite"></div>
 
     <div class="actions" id="sharebar">
+      <button type="button" class="btn go" id="share" hidden>Share Disc</button>
       <button type="button" class="btn" id="save">Save Disc</button>
       <a class="btn" id="sx" href="#" target="_blank" rel="noopener">X</a>
       <a class="btn" id="stu" href="#" target="_blank" rel="noopener">Tumblr</a>
@@ -693,6 +710,44 @@ window.__PL = {
     $('stu').href = 'https://www.tumblr.com/widgets/share/tool?canonicalUrl=' + u + '&caption=' + t;
   }
   refreshShare();
+
+  /* On a phone the share sheet can carry the picture itself, which is what
+     fans actually do - the link alone arrives as a naked URL in iMessage. Not
+     every browser can share files, so the button hides itself rather than
+     failing when tapped. */
+  function discFile(){
+    return new Promise(function(resolve){
+      var cv = $('disc');
+      if(!cv.toBlob || typeof File !== 'function') return resolve(null);
+      try {
+        cv.toBlob(function(b){
+          if(!b) return resolve(null);
+          try { resolve(new File([b], fileName(), {type:'image/png'})); }
+          catch(e){ resolve(null); }
+        }, 'image/png');
+      } catch(e){ resolve(null); }
+    });
+  }
+
+  var shareBtn = $('share');
+  shareBtn.hidden = !(navigator.share && navigator.canShare);
+  shareBtn.addEventListener('click', function(){
+    var link = mixLink();
+    var text = 'my listen when sad playlist — track 1 is non-negotiable';
+    discFile().then(function(f){
+      if(f && navigator.canShare({files:[f]})){
+        /* Several platforms drop `url` once a file rides along, so the link
+           goes in the text, where it always survives. */
+        return navigator.share({files:[f], text: text + ' ' + link});
+      }
+      return navigator.share({title: CFG.mixName, text: text, url: link});
+    }).then(function(){
+      say('Shared.');
+    }, function(err){
+      if(err && err.name === 'AbortError') return;      /* they backed out */
+      say('Sharing is not available here — use Save Disc and Copy Link.');
+    });
+  });
 
   var saveBtn = $('save');
   function fileName(){

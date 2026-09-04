@@ -88,6 +88,18 @@
       await wait(50);
       ok('duplicate refused', API.uris().length === before);
 
+      /* ---- the share link carries the mix, and the sheet carries the disc ---- */
+      var xhref = decodeURIComponent(document.getElementById('sx').href);
+      ok('share intent carries the mix', xhref.indexOf('#m=') !== -1);
+      ok('share intent points at the real page',
+         xhref.indexOf(window.__PL.shareUrl) !== -1);
+      var shareBtn = document.getElementById('share');
+      ok('share button matches platform support',
+         shareBtn.hidden === !(navigator.share && navigator.canShare));
+      ok('link preview image declared',
+         (document.querySelector('meta[property="og:image"]') || {}).content
+           .indexOf('og.png') !== -1);
+
       /* ---- create, with one API failure of each kind in the way ---- */
       MOCK.fail.once401 = true;
       MOCK.fail.once429 = true;
