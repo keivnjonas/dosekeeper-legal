@@ -262,7 +262,7 @@ window.__PL = {
      Permanent Marker reads more like a printed poster face. Swap the first
      name here to try another: "Caveat Brush" (softer, faster hand),
      "Sedgwick Ave Display" (fatter), "Just Another Hand" (tall + narrow).
-     Whatever goes first, the title fits itself to the rim below. */
+     Whatever goes first, the title sizes itself to fit the disc below. */
   var SHARPIE = '"Rock Salt","Permanent Marker","Comic Sans MS",cursive';
   var MARKER = '"Permanent Marker","Comic Sans MS",cursive';
   var HAND   = '"Caveat","Comic Sans MS",cursive';
@@ -287,13 +287,6 @@ window.__PL = {
 
   /* Text bent along a circle. `flip` puts it on the bottom rim still reading
      left to right, instead of upside down. */
-  /* How much of the rim a line of text would eat, in radians. */
-  function arcSpan(c, text, radius, gap){
-    var total = 0;
-    for(var i = 0; i < text.length; i++) total += c.measureText(text[i]).width + gap;
-    return total / radius;
-  }
-
   function arcText(c, text, cx, cy, radius, centerAngle, gap, flip){
     var widths = [], total = 0;
     for(var i = 0; i < text.length; i++){
@@ -349,29 +342,26 @@ window.__PL = {
       c.beginPath(); c.arc(cx,cy,R,0,Math.PI*2); c.fill();
     }
 
-    /* ---- marker: title arced over the top ---- */
-    /* Lettered like the single cover: black sharpie caps, arced over the top.
-       Rock Salt sets far wider than Permanent Marker did, so size the title to
-       the rim rather than to a fixed number - that also keeps a longer mix
-       name from wrapping round the sides. */
+    /* ---- marker: title straight across the top ---- */
+    /* Black sharpie caps, written flat near the top edge. The disc is round,
+       so the room the title has is the chord at that height, not the disc's
+       full width - and Rock Salt sets wide. Size the title to that chord
+       rather than to a fixed number, so a longer mix name shrinks instead of
+       running off the edge. */
     var title = CFG.mixName.toUpperCase();
-    var tRad = R*0.870, tGap = S*0.006, tfs, tSpan;
-    for(tfs = S*0.050; tfs > S*0.024; tfs -= 1){
+    var tY = cy - R*0.66, tfs;
+    var tRoom = Math.sqrt(Math.max(0, R*R - (tY-cy)*(tY-cy))) * 2 * 0.88;
+    for(tfs = S*0.052; tfs > S*0.024; tfs -= 1){
       c.font = '400 ' + Math.round(tfs) + 'px ' + SHARPIE;
-      tSpan = arcSpan(c, title, tRad, tGap);
-      /* The ends of the arc hang lower than its middle, and a full mix
-         needs that room for tracks - so cap the sweep tightly and let the
-         letters shrink instead. */
-      if(tSpan <= 1.9) break;                 /* ~109 deg of rim, at most */
+      if(c.measureText(title).width <= tRoom) break;
     }
     c.fillStyle = '#131318';
     c.textAlign = 'center'; c.textBaseline = 'middle';
-    arcText(c, title, cx, cy, tRad, -Math.PI/2, tGap, false);
-    /* The ends of the arc hang lower than its middle, and how much lower
-       depends on the font and the name. Measure it so the tracklist can
-       start underneath instead of guessing a clearance that stops being
-       true the moment either changes. */
-    var titleBottom = cy - tRad*Math.cos(Math.min(tSpan, 1.9)/2) + tfs*0.60;
+    c.fillText(title, cx, tY);
+    /* Tracks start under the title. Measure where that is rather than
+       guessing a clearance that stops being true the moment the font or the
+       name changes. */
+    var titleBottom = tY + tfs*0.60;
 
     /* byline rides the bottom rim, so the whole face is free for tracks */
     if(state.by){
