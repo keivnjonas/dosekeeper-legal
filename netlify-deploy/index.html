@@ -336,11 +336,12 @@ window.__PL = {
     }
 
     /* ---- marker: title arced over the top ---- */
-    var title = CFG.mixName;
-    c.fillStyle = '#E8368F';
-    c.font = '400 ' + Math.round(S*0.048) + 'px ' + MARKER;
+    /* Lettered like the single cover: black marker caps, arced over the top. */
+    var title = CFG.mixName.toUpperCase();
+    c.fillStyle = '#131318';
+    c.font = '400 ' + Math.round(S*0.052) + 'px ' + MARKER;
     c.textAlign = 'center'; c.textBaseline = 'middle';
-    arcText(c, title, cx, cy, R*0.870, -Math.PI/2, S*0.003, false);
+    arcText(c, title, cx, cy, R*0.870, -Math.PI/2, S*0.006, false);
 
     /* byline rides the bottom rim, so the whole face is free for tracks */
     if(state.by){
