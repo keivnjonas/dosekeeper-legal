@@ -38,6 +38,12 @@
     try {
       var API = window.__PL_API;
 
+      /* ---- a returning visitor starts clean ---- */
+      ok('stale mix not loaded', API.state.tracks.every(function(t){ return !(t.t || '').trim(); }));
+      ok('stale maker name not loaded', !API.state.by);
+      ok('old localStorage mix purged', !localStorage.getItem('jb-playlist-v2'));
+      ok('old localStorage token purged', !localStorage.getItem('jb-sp-tok'));
+
       /* ---- connects on a stored token, without a round trip ---- */
       await until(function(){ return document.getElementById('sp-make'); });
       ok('connected UI shown', !!document.getElementById('sp-make'));
@@ -87,6 +93,12 @@
       document.querySelector('#sp-res li[data-uri]').click();
       await wait(50);
       ok('duplicate refused', API.uris().length === before);
+
+      /* ---- the mix is scoped to the tab, so it survives the Spotify round
+             trip but not the next visitor ---- */
+      var kept = JSON.parse(sessionStorage.getItem('jb-playlist-v2') || 'null');
+      ok('mix saved for this tab', kept && kept.tracks.some(function(t){ return t.t === 'Sucker'; }));
+      ok('mix never written to localStorage', !localStorage.getItem('jb-playlist-v2'));
 
       /* ---- the share link carries the mix, and the sheet carries the disc ---- */
       var xhref = decodeURIComponent(document.getElementById('sx').href);
@@ -148,7 +160,7 @@
       await until(function(){ return document.getElementById('sp-login'); });
       ok('sign out returns to connect', !!document.getElementById('sp-login'));
       ok('chips hidden when signed out', document.querySelectorAll('.sp-chip').length === 0);
-      ok('token cleared', !localStorage.getItem('jb-sp-tok'));
+      ok('token cleared', !sessionStorage.getItem('jb-sp-tok'));
 
       finish();
     } catch(e){ finish(e); }

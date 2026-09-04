@@ -236,8 +236,9 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #E836
     </div>
 
     <p class="note">
-      Your mix stays in this browser. The disc is drawn on your device &mdash;
-      nothing is uploaded. If there's no Save button, long-press or right-click the disc.
+      Your mix lives in this tab and is gone when you close it &mdash; save the
+      disc or copy the link to keep it. It is drawn on your device; nothing is
+      uploaded. If there's no Save button, long-press or right-click the disc.
     </p>
   </div>
 </div>
@@ -303,12 +304,36 @@ window.__PL = {
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  /* Session, not local. A fan on a shared phone - or coming back a week later
+     - must get a blank disc, not somebody's half-finished one. It cannot be
+     dropped altogether, though: connecting Spotify navigates off the page and
+     back, and the mix has to still be there on return. sessionStorage is
+     exactly that scope - survives a reload and the OAuth round trip, gone when
+     the tab closes. */
+  var STORE = (function(){
+    try {
+      sessionStorage.setItem('jb-probe', '1');
+      sessionStorage.removeItem('jb-probe');
+      return sessionStorage;
+    } catch(e){ return null; }        /* private mode: hold it in memory only */
+  })();
+
+  /* Earlier builds kept all of this in localStorage, so a returning fan would
+     still be handed their old mix and an old Spotify session. Clear those once. */
+  try {
+    ['jb-playlist-v2','jb-playlist','jb-sp-tok','jb-sp-token','jb-sp-playlist']
+      .forEach(function(k){ localStorage.removeItem(k); });
+  } catch(e){}
+
   var state = {by:'', tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
   try {
-    var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    var saved = JSON.parse((STORE && STORE.getItem(KEY)) || 'null');
     if(saved && Array.isArray(saved.tracks)) state = saved;
   } catch(e){}
-  function persist(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+  function persist(){
+    if(!STORE) return;
+    try { STORE.setItem(KEY, JSON.stringify(state)); } catch(e){}
+  }
 
   /* The Spotify layer fills this in; the form only ever reads it, so the page
      works exactly the same with Spotify switched off. */
@@ -674,7 +699,7 @@ window.__PL = {
   });
   $('clear').addEventListener('click', function(){
     state = {by:'', tracks:[{t:'',a:''},{t:'',a:''},{t:'',a:''}]};
-    try { localStorage.removeItem(KEY); } catch(e){}
+    try { if(STORE) STORE.removeItem(KEY); } catch(e){}
     $('pl-by').value='';
     render(); say('Cleared.');
   });
@@ -897,10 +922,14 @@ window.__PL = {
   var TOKEN = 'https://accounts.spotify.com/api/token';
   var redirectUri = location.origin + location.pathname;
 
-  /* Storage can throw outright in private mode, so every touch is guarded. */
-  function readJSON(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch(e){ return null; } }
+  /* Same scope as the mix: a signed-in session must not outlive the tab, or
+     the next person on a shared device inherits someone's Spotify account.
+     Storage can also throw outright in private mode, so every touch is guarded. */
+  function readJSON(k){
+    try { return JSON.parse(sessionStorage.getItem(k) || 'null'); } catch(e){ return null; }
+  }
   function writeJSON(k, v){
-    try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch(e){}
+    try { v === null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, JSON.stringify(v)); } catch(e){}
   }
 
   if(!SP.clientId){

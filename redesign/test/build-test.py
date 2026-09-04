@@ -26,9 +26,15 @@ drive = io.open(os.path.join(here, 'drive.js'), encoding='utf-8').read()
 # not have to leave the origin to sign in.
 boot = """<script>
 try {
-  localStorage.removeItem('jb-playlist-v2');
-  localStorage.removeItem('jb-sp-playlist');
-  localStorage.setItem('jb-sp-tok', JSON.stringify({
+  sessionStorage.clear();
+  localStorage.clear();
+  // What an earlier build would have left on this device. The page must
+  // ignore it and clear it, not hand it to whoever opens the page next.
+  localStorage.setItem('jb-playlist-v2', JSON.stringify({
+    by:'Someone Else', tracks:[{t:'Stale Song', a:'Old Band'}]
+  }));
+  localStorage.setItem('jb-sp-tok', JSON.stringify({access:'STALE', refresh:'STALE', exp: Date.now() + 3600000}));
+  sessionStorage.setItem('jb-sp-tok', JSON.stringify({
     access:'AT-0', refresh:'RT-0', exp: Date.now() + 3600000
   }));
 } catch(e){}
@@ -78,3 +84,28 @@ mix = json.dumps({"b": "Nick", "t": [["Lovebug", "Jonas Brothers"], ["Year 3000"
 packed = base64.urlsafe_b64encode(mix.encode('utf-8')).decode('ascii').rstrip('=')
 io.open(os.path.join(here, 'run2.hash'), 'w', encoding='utf-8').write('#m=' + packed)
 print('wrote test/run2.html (%d bytes) + run2.hash' % len(out2))
+
+# ---- third page: the same page with no driver, plus a harness that loads it
+# in an iframe and navigates it, to prove the mix survives the Spotify round
+# trip without surviving into a fresh visit.
+# This page gets navigated repeatedly, so its seed must run ONCE - a boot that
+# clears storage on every load would wipe the very thing under test.
+boot_once = boot.replace('<script>\ntry {', """<script>
+try {
+  if(!sessionStorage.getItem('jb-test-seeded')){""", 1).replace(
+    '} catch(e){}\n</script>', """  sessionStorage.setItem('jb-test-seeded','1');
+  }
+} catch(e){}
+</script>""", 1)
+plain = page.replace('<body>', '<body>\n' + boot_once, 1)
+plain = plain.replace(reg,
+    '</script>\n<script>\n'
+    'window.__PL.spotify.redirectUris.push(location.origin + location.pathname);\n'
+    '</script>\n<script>\n(function(){\n  var CFG = window.__PL;', 1)
+io.open(os.path.join(here, 'plain.html'), 'w', encoding='utf-8').write(plain)
+
+reload_js = io.open(os.path.join(here, 'reload.js'), encoding='utf-8').read()
+io.open(os.path.join(here, 'reload.html'), 'w', encoding='utf-8').write(
+    '<style>html,body{margin:0;background:#111}iframe{width:900px;height:900px;border:0}</style>\n'
+    '<iframe id="f"></iframe>\n<script>%s</script>\n' % reload_js)
+print('wrote test/plain.html + reload.html')

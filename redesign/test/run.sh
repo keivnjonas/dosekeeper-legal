@@ -10,7 +10,7 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
 run(){  # name, url
-  "$CHROME" --headless=new --disable-gpu --no-sandbox \
+  "$CHROME" --headless=new --disable-gpu --no-sandbox $CHROME_EXTRA \
     --user-data-dir="$TMP/$1" --virtual-time-budget=40000 \
     --dump-dom "$2" 2>/dev/null \
     | grep -o "<title>[^<]*</title>" | sed -e 's/<[^>]*>//g' -e 's/ | /\n  /g'
@@ -21,3 +21,7 @@ run one   "file://$PWD/run.html"
 echo
 echo "== failure paths =="
 run two   "file://$PWD/run2.html$(cat run2.hash)"
+echo
+echo "== session scope =="
+# needs same-origin access to the iframe it navigates
+CHROME_EXTRA=--allow-file-access-from-files run three "file://$PWD/reload.html"

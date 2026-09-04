@@ -39,7 +39,7 @@
       await until(function(){ return MOCK.find(/accounts\.spotify\.com\/api\/token/).length > 0; });
       ok('stale token was refreshed', MOCK.find(/accounts\.spotify\.com\/api\/token/).length >= 1);
       ok('still connected after refresh', !!document.getElementById('sp-make'));
-      var tok = JSON.parse(localStorage.getItem('jb-sp-tok'));
+      var tok = JSON.parse(sessionStorage.getItem('jb-sp-tok'));
       ok('new token stored with an expiry', tok && tok.access.indexOf('AT-') === 0 && tok.exp > Date.now());
 
       /* ---- Spotify refuses the account: the likeliest launch failure ---- */
@@ -54,13 +54,13 @@
       MOCK.fail.forbid = false;
 
       /* ---- a refresh token Spotify will not honour ---- */
-      var t = JSON.parse(localStorage.getItem('jb-sp-tok'));
-      t.exp = 0; localStorage.setItem('jb-sp-tok', JSON.stringify(t));
+      var t = JSON.parse(sessionStorage.getItem('jb-sp-tok'));
+      t.exp = 0; sessionStorage.setItem('jb-sp-tok', JSON.stringify(t));
       MOCK.fail.refresh = true;
       document.getElementById('sp-make').click();
       await until(function(){ return document.getElementById('sp-login'); }, 12000);
       ok('dead session returns to Connect', !!document.getElementById('sp-login'));
-      ok('dead session clears the token', !localStorage.getItem('jb-sp-tok'));
+      ok('dead session clears the token', !sessionStorage.getItem('jb-sp-tok'));
       ok('dead session says so', status().indexOf('session ended') !== -1);
 
       /* ---- and the disc still works with Spotify gone ---- */
